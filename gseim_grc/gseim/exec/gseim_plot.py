@@ -1275,12 +1275,6 @@ class LinePropPopup(QMainWindow):
         canvas = QPixmap(185, 130)
         canvas.fill(QColor("#FFFFFF"));
         myFont = QFont(); myFont.setBold(True);
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 40, 185, 130))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
-        self.frame19 = QFrame(self);self.frame19.setGeometry(QRect(210, 40, 180, 130))
-        self.labelC2 = QLabel(self.frame19)
-        self.labelC2.setPixmap(canvas)
 
         self.frame1 = QFrame(self);self.frame1.setGeometry(QRect(10, 10, 250, 25))
         self.combo1 = QComboBox(self.frame1)
@@ -1372,29 +1366,6 @@ class LinePropPopup(QMainWindow):
         self.fcBtn = QPushButton(self.frame23);self.fcBtn.clicked.connect(self.openFcColorDlg)
         self.pixmap.fill(QColor("white"));
         self.redIcon= QIcon(self.pixmap);self.fcBtn.setIcon(self.redIcon);
-
-        # painter = QPainter(self.labelC.pixmap())
-        # # painter.setPen(QPen(QColor("black"), 1, Qt.PenStyle.SolidLine))
-        # painter.setPen(QPen())
-        # print('a')
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # print('b')
-        # painter.drawLine(QPoint(5, 125), QPoint(180, 125))
-        # painter.drawLine(QPoint(180, 10), QPoint(180, 125))
-        # painter.drawLine(QPoint(120, 10), QPoint(180, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # print('e')
-        # painter.end()
-        # print('f')
-
-        # painter = QPainter(self.labelC2.pixmap())
-        # # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(175, 125))
-        # painter.drawLine(QPoint(175, 10), QPoint(175, 125))
-        # painter.drawLine(QPoint(138, 10), QPoint(175, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # painter.end()
 
         self.frame20 =  QFrame(self);self.frame20.setGeometry(QRect(120, 170, 90, 25))
         self.applyBtn = QPushButton("Apply",self.frame20);
@@ -2286,9 +2257,6 @@ class GridPopup(QMainWindow):
         canvas = QPixmap(380, 130)
         canvas.fill(QColor("#FFFFFF"));
         myFont = QFont(); myFont.setBold(True);
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 20, 380, 130))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
 
         self.frameD = QFrame(self);self.frameD.setGeometry(QRect(10, 175, 50, 25))
         self.def1 = QLabel("Default:",self.frameD);self.def1.setFont(myFont)
@@ -2339,15 +2307,6 @@ class GridPopup(QMainWindow):
         self.frame24 = QFrame(self);self.frame24.setGeometry(QRect(300,120,150,25))
         self.combo3 = QComboBox(self.frame24)
         self.combo3.addItem("both");self.combo3.addItem("x");self.combo3.addItem("y");
-
-        # painter = QPainter(self.labelC.pixmap())
-        # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(375, 125))
-        # painter.drawLine(QPoint(375, 10), QPoint(375, 125))
-        # painter.drawLine(QPoint(50, 10), QPoint(375, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # painter.end()
 
         self.frame20 =  QFrame(self);self.frame20.setGeometry(QRect(120, 170, 90, 25))
         self.applyBtn = QPushButton("Apply",self.frame20);
@@ -2412,15 +2371,6 @@ class AxesPopup(QMainWindow):
         canvas = QPixmap(185, 130)
         canvas.fill(QColor("#FFFFFF"));
         myFont = QFont(); myFont.setBold(True);
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 10, 185, 130))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
-        self.frame19 = QFrame(self);self.frame19.setGeometry(QRect(210, 10, 185, 130))
-        self.labelC2 = QLabel(self.frame19)
-        self.labelC2.setPixmap(canvas)
-        self.frameY2 = QFrame(self);self.frameY2.setGeometry(QRect(410, 10, 185, 130))
-        self.labelY2 = QLabel(self.frameY2)
-        self.labelY2.setPixmap(canvas)
 
         self.frameD = QFrame(self);self.frameD.setGeometry(QRect(10, 145, 50, 25))
         self.def1 = QLabel("Default:",self.frameD);self.def1.setFont(myFont)
@@ -2520,32 +2470,6 @@ class AxesPopup(QMainWindow):
         self.YlimT2.setFixedWidth(120)
         validator = QDoubleValidator()
         self.YlimT2.setValidator(validator)
-        # painter = QPainter(self.labelC.pixmap())
-        # # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(180, 125))
-        # painter.drawLine(QPoint(180, 10), QPoint(180, 125))
-        # painter.drawLine(QPoint(60, 10), QPoint(180, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # painter.end()
-
-        # painter = QPainter(self.labelC2.pixmap())
-        # # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(180, 125))
-        # painter.drawLine(QPoint(180, 10), QPoint(180, 125))
-        # painter.drawLine(QPoint(60, 10), QPoint(180, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # painter.end()
-
-        # painter = QPainter(self.labelY2.pixmap())
-        # # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 10), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(180, 125))
-        # painter.drawLine(QPoint(180, 10), QPoint(180, 125))
-        # painter.drawLine(QPoint(110, 10), QPoint(180, 10))
-        # painter.drawLine(QPoint(5, 10), QPoint(7, 10))
-        # painter.end()
 
         self.frame20 =  QFrame(self);self.frame20.setGeometry(QRect(120, 140, 90, 25))
         self.applyBtn = QPushButton("Apply",self.frame20);
@@ -2634,9 +2558,6 @@ class TitlePopup(QMainWindow):
         canvas = QPixmap(250, 100)
         canvas.fill(QColor("#FFFFFF"));
         myFont = QFont(); myFont.setBold(True);
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 10, 250, 100))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
 
         self.frameD = QFrame(self);self.frameD.setGeometry(QRect(10, 145, 50, 25))
         self.def1 = QLabel("Default:",self.frameD);self.def1.setFont(myFont)
@@ -2665,14 +2586,6 @@ class TitlePopup(QMainWindow):
         self.frame8 = QFrame(self);self.frame8.setGeometry(QRect(80, 80, 250, 25))
         self.labelEdit = QLineEdit("",self.frame8);
         self.labelEdit.setFixedWidth(175)
-
-        # painter = QPainter(self.labelC.pixmap())
-        # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 5), QPoint(5, 95))
-        # painter.drawLine(QPoint(5, 95), QPoint(245, 95))
-        # painter.drawLine(QPoint(245, 5), QPoint(245, 95))
-        # painter.drawLine(QPoint(5, 5), QPoint(245, 5))
-        # painter.end()
 
         self.frame20 =  QFrame(self);self.frame20.setGeometry(QRect(20, 170, 80, 25))
         self.applyBtn = QPushButton("Apply",self.frame20);
@@ -2717,9 +2630,6 @@ class TickLabelNotation(QMainWindow):
         canvas = QPixmap(460, 130)
         canvas.fill(QColor("#FFFFFF"));
         myFont = QFont(); myFont.setBold(False);
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 10, 460, 130))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
 
         self.frameEg = QFrame(self);self.frameEg.setGeometry(QRect(20, 15, 450, 40))
         self.LabelEg = QLabel(
@@ -2760,14 +2670,6 @@ class TickLabelNotation(QMainWindow):
         self.frameCB2 = QFrame(self);self.frameCB2.setGeometry(QRect(355, 100, 25, 25))
         self.cb2 = QCheckBox(self.frameCB2)
         self.cb2.setCheckState(QtCore.Qt.CheckState.Checked)
-
-        # painter = QPainter(self.labelC.pixmap())
-        # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 5), QPoint(5, 125))
-        # painter.drawLine(QPoint(5, 125), QPoint(455, 125))
-        # painter.drawLine(QPoint(455, 5), QPoint(455, 125))
-        # painter.drawLine(QPoint(5, 5), QPoint(455, 5))
-        # painter.end()
 
         self.frame23 =  QFrame(self);self.frame23.setGeometry(QRect(20, 170, 80, 25))
         self.applyBtn = QPushButton("Apply",self.frame23)
@@ -2816,10 +2718,6 @@ class LegendPopup(QMainWindow):
     def widget(self):
         canvas = QPixmap(380, 125)
         canvas.fill(QColor("#FFFFFF"));
-
-        self.frame18 = QFrame(self);self.frame18.setGeometry(QRect(10, 30, 380, 125))
-        self.labelC = QLabel(self.frame18)
-        self.labelC.setPixmap(canvas)
 
         self.frame1 = QFrame(self);self.frame1.setGeometry(QRect(20, 10, 250, 25))
         self.combo1 = QLabel("Show Legend",self.frame1)
@@ -2882,15 +2780,6 @@ class LegendPopup(QMainWindow):
         validator = QDoubleValidator()
         self.clmSpc.setValidator(validator)
 
-        painter = QPainter(self.labelC.pixmap())
-
-        # painter.setPen(QPen(Qt.black, 1, Qt.SolidLine))
-        # painter.drawLine(QPoint(5, 5), QPoint(5, 120))
-        # painter.drawLine(QPoint(5, 120), QPoint(375, 120))
-        # painter.drawLine(QPoint(375, 120), QPoint(375, 5))
-        # painter.drawLine(QPoint(375, 5), QPoint(5, 5))
-
-        painter.end()
         self.frame20 =  QFrame(self);self.frame20.setGeometry(QRect(120, 170, 90, 25))
         self.applyBtn = QPushButton("Apply",self.frame20);
         self.applyBtn.clicked.connect(self.applyBtnAction)
@@ -3103,8 +2992,8 @@ class ApplicationWindow(QMainWindow):
         self.scroll2.setFixedWidth(270)
         layout.addWidget(self.scroll2)
         self.scroll2.move(10,465)
-        self.YIndex = None;
-        self.YIndexR = None;
+        self.YIndex = [];
+        self.YIndexR = [];
 
         self.x_pos = 160
         self.dely = 25
@@ -4450,7 +4339,7 @@ class ApplicationWindow(QMainWindow):
         self.msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         returnValue = self.msg.exec()
     def displayMessage2(self, message_1):
-        self.msg.setIcon(QMessageBox.Information)
+        self.msg.setIcon(QMessageBox.Icon.Information)
         self.msg.setWindowTitle("Message")
         self.msg.setText(message_1)
         self.msg.setStandardButtons(QMessageBox.StandardButton.Ok)

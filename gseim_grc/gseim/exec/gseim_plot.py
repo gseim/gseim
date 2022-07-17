@@ -40,11 +40,12 @@ import numpy as np
 import random
 import os.path
 from os import path
-from matplotlib.backends.qt_compat import QtCore, QtWidgets
+from matplotlib.backends.qt_compat import QT_API, QtCore, QtWidgets
 from matplotlib.figure import Figure
 
-print('QT6')
-from matplotlib.backends.backend_qt5agg import (
+# This will use the PyQT6 backend because it depends on the previously-
+# imported modules, and PyQt6 is imported above.
+from matplotlib.backends.backend_qtagg import (
     FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
@@ -4680,6 +4681,8 @@ class PlotWindow(QMainWindow):
         self.setCentralWidget(self.canvas)
 
 if __name__ == "__main__":
+    print('QT API used by MatPlotLib', QT_API)
+
     # QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True);
     app = QtWidgets.QApplication([])
 

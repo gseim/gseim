@@ -26,9 +26,9 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import MaxNLocator
 
 from os.path import expanduser
-from PyQt6.QtCore import *
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import (
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QRadioButton,
     QFrame, QMenu, QScrollArea, QLineEdit, QFileDialog,
     QComboBox, QMainWindow, QSizePolicy, QVBoxLayout, QListWidget,
@@ -45,7 +45,7 @@ from matplotlib.figure import Figure
 
 # This will use the PyQT6 backend because it depends on the previously-
 # imported modules, and PyQt6 is imported above.
-from matplotlib.backends.backend_qtagg import (
+from matplotlib.backends.backend_qt5agg import (
     FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
@@ -4428,9 +4428,8 @@ class ApplicationWindow(QMainWindow):
 
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=3, dpi=100):
-        super().__init__()
         self.fig = Figure(figsize=(width, height))
-        FigureCanvas.__init__(self, self.fig)
+        super().__init__(self.fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 

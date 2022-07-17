@@ -47,7 +47,7 @@ print('QT6')
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
-class NavigationToolbar(NavigationToolbar):
+class GSEIMPlotNavigationToolbar(NavigationToolbar):
     toolitems = [t for t in NavigationToolbar.toolitems if
                  t[0] in ('Home', 'Pan', 'Zoom', 'Save')]
 
@@ -2329,7 +2329,7 @@ class GridPopup(QMainWindow):
         mainWin.gridObject_1.setLineColor(self.linecolor.name())
         mainWin.gridObject_1.gridEnable = self.cb2.isChecked()
         mainWin.plotCanvas_1.changeGridProps()
-        mainWin.plotWindow_1.changeGridProps()
+        mainWin.plotWindow_1.canvas.changeGridProps()
     def GridPropShow(self):
         self.combo2.setCurrentText(mainWin.gridObject_1.lineStyle)
         self.combo3.setCurrentText(mainWin.gridObject_1.axis)
@@ -2516,7 +2516,7 @@ class AxesPopup(QMainWindow):
            mainWin.multiPlotObject_1.multiPlot or \
            mainWin.fourierObject_1.fourier):
             mainWin.plotCanvas_1.changeAxesProps()
-            mainWin.plotWindow_1.changeAxesProps()
+            mainWin.plotWindow_1.canvas.changeAxesProps()
         else:
             mainWin.plotDataWithChangedOptions()
 
@@ -2604,7 +2604,7 @@ class TitlePopup(QMainWindow):
         mainWin.titleObject_1.setLabel(self.labelEdit.text())
         mainWin.titleObject_1.setTitleEnable(self.cb3.isChecked())
         mainWin.plotCanvas_1.changeTitle()
-        mainWin.plotWindow_1.changeTitle()
+        mainWin.plotWindow_1.canvas.changeTitle()
     def TitlePropShow(self):
         self.combo2.setCurrentText(str(mainWin.titleObject_1.loc))
         self.labelEdit.setText(str(mainWin.titleObject_1.label))
@@ -2707,7 +2707,7 @@ class TickLabelNotation(QMainWindow):
         else:
             mainWin.axesPropObject_1.setxSNM(False)
         mainWin.plotCanvas_1.changeAxesProps()
-        mainWin.plotWindow_1.changeAxesProps()
+        mainWin.plotWindow_1.canvas.changeAxesProps()
 
 class LegendPopup(QMainWindow):
 
@@ -2805,10 +2805,10 @@ class LegendPopup(QMainWindow):
         mainWin.legendEnable = self.cb1.isChecked()
         if mainWin.legendEnable:
             mainWin.plotCanvas_1.showLegend();
-            mainWin.plotWindow_1.showLegend();
+            mainWin.plotWindow_1.canvas.showLegend();
         else:
             mainWin.plotCanvas_1.removeLegend()
-            mainWin.plotWindow_1.removeLegend()
+            mainWin.plotWindow_1.canvas.removeLegend()
 
     def LegendPropShow(self):
         self.combo2.setCurrentText(mainWin.legendObject_1.location)
@@ -3093,12 +3093,12 @@ class ApplicationWindow(QMainWindow):
 
         self.plotCanvas_1 = PlotCanvas(self, width=5, height=3)
         self.plotCanvas_1.move(285,40)
-        self.navi = self.addToolBar(NavigationToolbar(self.plotCanvas_1,self))
+        self.navi = self.addToolBar(GSEIMPlotNavigationToolbar(self.plotCanvas_1,self))
 
-        self.plotWindow_1 = PlotWindow()#self, width=5, height=3)
+        self.plotWindow_1 = PlotWindow()
         self.plotWindow_1.move(1,1)
         self.navi2 = self.plotWindow_1.addToolBar(
-            NavigationToolbar(self.plotWindow_1,self.plotWindow_1))
+            GSEIMPlotNavigationToolbar(self.plotWindow_1.canvas, self.plotWindow_1.canvas))
 
         self.frame13 = QFrame(self)
         self.frame13.setGeometry(QRect(600,520,120,25))
@@ -3245,7 +3245,7 @@ class ApplicationWindow(QMainWindow):
                 x = self.reader[:,self.XIndex]
 
         self.plotCanvas_1.ax_multi = [None]*self.n_variables_max
-        self.plotWindow_1.ax_multi = [None]*self.n_variables_max
+        self.plotWindow_1.canvas.ax_multi = [None]*self.n_variables_max
 
         if self.powerObject_1.compute_power:
             self.displayMessage2("Power computation:" + \
@@ -3253,10 +3253,10 @@ class ApplicationWindow(QMainWindow):
               "\nIt is also available in this file:\n" + self.filename_power)
             n_plots = 3
             self.plotCanvas_1.ax_power = [None]*n_plots
-            self.plotWindow_1.ax_power = [None]*n_plots
+            self.plotWindow_1.canvas.ax_power = [None]*n_plots
 
             self.plotCanvas_1.ax2_power = [None]*n_plots
-            self.plotWindow_1.ax2_power = [None]*n_plots
+            self.plotWindow_1.canvas.ax2_power = [None]*n_plots
 
             reader_power = np.loadtxt(self.filename_power)
             t_power = reader_power[:,0]
@@ -3276,7 +3276,7 @@ class ApplicationWindow(QMainWindow):
                 current = self.reader[:, self.i_index]
 
             self.plotCanvas_1.fig.clf()
-            self.plotWindow_1.fig.clf()
+            self.plotWindow_1.canvas.fig.clf()
 
             self.plotCanvas_1.fig.subplots_adjust(hspace=0.0)
             self.plotWindow_1.fig.subplots_adjust(hspace=0.0)
@@ -3296,19 +3296,19 @@ class ApplicationWindow(QMainWindow):
                 if (self.axesPropObject_1.s_xMax.split()):
                     self.plotCanvas_1.ax_power[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
 
-                self.plotWindow_1.ax_power[i] = self.plotWindow_1.fig.add_subplot(n_plots, 1, i+1)
-                self.plotWindow_1.ax_power[i].label_outer()
-                self.plotWindow_1.ax_power[i].grid(color='lightgrey')
-                self.plotWindow_1.ax_power[i].legend(loc='best')
-                self.plotWindow_1.ax_power[i].ticklabel_format(axis="x", style="sci",
+                self.plotWindow_1.canvas.ax_power[i] = self.plotWindow_1.fig.add_subplot(n_plots, 1, i+1)
+                self.plotWindow_1.canvas.ax_power[i].label_outer()
+                self.plotWindow_1.canvas.ax_power[i].grid(color='lightgrey')
+                self.plotWindow_1.canvas.ax_power[i].legend(loc='best')
+                self.plotWindow_1.canvas.ax_power[i].ticklabel_format(axis="x", style="sci",
                     scilimits=(-2, 2),useMathText=True)
-                self.plotWindow_1.ax_power[i].ticklabel_format(axis="y", style="sci",
+                self.plotWindow_1.canvas.ax_power[i].ticklabel_format(axis="y", style="sci",
                     scilimits=(-2, 2),useMathText=True)
 
                 if (self.axesPropObject_1.s_xMin.split()):
-                    self.plotWindow_1.ax_power[i].set_xlim(left = float(self.axesPropObject_1.s_xMin))
+                    self.plotWindow_1.canvas.ax_power[i].set_xlim(left = float(self.axesPropObject_1.s_xMin))
                 if (self.axesPropObject_1.s_xMax.split()):
-                    self.plotWindow_1.ax_power[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
+                    self.plotWindow_1.canvas.ax_power[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
 
             pl1 = self.plotCanvas_1.ax_power[0].plot(t, voltage,
                  color='dodgerblue',
@@ -3362,57 +3362,57 @@ class ApplicationWindow(QMainWindow):
                  label='pf')
             self.plotCanvas_1.ax_power[2].legend()
 
-            pl1w = self.plotWindow_1.ax_power[0].plot(t, voltage,
+            pl1w = self.plotWindow_1.canvas.ax_power[0].plot(t, voltage,
                  color='dodgerblue',
                  linestyle='solid',
                  linewidth=1.0,
                  drawstyle='default',
                  label="'" + self.v_string + "'")
-            self.plotWindow_1.ax_power[0].plot(t_power, v_rms,
+            self.plotWindow_1.canvas.ax_power[0].plot(t_power, v_rms,
                  color='dodgerblue',
                  linestyle='dashed',
                  linewidth=1.0,
                  drawstyle='default',
                  label='')
-            self.plotWindow_1.ax_power[0].legend()
+            self.plotWindow_1.canvas.ax_power[0].legend()
 
-            self.plotWindow_1.ax2_power[0] = self.plotWindow_1.ax_power[0].twinx()
-            pl2w = self.plotWindow_1.ax2_power[0].plot(t, current,
+            self.plotWindow_1.canvas.ax2_power[0] = self.plotWindow_1.canvas.ax_power[0].twinx()
+            pl2w = self.plotWindow_1.canvas.ax2_power[0].plot(t, current,
                  color='orangered',
                  linestyle='solid',
                  linewidth=1.0,
                  drawstyle='default',
                  label="'" + self.i_string + "'")
-            self.plotWindow_1.ax2_power[0].plot(t_power, i_rms,
+            self.plotWindow_1.canvas.ax2_power[0].plot(t_power, i_rms,
                  color='orangered',
                  linestyle='dashed',
                  linewidth=1.0,
                  drawstyle='default',
                  label='')
             plsw = pl1w + pl2w
-            self.plotWindow_1.ax_power[0].legend(plsw, labs, loc='best')
+            self.plotWindow_1.canvas.ax_power[0].legend(plsw, labs, loc='best')
 
-            self.plotWindow_1.ax_power[1].plot(t_power, p_avg,
+            self.plotWindow_1.canvas.ax_power[1].plot(t_power, p_avg,
                  color='teal',
                  linestyle='solid',
                  linewidth=1.0,
                  drawstyle='default',
                  label='p_avg')
-            self.plotWindow_1.ax_power[1].plot(t_power, p_app,
+            self.plotWindow_1.canvas.ax_power[1].plot(t_power, p_app,
                  color='deeppink',
                  linestyle='solid',
                  linewidth=1.0,
                  drawstyle='default',
                  label='p_app')
-            self.plotWindow_1.ax_power[1].legend()
+            self.plotWindow_1.canvas.ax_power[1].legend()
 
-            self.plotWindow_1.ax_power[2].plot(t_power, pf,
+            self.plotWindow_1.canvas.ax_power[2].plot(t_power, pf,
                  color='darkgoldenrod',
                  linestyle='solid',
                  linewidth=1.0,
                  drawstyle='default',
                  label='pf')
-            self.plotWindow_1.ax_power[2].legend()
+            self.plotWindow_1.canvas.ax_power[2].legend()
 
             self.plotCanvas_1.draw()
             self.plotWindow_1.draw()
@@ -3835,22 +3835,22 @@ class ApplicationWindow(QMainWindow):
             self.plotWindow_1.draw()
         else:
             self.plotCanvas_1.fig.clf()
-            self.plotWindow_1.fig.clf()
+            self.plotWindow_1.canvas.fig.clf()
 
             for i in range(self.n_variables_max):
                 if self.plotCanvas_1.ax_multi[i]:
                     self.plotCanvas_1.ax_multi[i].remove()
             for i in range(self.n_variables_max):
-                if self.plotWindow_1.ax_multi[i]:
-                    self.plotWindow_1.ax_multi[i].remove()
+                if self.plotWindow_1.canvas.ax_multi[i]:
+                    self.plotWindow_1.canvas.ax_multi[i].remove()
 
             self.plotCanvas_1.ax = self.plotCanvas_1.fig.add_subplot(1, 1, 1)
             self.plotCanvas_1.ax.grid()
             self.plotCanvas_1.ax2 = self.plotCanvas_1.ax.twinx()
 
-            self.plotWindow_1.ax = self.plotWindow_1.fig.add_subplot(1, 1, 1)
-            self.plotWindow_1.ax.grid()
-            self.plotWindow_1.ax2 = self.plotWindow_1.ax.twinx()
+            self.plotWindow_1.canvas.ax = self.plotWindow_1.canvas.fig.add_subplot(1, 1, 1)
+            self.plotWindow_1.canvas.ax.grid()
+            self.plotWindow_1.canvas.ax2 = self.plotWindow_1.canvas.ax.twinx()
 
             if not (self.avgrmsObject_1.avg or self.avgrmsObject_1.rms):
                 self.pls  = [];self.plbs = [];
@@ -3875,7 +3875,7 @@ class ApplicationWindow(QMainWindow):
                          self.plotObject_1[self.YIndex[i]].edgeColor,
                          self.plotObject_1[self.YIndex[i]].faceColor);
                     self.pls.append(pl);self.plbs.append(self.plotObject_1[self.YIndex[i]].label);
-                    self.plotWindow_1.plotData(x,y,
+                    self.plotWindow_1.canvas.plotData(x,y,
                          self.plotObject_1[self.YIndex[i]].lineColor,
                          self.plotObject_1[self.YIndex[i]].lineStyle,
                          self.plotObject_1[self.YIndex[i]].width,
@@ -3912,7 +3912,7 @@ class ApplicationWindow(QMainWindow):
                         self.plotObject_1[self.YIndexR[i]].edgeColor,
                         self.plotObject_1[self.YIndexR[i]].faceColor,yax='right');
                     self.pls.append(pl);self.plbs.append(self.plotObject_1[self.YIndexR[i]].label);
-                    self.plotWindow_1.plotData(x,y,
+                    self.plotWindow_1.canvas.plotData(x,y,
                         self.plotObject_1[self.YIndexR[i]].lineColor,
                         self.plotObject_1[self.YIndexR[i]].lineStyle,
                         self.plotObject_1[self.YIndexR[i]].width,
@@ -3983,7 +3983,7 @@ class ApplicationWindow(QMainWindow):
                     self.redIcon= QIcon(pixmap);
                     self.YCols.item(self.YIndex[i],0).setIcon(QIcon(self.redIcon))
 
-                    self.plotWindow_1.ax.plot(x,y,
+                    self.plotWindow_1.canvas.ax.plot(x,y,
                          color=pltColor,
                          linestyle='solid',
                          linewidth=1.0,
@@ -3994,20 +3994,20 @@ class ApplicationWindow(QMainWindow):
                          markeredgecolor=self.plotObject_1[self.YIndex[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndex[i]].faceColor)
                     if self.avgrmsObject_1.avg:
-                        self.plotWindow_1.ax.plot(t_avg,y_avg,
+                        self.plotWindow_1.canvas.ax.plot(t_avg,y_avg,
                              color=pltColor,
                              linestyle='dashed',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
                     if self.avgrmsObject_1.rms:
-                        self.plotWindow_1.ax.plot(t_rms,y_rms,
+                        self.plotWindow_1.canvas.ax.plot(t_rms,y_rms,
                              color=pltColor,
                              linestyle='dashdot',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
-                    self.plotWindow_1.ax.legend()
+                    self.plotWindow_1.canvas.ax.legend()
                     i_ax += 1
                 for i in range(0,len(self.YIndexR)):
                     pltColor = self.colorSet[(self.YIndexR[i])%self.nColorSet]
@@ -4057,7 +4057,7 @@ class ApplicationWindow(QMainWindow):
                     self.redIcon= QIcon(pixmap);
                     self.YCols.item(self.YIndexR[i],0).setIcon(QIcon(self.redIcon))
 
-                    self.plotWindow_1.ax2.plot(x,y,
+                    self.plotWindow_1.canvas.ax2.plot(x,y,
                          color=pltColor,
                          linestyle='solid',
                          linewidth=1.0,
@@ -4068,29 +4068,29 @@ class ApplicationWindow(QMainWindow):
                          markeredgecolor=self.plotObject_1[self.YIndexR[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndexR[i]].faceColor)
                     if self.avgrmsObject_1.avg:
-                        self.plotWindow_1.ax2.plot(t_avg,y_avg,
+                        self.plotWindow_1.canvas.ax2.plot(t_avg,y_avg,
                              color=pltColor,
                              linestyle='dashed',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
                     if self.avgrmsObject_1.rms:
-                        self.plotWindow_1.ax2.plot(t_rms,y_rms,
+                        self.plotWindow_1.canvas.ax2.plot(t_rms,y_rms,
                              color=pltColor,
                              linestyle='dashdot',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
-                    self.plotWindow_1.ax2.legend()
+                    self.plotWindow_1.canvas.ax2.legend()
                     i_ax += 1
 
             if self.legendEnable:
                 self.plotCanvas_1.showLegend();
-                self.plotWindow_1.showLegend();
+                self.plotWindow_1.canvas.showLegend();
             self.axesPropObject_1.setxLabel(self.senList.item(self.XIndex).text())
 
             self.plotCanvas_1.changeAxesProps();
-            self.plotWindow_1.changeAxesProps();
+            self.plotWindow_1.canvas.changeAxesProps();
 
             self.linePropBtn.setEnabled(1)
             self.axesBtn.setEnabled(1)
@@ -4099,11 +4099,11 @@ class ApplicationWindow(QMainWindow):
             self.saveBtn.setEnabled(1)
 
             self.plotCanvas_1.changeGridProps();
-            self.plotWindow_1.changeGridProps();
+            self.plotWindow_1.canvas.changeGridProps();
 
             self.titleBtn.setEnabled(1)
             self.plotCanvas_1.changeTitle()
-            self.plotWindow_1.changeTitle();
+            self.plotWindow_1.canvas.changeTitle();
             self.plotCanvas_1.getxTicks();
 
     def FileSelectionChange(self):
@@ -4427,6 +4427,7 @@ class ApplicationWindow(QMainWindow):
 
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=3, dpi=100):
+        super().__init__()
         self.fig = Figure(figsize=(width, height))
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
@@ -4667,9 +4668,16 @@ class PlotCanvas(FigureCanvas):
         else:
             self.ax2.set_yticks([])
         self.draw()
-class PlotWindow(QMainWindow, PlotCanvas):
+
+class PlotWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('Plot Data')
+
+        self.canvas = PlotCanvas()
+        self.fig = self.canvas.fig
+
+        self.setCentralWidget(self.canvas)
 
 if __name__ == "__main__":
     # QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True);

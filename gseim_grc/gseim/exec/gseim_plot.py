@@ -25,28 +25,51 @@ import matplotlib
 import matplotlib.pylab as plt
 from matplotlib.ticker import MaxNLocator
 
+from matplotlib.backends.qt_compat import QT_API, QT_API_PYQT5, QtCore, QtWidgets
+
 from os.path import expanduser
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton, QRadioButton,
-    QFrame, QMenu, QScrollArea, QLineEdit, QFileDialog,
-    QComboBox, QMainWindow, QSizePolicy, QVBoxLayout, QListWidget,
-    QCheckBox, QHeaderView, QListWidgetItem, QAbstractItemView,
-    QHBoxLayout, QColorDialog, QPlainTextEdit, QMessageBox,
-    QTableWidget, QTableWidgetItem
-    )
+if QT_API == QT_API_PYQT5:
+    print('Matplotlib selected PyQt5, so trying to import that version')
+    from PyQt5.QtCore import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import (
+        QApplication, QWidget, QLabel, QPushButton, QRadioButton,
+        QFrame, QMenu, QScrollArea, QLineEdit, QFileDialog,
+        QComboBox, QMainWindow, QSizePolicy, QVBoxLayout, QListWidget,
+        QCheckBox, QHeaderView, QListWidgetItem, QAbstractItemView,
+        QHBoxLayout, QColorDialog, QPlainTextEdit, QMessageBox,
+        QTableWidget, QTableWidgetItem
+        )
+
+else:
+    print('Matplotlib selected PyQt6, so trying to import that version')
+    from PyQt6.QtCore import *
+    from PyQt6.QtGui import *
+    from PyQt6.QtWidgets import (
+        QApplication, QWidget, QLabel, QPushButton, QRadioButton,
+        QFrame, QMenu, QScrollArea, QLineEdit, QFileDialog,
+        QComboBox, QMainWindow, QSizePolicy, QVBoxLayout, QListWidget,
+        QCheckBox, QHeaderView, QListWidgetItem, QAbstractItemView,
+        QHBoxLayout, QColorDialog, QPlainTextEdit, QMessageBox,
+        QTableWidget, QTableWidgetItem
+        )
+
 import numpy as np
 import random
 import os.path
 from os import path
-from matplotlib.backends.qt_compat import QT_API, QtCore, QtWidgets
 from matplotlib.figure import Figure
 
-# This will use the PyQT6 backend because it depends on the previously-
+# This will use the PyQt6 backend because it depends on the previously-
 # imported modules, and PyQt6 is imported above.
-from matplotlib.backends.backend_qt5agg import (
-    FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+try:
+    from matplotlib.backends.backend_qtagg import (
+        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+except ImportError:
+    print('Faield to import matplotlib.backends.backend_qtagg, so falling back'
+            ' to matplotlib.backends.backend_qt5agg')
+    from matplotlib.backends.backend_qt5agg import (
+        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
     toolitems = [t for t in NavigationToolbar.toolitems if

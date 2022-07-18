@@ -3300,7 +3300,7 @@ class ApplicationWindow(QMainWindow):
                 current = self.reader[:, self.i_index]
 
             self.plotCanvas_1.fig.clf()
-            self.plotWindow_1.canvas.fig.clf()
+            self.plotWindow_1.fig.clf()
 
             self.plotCanvas_1.fig.subplots_adjust(hspace=0.0)
             self.plotWindow_1.fig.subplots_adjust(hspace=0.0)
@@ -3439,7 +3439,7 @@ class ApplicationWindow(QMainWindow):
             self.plotWindow_1.canvas.ax_power[2].legend()
 
             self.plotCanvas_1.draw()
-            self.plotWindow_1.draw()
+            self.plotWindow_1.canvas.draw()
         elif self.fourierObject_1.fourier:
 #           It would not make sense to plot different variables in a single plot;
 #           assume multi-plot even if it is not specified.
@@ -3472,14 +3472,14 @@ class ApplicationWindow(QMainWindow):
                 self.plotCanvas_1.ax_multi[i].set_axisbelow(True)
                 self.plotCanvas_1.ax_multi[i].xaxis.set_major_locator(MaxNLocator(integer=True))
 
-                self.plotWindow_1.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1)
-                self.plotWindow_1.ax_multi[i].label_outer()
-                self.plotWindow_1.ax_multi[i].grid(color='lightgrey')
-                self.plotWindow_1.ax_multi[i].legend(loc='best')
-                self.plotWindow_1.ax_multi[i].ticklabel_format(axis="y", style="sci",
+                self.plotWindow_1.canvas.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1)
+                self.plotWindow_1.canvas.ax_multi[i].label_outer()
+                self.plotWindow_1.canvas.ax_multi[i].grid(color='lightgrey')
+                self.plotWindow_1.canvas.ax_multi[i].legend(loc='best')
+                self.plotWindow_1.canvas.ax_multi[i].ticklabel_format(axis="y", style="sci",
                     scilimits=(-2, 2),useMathText=True)
-                self.plotWindow_1.ax_multi[i].set_axisbelow(True)
-                self.plotWindow_1.ax_multi[i].xaxis.set_major_locator(MaxNLocator(integer=True))
+                self.plotWindow_1.canvas.ax_multi[i].set_axisbelow(True)
+                self.plotWindow_1.canvas.ax_multi[i].xaxis.set_major_locator(MaxNLocator(integer=True))
 
             if self.n_variables == 1:
                 y_thd = 0.88
@@ -3508,10 +3508,10 @@ class ApplicationWindow(QMainWindow):
                    verticalalignment='top',
                    transform=self.plotCanvas_1.ax_multi[i_ax].transAxes)
 
-                self.plotWindow_1.ax_multi[i_ax].bar(x, y1, width=bar_width, color='darkorange',align='center',
+                self.plotWindow_1.canvas.ax_multi[i_ax].bar(x, y1, width=bar_width, color='darkorange',align='center',
                    label=self.plotObject_1[self.YIndex[i]].label)
-                self.plotWindow_1.ax_multi[i_ax].legend()
-                self.plotWindow_1.ax_multi[i_ax].text(0.9, y_thd, s,
+                self.plotWindow_1.canvas.ax_multi[i_ax].legend()
+                self.plotWindow_1.canvas.ax_multi[i_ax].text(0.9, y_thd, s,
                    horizontalalignment='center',
                    verticalalignment='top',
                    transform=self.plotCanvas_1.ax_multi[i_ax].transAxes)
@@ -3535,10 +3535,10 @@ class ApplicationWindow(QMainWindow):
                    verticalalignment='top',
                    transform=self.plotCanvas_1.ax_multi[i_ax].transAxes)
 
-                self.plotWindow_1.ax_multi[i_ax].bar(x, y1, width=bar_width, color='darkorange',align='center',
+                self.plotWindow_1.canvas.ax_multi[i_ax].bar(x, y1, width=bar_width, color='darkorange',align='center',
                    label=self.plotObject_1[self.YIndexR[i]].label)
-                self.plotWindow_1.ax_multi[i_ax].legend()
-                self.plotWindow_1.ax_multi[i_ax].text(0.9, y_thd, s,
+                self.plotWindow_1.canvas.ax_multi[i_ax].legend()
+                self.plotWindow_1.canvas.ax_multi[i_ax].text(0.9, y_thd, s,
                    horizontalalignment='center',
                    verticalalignment='top',
                    transform=self.plotCanvas_1.ax_multi[i_ax].transAxes)
@@ -3547,7 +3547,7 @@ class ApplicationWindow(QMainWindow):
                 i_ax += 1
 
             self.plotCanvas_1.draw()
-            self.plotWindow_1.draw()
+            self.plotWindow_1.canvas.draw()
 
         elif self.multiPlotObject_1.multiPlot:
             self.plotCanvas_1.fig.clf()
@@ -3591,20 +3591,20 @@ class ApplicationWindow(QMainWindow):
                     self.plotCanvas_1.ax_multi[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
 
                 if i == 0:
-                    self.plotWindow_1.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1)
+                    self.plotWindow_1.canvas.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1)
                 else:
-                    self.plotWindow_1.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1,
-                      sharex=self.plotWindow_1.ax_multi[0])
-                self.plotWindow_1.ax_multi[i].label_outer()
-                self.plotWindow_1.ax_multi[i].grid(color='lightgrey')
-                self.plotWindow_1.ax_multi[i].legend(loc='best')
-                self.plotWindow_1.ax_multi[i].ticklabel_format(axis="x", style="sci",
+                    self.plotWindow_1.canvas.ax_multi[i] = self.plotWindow_1.fig.add_subplot(self.n_variables, 1, i+1,
+                      sharex=self.plotWindow_1.canvas.ax_multi[0])
+                self.plotWindow_1.canvas.ax_multi[i].label_outer()
+                self.plotWindow_1.canvas.ax_multi[i].grid(color='lightgrey')
+                self.plotWindow_1.canvas.ax_multi[i].legend(loc='best')
+                self.plotWindow_1.canvas.ax_multi[i].ticklabel_format(axis="x", style="sci",
                     scilimits=(-2, 2),useMathText=True)
 
                 if (self.axesPropObject_1.s_xMin.split()):
-                    self.plotWindow_1.ax_multi[i].set_xlim(left = float(self.axesPropObject_1.s_xMin))
+                    self.plotWindow_1.canvas.ax_multi[i].set_xlim(left = float(self.axesPropObject_1.s_xMin))
                 if (self.axesPropObject_1.s_xMax.split()):
-                    self.plotWindow_1.ax_multi[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
+                    self.plotWindow_1.canvas.ax_multi[i].set_xlim(right = float(self.axesPropObject_1.s_xMax))
 
             if not (self.avgrmsObject_1.avg or self.avgrmsObject_1.rms):
                 i_ax = 0
@@ -3637,7 +3637,7 @@ class ApplicationWindow(QMainWindow):
                     if self.plotObject_1[self.YIndex[i]].multiLinLog == 'linear':
                         self.plotCanvas_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                             scilimits=(-2, 2),useMathText=True)
-                    self.plotWindow_1.ax_multi[i_ax].plot(x,y,
+                    self.plotWindow_1.canvas.ax_multi[i_ax].plot(x,y,
                          color=self.plotObject_1[self.YIndex[i]].lineColor,
                          linestyle=self.plotObject_1[self.YIndex[i]].lineStyle,
                          linewidth=self.plotObject_1[self.YIndex[i]].width,
@@ -3647,10 +3647,10 @@ class ApplicationWindow(QMainWindow):
                          markersize=self.plotObject_1[self.YIndex[i]].size,
                          markeredgecolor=self.plotObject_1[self.YIndex[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndex[i]].faceColor)
-                    self.plotWindow_1.ax_multi[i_ax].legend()
+                    self.plotWindow_1.canvas.ax_multi[i_ax].legend()
                     self.linePropPopup_1.combo1.addItem(self.YCols.item(self.YIndex[i],2).text())
                     if self.plotObject_1[self.YIndex[i]].multiLinLog == 'linear':
-                        self.plotWindow_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
+                        self.plotWindow_1.canvas.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                             scilimits=(-2, 2),useMathText=True)
                     i_ax += 1
                 for i in range(0,len(self.YIndexR)):
@@ -3681,7 +3681,7 @@ class ApplicationWindow(QMainWindow):
                     if self.plotObject_1[self.YIndexR[i]].multiLinLog == 'linear':
                         self.plotCanvas_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                             scilimits=(-2, 2),useMathText=True)
-                    self.plotWindow_1.ax_multi[i_ax].plot(x,y,
+                    self.plotWindow_1.canvas.ax_multi[i_ax].plot(x,y,
                          color=self.plotObject_1[self.YIndexR[i]].lineColor,
                          linestyle=self.plotObject_1[self.YIndexR[i]].lineStyle,
                          linewidth=self.plotObject_1[self.YIndexR[i]].width,
@@ -3691,9 +3691,9 @@ class ApplicationWindow(QMainWindow):
                          markersize=self.plotObject_1[self.YIndexR[i]].size,
                          markeredgecolor=self.plotObject_1[self.YIndexR[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndexR[i]].faceColor)
-                    self.plotWindow_1.ax_multi[i_ax].legend()
+                    self.plotWindow_1.canvas.ax_multi[i_ax].legend()
                     if self.plotObject_1[self.YIndexR[i]].multiLinLog == 'linear':
-                        self.plotWindow_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
+                        self.plotWindow_1.canvas.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                             scilimits=(-2, 2),useMathText=True)
                     i_ax += 1
             else:
@@ -3751,7 +3751,7 @@ class ApplicationWindow(QMainWindow):
                     self.plotCanvas_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                         scilimits=(-2, 2),useMathText=True)
 
-                    self.plotWindow_1.ax_multi[i_ax].plot(x,y,
+                    self.plotWindow_1.canvas.ax_multi[i_ax].plot(x,y,
                          color=pltColor,
                          linestyle='solid',
                          linewidth=1.0,
@@ -3762,21 +3762,21 @@ class ApplicationWindow(QMainWindow):
                          markeredgecolor=self.plotObject_1[self.YIndex[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndex[i]].faceColor)
                     if self.avgrmsObject_1.avg:
-                        self.plotWindow_1.ax_multi[i_ax].plot(t_avg,y_avg,
+                        self.plotWindow_1.canvas.ax_multi[i_ax].plot(t_avg,y_avg,
                              color=pltColor,
                              linestyle='dashed',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
                     if self.avgrmsObject_1.rms:
-                        self.plotWindow_1.ax_multi[i_ax].plot(t_rms,y_rms,
+                        self.plotWindow_1.canvas.ax_multi[i_ax].plot(t_rms,y_rms,
                              color=pltColor,
                              linestyle='dashdot',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
-                    self.plotWindow_1.ax_multi[i_ax].legend(loc='best')
-                    self.plotWindow_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
+                    self.plotWindow_1.canvas.ax_multi[i_ax].legend(loc='best')
+                    self.plotWindow_1.canvas.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                         scilimits=(-2, 2),useMathText=True)
 
                     i_ax += 1
@@ -3825,7 +3825,7 @@ class ApplicationWindow(QMainWindow):
                     self.plotCanvas_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                         scilimits=(-2, 2),useMathText=True)
 
-                    self.plotWindow_1.ax_multi[i_ax].plot(x,y,
+                    self.plotWindow_1.canvas.ax_multi[i_ax].plot(x,y,
                          color=pltColor,
                          linestyle='solid',
                          linewidth=1.0,
@@ -3836,30 +3836,30 @@ class ApplicationWindow(QMainWindow):
                          markeredgecolor=self.plotObject_1[self.YIndexR[i]].edgeColor,
                          markerfacecolor=self.plotObject_1[self.YIndexR[i]].faceColor)
                     if self.avgrmsObject_1.avg:
-                        self.plotWindow_1.ax_multi[i_ax].plot(t_avg,y_avg,
+                        self.plotWindow_1.canvas.ax_multi[i_ax].plot(t_avg,y_avg,
                              color=pltColor,
                              linestyle='dashed',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
                     if self.avgrmsObject_1.rms:
-                        self.plotWindow_1.ax_multi[i_ax].plot(t_rms,y_rms,
+                        self.plotWindow_1.canvas.ax_multi[i_ax].plot(t_rms,y_rms,
                              color=pltColor,
                              linestyle='dashdot',
                              linewidth=1.0,
                              drawstyle='default',
                              label='')
-                    self.plotWindow_1.ax_multi[i_ax].legend(loc='best')
-                    self.plotWindow_1.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
+                    self.plotWindow_1.canvas.ax_multi[i_ax].legend(loc='best')
+                    self.plotWindow_1.canvas.ax_multi[i_ax].ticklabel_format(axis="y", style="sci",
                         scilimits=(-2, 2),useMathText=True)
 
                     i_ax += 1
 
             self.plotCanvas_1.draw()
-            self.plotWindow_1.draw()
+            self.plotWindow_1.canvas.draw()
         else:
             self.plotCanvas_1.fig.clf()
-            self.plotWindow_1.canvas.fig.clf()
+            self.plotWindow_1.fig.clf()
 
             for i in range(self.n_variables_max):
                 if self.plotCanvas_1.ax_multi[i]:

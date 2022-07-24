@@ -68,4 +68,4 @@ b_right_nodes: []
 b_top_nodes: []
 
 b_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_r_star_bus_1.grc
+grc_source: ./gseim_grc/subckt_grc/s_r_star_bus_1.grc

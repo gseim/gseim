@@ -82,4 +82,4 @@ b_right_nodes: []
 b_top_nodes: []
 
 b_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_d_filter_z1_p1.grc
+grc_source: ./gseim_grc/subckt_grc/s_d_filter_z1_p1.grc

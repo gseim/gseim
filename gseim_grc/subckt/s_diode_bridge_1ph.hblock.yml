@@ -81,4 +81,4 @@ b_right_nodes: []
 b_top_nodes: []
 
 b_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_diode_bridge_1ph.grc
+grc_source: ./gseim_grc/subckt_grc/s_diode_bridge_1ph.grc

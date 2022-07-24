@@ -35,7 +35,7 @@ EbeLib::EbeLib(
    std::string filename1;
 
    filename1.assign(filename);
-   homedir = getenv("HOME");
+   homedir = ".";
    replace_first(filename1,"~",homedir);
 
    inf.open(filename1,ios::in|ios::binary);

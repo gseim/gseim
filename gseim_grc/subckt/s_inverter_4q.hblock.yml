@@ -70,4 +70,4 @@ e_top_nodes:
 e_bottom_nodes:
 -   label: m
     dtype: float
-grc_source: ~/gseim_grc/subckt_grc/s_inverter_4q.grc
+grc_source: ./gseim_grc/subckt_grc/s_inverter_4q.grc

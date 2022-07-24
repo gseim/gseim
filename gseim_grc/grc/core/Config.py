@@ -29,7 +29,7 @@ class Config(object):
     license = __doc__.strip()
     website = 'https://gseim.github.io/'
 
-    home_dir = expanduser("~")
+    home_dir = "."
 
     hier_block_lib_dir = home_dir + '/gseim_grc/subckt'
     block_lib_dir      = home_dir + '/gseim_grc/blocks'

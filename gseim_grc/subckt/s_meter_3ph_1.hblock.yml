@@ -90,4 +90,4 @@ b_top_nodes:
     dtype: float
 
 b_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_meter_3ph_1.grc
+grc_source: ./gseim_grc/subckt_grc/s_meter_3ph_1.grc

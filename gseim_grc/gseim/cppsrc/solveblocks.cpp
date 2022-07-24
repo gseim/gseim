@@ -797,7 +797,7 @@ void SolveBlocks::method_default(
    delt_min_ex = 0.0;
    delt_max_ex = 0.0;
 
-   homedir = getenv("HOME");
+   homedir = ".";
    filename = homedir + "/gseim_grc/gseim/exec/slvparms.in";
 
    flag_fixed_delt_x = false;
@@ -1141,7 +1141,7 @@ void SolveBlocks::open_output_files() {
 
    std::string filename;
    std::string homedir;
-   homedir = getenv("HOME");
+   homedir = ".";
 
    for (int i=0; i < n_outfile; i++) {
      filename = homedir + "/gseim_grc/gseim/output/" + outf_name[i];

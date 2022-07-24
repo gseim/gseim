@@ -83,4 +83,4 @@ e_right_nodes: []
 e_top_nodes: []
 
 e_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_gate_pulse_2.grc
+grc_source: ./gseim_grc/subckt_grc/s_gate_pulse_2.grc

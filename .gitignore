@@ -2,4 +2,7 @@ __pycache__
 *.o
 *.so
 *.swp
+gseim_grc/gseim/exec/compute_prm.py
+gseim_grc/gseim/output
+gseim_grc/gseim.conf
 gseim_grc/gseim/cppsrc/gsmain

@@ -70,4 +70,4 @@ e_right_nodes: []
 e_top_nodes: []
 
 e_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_signal_pair_1.grc
+grc_source: ./gseim_grc/subckt_grc/s_signal_pair_1.grc

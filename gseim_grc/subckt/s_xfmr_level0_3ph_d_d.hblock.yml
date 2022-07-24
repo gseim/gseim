@@ -79,4 +79,4 @@ b_right_nodes: []
 b_top_nodes: []
 
 b_bottom_nodes: []
-grc_source: ~/gseim_grc/subckt_grc/s_xfmr_level0_3ph_d_d.grc
+grc_source: ./gseim_grc/subckt_grc/s_xfmr_level0_3ph_d_d.grc

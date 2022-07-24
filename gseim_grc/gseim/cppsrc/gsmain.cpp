@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
    std::ofstream outf;
 
-   homedir = getenv("HOME");
+   homedir = "."; 
    file_xbe_list = homedir + "/gseim_grc/gseim/cppsrc/xbe.aux";
    file_ebe_list = homedir + "/gseim_grc/gseim/cppsrc/ebe.aux";
 

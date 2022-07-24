@@ -22,13 +22,14 @@ a Qt-python plotting GUI, and a few additional python programs.
   ```matplotlib```, ```pyyaml```, ```Gtk3```,
   ```PyQt6```, and ```g++``` installed.
 
-- Download the ```gseim_grc``` folder in your home directory.
-- ```cd ~/gseim_grc/gseim/cppsrc```
+- Download the ```gseim_grc``` folder into any directory.
+- ```cd gseim_grc/gseim/cppsrc```
 - ```make```
 - ```make install_libfilter```
-- ```cd ~/gseim_grc/gseim```
+- ```cd ../../gseim```
 - ```mkdir output```
-- ```python3 ~/gseim_grc/grc/scripts/run_gseim```
+- ```cd ../..```
+- ```python3 ./gseim_grc/grc/scripts/run_gseim```
 - The GSEIM GUI should show up. Change the window to full size;
   quit the GUI and run ```run_gseim``` again.
 - Follow instructions in the **Getting started** page of the

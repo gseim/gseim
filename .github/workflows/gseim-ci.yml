@@ -1,0 +1,20 @@
+name: gseim-ci
+on: [push, pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./gseim_grc/src/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Setup bazelisk for Bazel builds
+        uses: holvonix-open/setup-bazelisk@v0.6.1
+      - name: Install Ubuntu package dependencies
+        run: sudo apt install libgirepository1.0-dev # qtbase5-dev
+      - name: Run Bazel test
+        run: |
+          bazel test //gseim/... //gseim_cpp_lib/... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors

@@ -1,0 +1,90 @@
+id: s_dcmc
+label: s_dcmc
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: C
+    label: C
+    default: '1'
+-   id: J
+    label: J
+    default: '0.25'
+-   id: La
+    label: La
+    default: 1m
+-   id: Ra
+    label: Ra
+    default: '1'
+-   id: b_damp
+    label: b_damp
+    default: '0'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: symbol
+-   id: port_block_x
+    label: port_block_x
+    default: '8'
+-   id: port_block_y
+    label: port_block_y
+    default: '12'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '0'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'yes'
+-   id: mirror
+    label: mirror
+    default: none
+outvars:
+- ia
+- tem
+- wrm
+
+inputs:
+-   label: TL
+    dtype: ''
+
+outputs:
+-   label: wrm
+    dtype: ''
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes:
+-   label: p
+    dtype: ''
+
+e_bottom_nodes:
+-   label: n
+    dtype: ''
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_dcmc.grc

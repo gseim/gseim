@@ -1,0 +1,37 @@
+title: boost.grc
+begin_circuit
+   xelement name=clock_1$1 type=clock_1 y=n0_0 D=0.8 delta1=0.1u delta2=0.1u
++     f_hz=25k
+   eelement name=switch_1$1 type=switch_1 x=n0_0 p=n0_4 n=0 r_off=10M v_on=0.0
++     x_high=1
+   eelement name=vsrc_dc$1 type=vsrc_dc p=n0_1 n=0 k_scale=1.0 vdc=50
+   eelement name=s0#l$0 type=l p=n1_2 n=n0_4 i0=0 k_scale=1.0 l=100u
+   eelement name=s0#r$0 type=r p=n0_1 n=n1_2 k_scale=1.0 r=1
+   eelement name=c$1 type=c p=n0_3 n=0 c=100u k_scale=1.0
+   eelement name=r$1 type=r p=n0_3 n=0 k_scale=1.0 r=50
+   eelement name=diode_r$1 type=diode_r p=n0_4 n=n0_3 r_off=10M r_on=1m
++     v_on=0.0
+   ref_node=0
+   outvar: i_diode=i_of_diode_r$1
+   outvar: i_src=i_of_vsrc_dc$1
+   outvar: i_switch=i_of_switch_1$1
+   outvar: v_R=v_of_r$1
+end_circuit
+begin_solve
+   solve_type=ssw
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_spice=yes
+   method: ssw_period=40u
+   method: t_end=0
+   method: t_start=0
+   method: tstep0_ex=0.1u
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: i_diode i_src i_switch v_R
+   end_output
+end_solve
+end_cf

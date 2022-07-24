@@ -1,0 +1,90 @@
+id: s_clock_4
+label: s_clock_4
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: T
+    label: T
+    default: 20m
+-   id: alpha
+    label: alpha
+    default: '10'
+-   id: beta
+    label: beta
+    default: '0'
+-   id: delta1
+    label: delta1
+    default: 0.01m
+-   id: delta2
+    label: delta2
+    default: 0.01m
+-   id: y_high
+    label: y_high
+    default: '1'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: symbol
+-   id: port_block_x
+    label: port_block_x
+    default: '8'
+-   id: port_block_y
+    label: port_block_y
+    default: '3'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '4'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'yes'
+-   id: mirror
+    label: mirror
+    default: none
+outvars: []
+
+inputs: []
+
+outputs:
+-   label: y1
+    dtype: float
+-   label: y2
+    dtype: float
+-   label: y3
+    dtype: float
+-   label: y4
+    dtype: float
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_clock_4.grc

@@ -1,0 +1,126 @@
+id: s_ICE1PCS01
+label: ICE1PCS01
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: C_icomp
+    label: C_icomp
+    default: 1e-9
+-   id: C_parallel
+    label: C_parallel
+    default: '0.1e-6'
+-   id: C_series
+    label: C_series
+    default: 1e-6
+-   id: K1
+    label: K1
+    default: '7'
+-   id: KFQ
+    label: KFQ
+    default: '9.183'
+-   id: R_series
+    label: R_series
+    default: 33e3
+-   id: a1_filter
+    label: a1_filter
+    default: computed
+-   id: b1_filter
+    label: b1_filter
+    default: computed
+-   id: b2_filter
+    label: b2_filter
+    default: computed
+-   id: c1
+    label: c1
+    default: computed
+-   id: delt_min
+    label: delt_min
+    default: 0.01u
+-   id: delt_nrml
+    label: delt_nrml
+    default: 10u
+-   id: dt_clock
+    label: dt_clock
+    default: computed
+-   id: fc
+    label: fc
+    default: 62.5e3
+-   id: gOTA1
+    label: gOTA1
+    default: 42e-6
+-   id: gOTA1start
+    label: gOTA1start
+    default: '15.12e-6'
+-   id: gOTA2
+    label: gOTA2
+    default: '1.1e-3'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: mirror
+    label: mirror
+    default: none
+-   id: port_block_x
+    label: port_block_x
+    default: '4'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '4'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '4'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+outvars:
+- clk
+- gate
+- xfn_x
+- xfn_y
+- Vicomp
+
+inputs:
+-   label: VSENSE
+    dtype: ''
+-   label: ISENSE
+    dtype: ''
+
+outputs:
+-   label: gate
+    dtype: ''
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_ICE1PCS01.grc

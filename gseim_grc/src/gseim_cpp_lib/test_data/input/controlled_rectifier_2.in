@@ -1,0 +1,47 @@
+title: /Users/jeff/Desktop/gseim/gseim_grc/src/gseim/test_data/controlled_rectifier/controlled_rectifier_2.grc
+begin_circuit
+   xelement name=clock_thyr$1 type=clock_thyr y=n0_0 T=0 alpha=240 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$1 type=thyristor g_in=n0_0 anode=0 cathode=n0_5
++     r_off=1M
+   xelement name=clock_thyr$2 type=clock_thyr y=n0_1 T=0 alpha=60 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$2 type=thyristor g_in=n0_1 anode=n0_4 cathode=n0_5
++     r_off=1M
+   eelement name=r$3 type=r p=n0_5 n=n0_2 k_scale=1.0 r=0.5
+   eelement name=l$0 type=l p=n0_6 n=n0_2 k_scale=1.0 l=6.5m
+   eelement name=diode_r$0 type=diode_r p=n0_6 n=0 r_on=1m
+   eelement name=vsrc_ac$0 type=vsrc_ac p=n0_4 n=0 a=169.7 f_hz=60
+   eelement name=diode_r$1 type=diode_r p=n0_6 n=n0_4 r_on=1m
+   eelement name=diode_r$2 type=diode_r p=n0_6 n=n0_5 r_on=1m
+   eelement name=voltmeter$0 type=voltmeter p=n0_5 n=n0_6
+   ref_node=0
+   outvar: gb=y_of_clock_thyr$1
+   outvar: gc=y_of_clock_thyr$2
+   outvar: i_R=i_of_r$3
+   outvar: i_s=i_of_vsrc_ac$0
+   outvar: v_in=v_of_vsrc_ac$0
+   outvar: v_out=v_of_voltmeter$0
+end_circuit
+begin_solve
+   solve_type=ssw
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_spice_abstol=1.0e-12
+   method: e_nr_spice_vntol=1.0e-6
+   method: ex_nr_check_delx_all=yes
+   method: ssw_frequency=60
+   method: t_end=100m
+   method: t_start=0
+   method: tstep0_ex=10u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=controlled_rectifier_2.dat limit_lines=1000000
+     variables: i_R i_s v_in v_out
+   end_output
+end_solve
+end_cf

@@ -1,0 +1,54 @@
+title: controlled_rectifier_4.grc
+begin_circuit
+   xelement name=clock_thyr$0 type=clock_thyr y=n0_0 T=0 alpha=210 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$0 type=thyristor g_in=n0_0 anode=n0_7 cathode=n0_9
++     r_off=1M
+   xelement name=clock_thyr$1 type=clock_thyr y=n0_1 T=0 alpha=330 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$1 type=thyristor g_in=n0_1 anode=n0_8 cathode=n0_9
++     r_off=1M
+   xelement name=clock_thyr$2 type=clock_thyr y=n0_2 T=0 alpha=90 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$2 type=thyristor g_in=n0_2 anode=n0_6 cathode=n0_9
++     r_off=1M
+   eelement name=l$0 type=l p=n0_4 n=0 k_scale=1.0 l=6.5m
+   eelement name=r$3 type=r p=n0_9 n=n0_4 k_scale=1.0 r=0.5
+   eelement name=s0#vsrc_ac$0 type=vsrc_ac p=n0_6 n=0 a=169.7 f_hz=60
+   eelement name=s0#vsrc_ac$1 type=vsrc_ac p=n0_7 n=0 a=169.7 f_hz=60
++     phi_deg=-120
+   eelement name=s0#vsrc_ac$2 type=vsrc_ac p=n0_8 n=0 a=169.7 f_hz=60
++     phi_deg=-240
+   ref_node=0
+   outvar: ga=y_of_clock_thyr$0
+   outvar: gb=y_of_clock_thyr$1
+   outvar: gc=y_of_clock_thyr$2
+   outvar: i_R=i_of_r$3
+   outvar: v_d=nodev_of_n0_9
+end_circuit
+begin_solve
+   solve_type=ssw
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_spice_abstol=1.0e-12
+   method: e_nr_spice_vntol=1.0e-6
+   method: ex_nr_check_delx_all=yes
+   method: ssw_frequency=60
+   method: t_end=100m
+   method: t_start=0
+   method: tstep0_ex=10u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: i_R v_d
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: ga gb gc
+   end_output
+end_solve
+end_cf

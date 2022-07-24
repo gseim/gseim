@@ -1,0 +1,65 @@
+title: resonant_full_bridge_1.grc
+begin_circuit
+   eelement name=c$0 type=c p=n0_0 n=n0_10 c=50u k_scale=1.0
+   eelement name=l$0 type=l p=n0_6 n=n0_0 k_scale=1.0 l=20u
+   xelement name=clock_1$0 type=clock_1 y=n0_1 D=0.4 delta1=0.1u delta2=0.1u
++     f_hz=5k
+   xelement name=clock_1$1 type=clock_1 y=n0_2 D=0.4 delta1=1u delta2=1u
++     f_hz=5k t0=62.5u
+   eelement name=s0#igbt_1$0 type=igbt_1 x=n0_1 p=n0_9 n=0 x_high=1
+   eelement name=s0#c$0 type=c p=n0_9 n=0 c=5u k_scale=1.0
+   eelement name=s0#diode_r$1 type=diode_r p=0 n=n0_9 r_on=1m
+   eelement name=s1#igbt_1$0 type=igbt_1 x=n0_2 p=n0_6 n=0 x_high=1
+   eelement name=s1#c$0 type=c p=n0_6 n=0 c=5u k_scale=1.0
+   eelement name=s1#diode_r$1 type=diode_r p=0 n=n0_6 r_on=1m
+   eelement name=s2#igbt_1$0 type=igbt_1 x=n0_1 p=n0_8 n=n0_6 x_high=1
+   eelement name=s2#c$0 type=c p=n0_8 n=n0_6 c=5u k_scale=1.0
+   eelement name=s2#diode_r$1 type=diode_r p=n0_6 n=n0_8 r_on=1m
+   eelement name=s3#igbt_1$0 type=igbt_1 x=n0_2 p=n0_8 n=n0_9 x_high=1
+   eelement name=s3#c$0 type=c p=n0_8 n=n0_9 c=5u k_scale=1.0
+   eelement name=s3#diode_r$1 type=diode_r p=n0_9 n=n0_8 r_on=1m
+   eelement name=ammeter$0 type=ammeter p=n0_4 n=n0_3
+   eelement name=r$0 type=r p=n0_3 n=n0_5 k_scale=1.0 r=0.5
+   eelement name=c$1 type=c p=n0_3 n=n0_5 c=1m k_scale=1.0
+   eelement name=diode_r$2 type=diode_r p=n0_9 n=n0_4 r_on=1m
+   eelement name=diode_r$0 type=diode_r p=n0_10 n=n0_4 r_on=1m
+   eelement name=vsrc_dc$0 type=vsrc_dc p=n0_8 n=0 k_scale=1.0 vdc=10
+   eelement name=diode_r$1 type=diode_r p=n0_5 n=n0_9 r_on=1m
+   eelement name=diode_r$3 type=diode_r p=n0_5 n=n0_10 r_on=1m
+   ref_node=0
+   outvar: g1=y_of_clock_1$0
+   outvar: g2=y_of_clock_1$1
+   outvar: i_Lr=i_of_l$0
+   outvar: i_d1=i_of_s2#diode_r$1
+   outvar: i_dc=i_of_ammeter$0
+   outvar: i_s1=i_of_s2#igbt_1$0
+   outvar: v_Cr=v_of_c$0
+   outvar: v_dc=v_of_c$1
+   outvar: v_s1=v_of_s2#igbt_1$0
+end_circuit
+begin_solve
+   solve_type=ssw
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: delt_min_ex=0.1u
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: ex_nr_check_delx_all=no
+   method: ssw_frequency=5e3
+   method: t_end=0
+   method: t_start=0
+   method: tstep0_ex=1u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: i_Lr i_dc v_Cr v_dc
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: g1 g2 i_d1 i_s1 v_s1
+   end_output
+end_solve
+end_cf

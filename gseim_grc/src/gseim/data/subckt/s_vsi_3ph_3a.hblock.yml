@@ -1,0 +1,167 @@
+id: s_vsi_3ph_3a
+label: VSI 3ph
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: c_s
+    label: c_s
+    default: 10p
+-   id: frequency
+    label: frequency
+    default: '1'
+-   id: level_0minus
+    label: level_0minus
+    default: '0'
+-   id: ndata
+    label: ndata
+    default: '2'
+-   id: r_off
+    label: r_off
+    default: 10M
+-   id: r_on
+    label: r_on
+    default: 1m
+-   id: r_s
+    label: r_s
+    default: '0.01'
+-   id: theta_1
+    label: theta_1
+    default: '90'
+-   id: theta_10
+    label: theta_10
+    default: '0'
+-   id: theta_11
+    label: theta_11
+    default: '0'
+-   id: theta_12
+    label: theta_12
+    default: '0'
+-   id: theta_13
+    label: theta_13
+    default: '0'
+-   id: theta_14
+    label: theta_14
+    default: '0'
+-   id: theta_15
+    label: theta_15
+    default: '0'
+-   id: theta_16
+    label: theta_16
+    default: '0'
+-   id: theta_17
+    label: theta_17
+    default: '0'
+-   id: theta_18
+    label: theta_18
+    default: '0'
+-   id: theta_19
+    label: theta_19
+    default: '0'
+-   id: theta_2
+    label: theta_2
+    default: '100'
+-   id: theta_20
+    label: theta_20
+    default: '0'
+-   id: theta_3
+    label: theta_3
+    default: '0'
+-   id: theta_4
+    label: theta_4
+    default: '0'
+-   id: theta_5
+    label: theta_5
+    default: '0'
+-   id: theta_6
+    label: theta_6
+    default: '0'
+-   id: theta_7
+    label: theta_7
+    default: '0'
+-   id: theta_8
+    label: theta_8
+    default: '0'
+-   id: theta_9
+    label: theta_9
+    default: '0'
+-   id: x_high
+    label: x_high
+    default: '1'
+-   id: x_low
+    label: x_low
+    default: '0'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: mirror
+    label: mirror
+    default: none
+-   id: port_block_x
+    label: port_block_x
+    default: '11'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '4'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '6'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+outvars:
+- g1
+- g2
+- g3
+- g4
+- g5
+- g6
+
+inputs: []
+
+outputs: []
+
+e_left_nodes: []
+
+e_right_nodes:
+-   label: a
+    dtype: float
+-   label: b
+    dtype: float
+-   label: c
+    dtype: float
+
+e_top_nodes:
+-   label: p
+    dtype: float
+
+e_bottom_nodes:
+-   label: m
+    dtype: float
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_vsi_3ph_3a.grc

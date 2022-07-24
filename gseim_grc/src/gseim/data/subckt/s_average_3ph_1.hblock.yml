@@ -1,0 +1,77 @@
+id: s_average_3ph_1
+label: average\n   3ph
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: T_avg
+    label: T_avg
+    default: 1m
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+-   id: mirror
+    label: mirror
+    default: none
+-   id: port_sep_x
+    label: port_sep_x
+    default: '4'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '4'
+-   id: port_block_x
+    label: port_block_x
+    default: '4'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+outvars:
+- x_a
+- x_b
+- x_c
+- y_a
+- y_b
+- y_c
+
+inputs: []
+
+outputs: []
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes:
+-   label: x
+    dtype: float
+
+b_right_nodes:
+-   label: y
+    dtype: float
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_average_3ph_1.grc

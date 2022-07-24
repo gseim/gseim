@@ -1,0 +1,78 @@
+id: s_rl_series
+label: RL_series
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: i0
+    label: i0
+    default: '0'
+-   id: l
+    label: l
+    default: 1m
+-   id: r
+    label: r
+    default: '1'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: symbol
+-   id: port_block_x
+    label: port_block_x
+    default: '10'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '0'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'yes'
+-   id: mirror
+    label: mirror
+    default: none
+outvars:
+- i
+
+inputs: []
+
+outputs: []
+
+e_left_nodes:
+-   label: p
+    dtype: float
+
+e_right_nodes:
+-   label: n
+    dtype: float
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_rl_series.grc

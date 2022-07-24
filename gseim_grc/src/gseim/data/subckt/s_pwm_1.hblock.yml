@@ -1,0 +1,89 @@
+id: s_pwm_1
+label: PWM
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: T
+    label: T
+    default: 10u
+-   id: cmpr_high
+    label: cmpr_high
+    default: '1'
+-   id: delt_min
+    label: delt_min
+    default: 0.1u
+-   id: delt_nrml
+    label: delt_nrml
+    default: 10u
+-   id: tri_high
+    label: tri_high
+    default: '1'
+-   id: tri_low
+    label: tri_low
+    default: '-1'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: mirror
+    label: mirror
+    default: none
+-   id: port_block_x
+    label: port_block_x
+    default: '10'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '4'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+outvars:
+- triangle
+
+inputs:
+-   label: va
+    dtype: float
+-   label: vb
+    dtype: float
+-   label: vc
+    dtype: float
+
+outputs:
+-   label: g1
+    dtype: float
+-   label: g2
+    dtype: float
+-   label: g3
+    dtype: float
+-   label: g4
+    dtype: float
+-   label: g5
+    dtype: float
+-   label: g6
+    dtype: float
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_pwm_1.grc

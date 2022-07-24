@@ -1,0 +1,71 @@
+title: dc_commutation_3.grc
+begin_circuit
+   eelement name=c$1 type=c p=n0_6 n=n0_0 c=31.2u k_scale=1.0 v0=200
+   eelement name=l$3 type=l p=n0_0 n=n0_7 k_scale=1.0 l=6.4u
+   xelement name=clock$3 type=clock y=n0_1 L2=0 T1=400u T2=600u delta1=1u
++     delta2=1u
+   eelement name=thyristor$3 type=thyristor g_in=n0_1 anode=n0_6 cathode=n0_8
++     r_on=0.1m v_on=0.1
+   xelement name=clock$4 type=clock y=n0_2 L1=0 L2=1 T1=400u T2=600u delta1=1u
++     delta2=1u
+   eelement name=thyristor$4 type=thyristor g_in=n0_2 anode=n0_7 cathode=n0_8
++     r_on=0.1m v_on=0.1
+   xelement name=clock$5 type=clock y=n0_3 L2=0 T1=200u T2=800u delta1=1u
++     delta2=1u
+   eelement name=thyristor$5 type=thyristor g_in=n0_3 anode=n0_6 cathode=n0_7
++     r_on=0.1m v_on=0.1
+   eelement name=r$0 type=r p=n0_8 n=n0_4 k_scale=1.0 r=1
+   eelement name=l$2 type=l p=n0_4 n=0 k_scale=1.0 l=5m
+   eelement name=vsrc_dc$0 type=vsrc_dc p=n0_6 n=0 k_scale=1.0 vdc=200
+   eelement name=voltmeter$0 type=voltmeter p=n0_8 n=0
+   eelement name=diode_r$1 type=diode_r p=0 n=n0_8 r_off=10M r_on=0.1m
+   eelement name=diode_r$2 type=diode_r p=n0_8 n=n0_6 r_off=10M r_on=0.1m
+   ref_node=0
+   outvar: g1=y_of_clock$3
+   outvar: g2=y_of_clock$4
+   outvar: g3=y_of_clock$5
+   outvar: i_r=i_of_r$0
+   outvar: i_s=i_of_vsrc_dc$0
+   outvar: v_out=v_of_voltmeter$0
+end_circuit
+begin_solve
+   solve_type=startup
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_spice_abstol=1.0e-12
+   method: e_nr_spice_vntol=1.0e-6
+   method: ex_nr_check_delx_all=yes
+   method: t_end=0
+   method: t_start=0
+   method: x_nr_check_delx_all=no
+end_solve
+begin_solve
+   solve_type=ssw
+   initial_sol=previous
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: e_nr_spice_vntol=1.0e-3
+   method: ex_nr_check_delx_all=yes
+   method: ssw_period=1m
+   method: t_end=0
+   method: t_start=0
+   method: tstep0_ex=1u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: i_r i_s v_out
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: g1 g2 g3
+   end_output
+end_solve
+end_cf

@@ -1,0 +1,42 @@
+title: /Users/jeff/Desktop/gseim/gseim_grc/src/gseim/test_data/ac_controller/ac_controller_1.grc
+begin_circuit
+   xelement name=clock$0 type=clock y=n0_0 L2=0 T1=100u T2=16.567m delta1=1u
++     delta2=1u t0=4.167m
+   eelement name=thyristor$0 type=thyristor g_in=n0_0 anode=n0_6 cathode=n0_4
++     r_off=1M
+   xelement name=clock$1 type=clock y=n0_1 L2=0 T1=100u T2=16.567m delta1=1u
++     delta2=1u t0=12.5m
+   eelement name=thyristor$1 type=thyristor g_in=n0_1 anode=n0_4 cathode=n0_6
++     r_off=1M
+   eelement name=r$0 type=r p=n0_6 n=n0_2 k_scale=1.0 r=750
+   eelement name=c$0 type=c p=n0_2 n=n0_4 c=0.1u k_scale=1.0
+   eelement name=r$1 type=r p=n0_4 n=n0_3 k_scale=1.0 r=2.5
+   eelement name=l$0 type=l p=n0_3 n=0 k_scale=1.0 l=6.5m
+   eelement name=vsrc_ac$0 type=vsrc_ac p=n0_6 n=0 a=169.7 f_hz=60
+   ref_node=0
+   outvar: g1=y_of_clock$0
+   outvar: g2=y_of_clock$1
+   outvar: i_R=i_of_r$1
+   outvar: v_in=v_of_vsrc_ac$0
+   outvar: v_out=nodev_of_n0_4
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: ex_nr_check_delx_all=no
+   method: t_end=50m
+   method: t_start=0
+   method: tstep0_ex=50u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=ac_controller_1.dat limit_lines=1000000
+     variables: g1 g2 i_R v_in v_out
+   end_output
+end_solve
+end_cf

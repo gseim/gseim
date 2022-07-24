@@ -1,0 +1,66 @@
+title: ac_controller_3.grc
+begin_circuit
+   xelement name=clock_thyr$0 type=clock_thyr y=n0_0 T=0 alpha=180 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$0 type=thyristor g_in=n0_0 anode=n0_8 cathode=n0_7
++     r_off=1M
+   xelement name=clock_thyr$1 type=clock_thyr y=n0_1 T=0 dt=1u flag_frequency=1
++     flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$1 type=thyristor g_in=n0_1 anode=n0_7 cathode=n0_8
++     r_off=1M
+   xelement name=clock_thyr$2 type=clock_thyr y=n0_2 T=0 alpha=300 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$2 type=thyristor g_in=n0_2 anode=n0_9 cathode=n0_10
++     r_off=1M
+   xelement name=clock_thyr$3 type=clock_thyr y=n0_3 T=0 alpha=120 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$3 type=thyristor g_in=n0_3 anode=n0_10 cathode=n0_9
++     r_off=1M
+   xelement name=clock_thyr$4 type=clock_thyr y=n0_4 T=0 alpha=60 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$4 type=thyristor g_in=n0_4 anode=n0_11 cathode=n0_12
++     r_off=1M
+   xelement name=clock_thyr$5 type=clock_thyr y=n0_5 T=0 alpha=240 dt=1u
++     flag_frequency=1 flag_period=0 frequency=60 tw=100u tw_deg=0 x_high=1
+   eelement name=thyristor$5 type=thyristor g_in=n0_5 anode=n0_12 cathode=n0_11
++     r_off=1M
+   eelement name=s0#vsrc_ac$0 type=vsrc_ac p=n0_11 n=0 a=169.7 f_hz=60
+   eelement name=s0#vsrc_ac$1 type=vsrc_ac p=n0_8 n=0 a=169.7 f_hz=60
++     phi_deg=-120
+   eelement name=s0#vsrc_ac$2 type=vsrc_ac p=n0_9 n=0 a=169.7 f_hz=60
++     phi_deg=-240
+   eelement name=r$0 type=r p=n0_7 n=n0_13 k_scale=1.0 r=2.5
+   eelement name=r$1 type=r p=n0_10 n=n0_13 k_scale=1.0 r=2.5
+   eelement name=r$2 type=r p=n0_12 n=n0_13 k_scale=1.0 r=2.5
+   ref_node=0
+   outvar: g1=y_of_clock_thyr$4
+   outvar: g2=y_of_clock_thyr$3
+   outvar: g3=y_of_clock_thyr$0
+   outvar: g4=y_of_clock_thyr$5
+   outvar: g5=y_of_clock_thyr$2
+   outvar: g6=y_of_clock_thyr$1
+   outvar: i_Ra=i_of_r$2
+   outvar: i_Rb=i_of_r$0
+   outvar: i_Rc=i_of_r$1
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_spice=yes
+   method: t_end=50m
+   method: t_start=0
+   method: tstep0_ex=10u
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: i_Ra i_Rb i_Rc
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: g1 g2 g3 g4 g5 g6
+   end_output
+end_solve
+end_cf

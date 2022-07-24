@@ -1,0 +1,91 @@
+id: s_switch_diode_1
+label: switch_diode_1
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: c_snubber
+    label: c_snubber
+    default: 1p
+-   id: r_off
+    label: r_off
+    default: 10M
+-   id: r_on
+    label: r_on
+    default: 1m
+-   id: r_snubber
+    label: r_snubber
+    default: '0.01'
+-   id: v_on_d
+    label: v_on_d
+    default: '0'
+-   id: v_on_s
+    label: v_on_s
+    default: '0'
+-   id: x_high
+    label: x_high
+    default: '1'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: symbol
+-   id: port_block_x
+    label: port_block_x
+    default: '6'
+-   id: port_block_y
+    label: port_block_y
+    default: '10'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '-1'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '-1'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '0'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'yes'
+-   id: mirror
+    label: mirror
+    default: none
+outvars: []
+
+inputs:
+-   label: x
+    dtype: float
+
+outputs: []
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes:
+-   label: p
+    dtype: float
+
+e_bottom_nodes:
+-   label: n
+    dtype: float
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_switch_diode_1.grc

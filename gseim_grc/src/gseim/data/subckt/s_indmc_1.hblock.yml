@@ -1,0 +1,88 @@
+id: s_indmc_1
+label: indmc_1
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: j
+    label: j
+    default: '0.089'
+-   id: llr
+    label: llr
+    default: '0.002'
+-   id: lls
+    label: lls
+    default: '0.002'
+-   id: lm
+    label: lm
+    default: '0.0693'
+-   id: poles
+    label: poles
+    default: '4'
+-   id: rr
+    label: rr
+    default: '0.816'
+-   id: rs
+    label: rs
+    default: '0.435'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: port_block_x
+    label: port_block_x
+    default: '4'
+-   id: port_block_y
+    label: port_block_y
+    default: '4'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '4'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '4'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+-   id: mirror
+    label: mirror
+    default: none
+outvars:
+- ia
+- ib
+- ic
+- tem
+- wrm
+
+inputs:
+-   label: va
+    dtype: ''
+-   label: vb
+    dtype: ''
+-   label: vc
+    dtype: ''
+-   label: tl
+    dtype: ''
+
+outputs:
+-   label: wrm
+    dtype: ''
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes: []
+
+e_bottom_nodes: []
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_indmc_1.grc

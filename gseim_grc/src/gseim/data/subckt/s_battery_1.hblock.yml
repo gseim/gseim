@@ -1,0 +1,142 @@
+id: s_battery_1
+label: battery
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: name
+    label: name
+    dtype: string
+    default: none
+-   id: a0_ctl
+    label: a0_ctl
+    default: '4475'
+-   id: a0_cts
+    label: a0_cts
+    default: '703.6'
+-   id: a0_rs
+    label: a0_rs
+    default: '0.07446'
+-   id: a0_rtl
+    label: a0_rtl
+    default: '0.04984'
+-   id: a0_rts
+    label: a0_rts
+    default: '0.04669'
+-   id: a0_vsrc
+    label: a0_vsrc
+    default: '3.685'
+-   id: a1_vsrc
+    label: a1_vsrc
+    default: '0.2156'
+-   id: a2_vsrc
+    label: a2_vsrc
+    default: '-0.1178'
+-   id: a3_vsrc
+    label: a3_vsrc
+    default: '0.3201'
+-   id: b0_ctl
+    label: b0_ctl
+    default: '-6056'
+-   id: b0_cts
+    label: b0_cts
+    default: '-752.9'
+-   id: b0_rs
+    label: b0_rs
+    default: '0.1562'
+-   id: b0_rtl
+    label: b0_rtl
+    default: '6.603'
+-   id: b0_rts
+    label: b0_rts
+    default: '0.3208'
+-   id: b0_vsrc
+    label: b0_vsrc
+    default: '-1.031'
+-   id: b1_ctl
+    label: b1_ctl
+    default: '27.12'
+-   id: b1_cts
+    label: b1_cts
+    default: '13.51'
+-   id: b1_rs
+    label: b1_rs
+    default: '24.37'
+-   id: b1_rtl
+    label: b1_rtl
+    default: '155.2'
+-   id: b1_rts
+    label: b1_rts
+    default: '29.14'
+-   id: b1_vsrc
+    label: b1_vsrc
+    default: '35'
+-   id: c_capacity
+    label: c_capacity
+    default: '3060'
+-   id: r_self_discharge
+    label: r_self_discharge
+    default: 1M
+-   id: v0_soc
+    label: v0_soc
+    default: '1'
+-   id: drawing_scheme
+    label: drawing_scheme
+    default: name
+-   id: mirror
+    label: mirror
+    default: none
+-   id: port_block_x
+    label: port_block_x
+    default: '4'
+-   id: port_block_y
+    label: port_block_y
+    default: '10'
+-   id: port_offset_b
+    label: port_offset_b
+    default: '0'
+-   id: port_offset_l
+    label: port_offset_l
+    default: '0'
+-   id: port_offset_r
+    label: port_offset_r
+    default: '0'
+-   id: port_offset_t
+    label: port_offset_t
+    default: '0'
+-   id: port_sep_x
+    label: port_sep_x
+    default: '0'
+-   id: port_sep_y
+    label: port_sep_y
+    default: '0'
+-   id: rotate_strict
+    label: rotate_strict
+    default: 'no'
+outvars:
+- IBatt
+- soc
+
+inputs: []
+
+outputs: []
+
+e_left_nodes: []
+
+e_right_nodes: []
+
+e_top_nodes:
+-   label: p
+    dtype: ''
+
+e_bottom_nodes:
+-   label: n
+    dtype: ''
+
+b_left_nodes: []
+
+b_right_nodes: []
+
+b_top_nodes: []
+
+b_bottom_nodes: []
+grc_source: subckt_grc/s_battery_1.grc

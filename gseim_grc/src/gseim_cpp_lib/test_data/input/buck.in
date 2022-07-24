@@ -1,0 +1,40 @@
+title: /Users/jeff/Desktop/buck.grc
+begin_circuit
+   xelement name=clock_1$0 type=clock_1 y=n0_0 D=0.6 delta1=.1u delta2=.1u
++     f_hz=25k
+   eelement name=switch_1$0 type=switch_1 x=n0_0 p=n0_4 n=n0_1 r_off=10M
++     x_high=1
+   eelement name=vsrc_dc$0 type=vsrc_dc p=n0_1 n=0 k_scale=1.0 vdc=50
+   eelement name=c$0 type=c p=n0_2 n=0 c=100u k_scale=1.0
+   eelement name=l$0 type=l p=n0_4 n=n0_2 k_scale=1.0 l=200u
+   eelement name=r$0 type=r p=n0_2 n=0 k_scale=1.0 r=50
+   eelement name=diode_r$0 type=diode_r p=0 n=n0_4 r_off=10M r_on=1m
+   ref_node=0
+   outvar: IL=i_of_l$0
+   outvar: Vout=v_of_r$0
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=trz_auto
+   method: algorithm_ex=trz_auto
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: e_nr_write_rhs2=yes
+   method: ex_nr_check_delx_all=no
+   method: ex_nr_dmp0=yes
+   method: ssw_frequency=25k
+   method: t_end=40m
+   method: t_start=0
+   method: tstep0_e=0.1m
+   method: tstep0_ex=0.2u
+   method: tstep0_x=0.1m
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=buck.dat limit_lines=1000000
+     variables: IL Vout
+   end_output
+end_solve
+end_cf

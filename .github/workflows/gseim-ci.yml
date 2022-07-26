@@ -11,8 +11,6 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Setup bazelisk for Bazel builds
-        uses: holvonix-open/setup-bazelisk@v0.6.1
       - name: Install Ubuntu package dependencies
         run: sudo apt install libgirepository1.0-dev # qtbase5-dev
       - name: Run Bazel test

@@ -21,7 +21,8 @@ import sys
 import os
 from itertools import islice
 import subprocess
-from importlib.resources import files
+
+from importlib_resources import files
 
 import gutils_gseim as gu
 

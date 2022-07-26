@@ -22,8 +22,8 @@ from __future__ import absolute_import
 import os
 import numbers
 import stat
-from importlib.resources import files
 
+from importlib_resources import files
 import numpy
 
 # Data files

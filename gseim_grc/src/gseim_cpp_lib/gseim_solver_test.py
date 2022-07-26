@@ -1,9 +1,9 @@
 import filecmp
-from importlib.resources import files
 import os
 import subprocess
 import sys
 
+from importlib_resources import files
 import pytest
 
 def _test_solver(fname):

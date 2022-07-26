@@ -19,9 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 from os.path import expanduser, normpath, expandvars, exists
 
-from importlib.resources import files
-
 import appdirs
+from importlib_resources import files
 
 from . import Constants
 

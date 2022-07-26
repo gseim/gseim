@@ -25,7 +25,8 @@ import time
 import subprocess
 from multiprocessing import Process
 import pkgutil
-from importlib.resources import files
+
+from importlib_resources import files
 
 from gi.repository import Gtk, Gio, GLib, GObject
 from getpass import getuser

@@ -2,6 +2,9 @@ name: gseim-ci
 on: [push, pull_request]
 jobs:
   build-and-test:
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9']
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -10,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.python-version }}
       - name: Install Ubuntu package dependencies
         run: sudo apt install libgirepository1.0-dev # qtbase5-dev
       - name: Run Bazel test

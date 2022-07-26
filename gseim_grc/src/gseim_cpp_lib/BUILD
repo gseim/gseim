@@ -78,6 +78,7 @@ py_test(
     name = "gseim_solver_test",
     srcs = ["gseim_solver_test.py"],
     deps = [
+        requirement("importlib-resources"),
         requirement("pytest"),
     ],
     data = [

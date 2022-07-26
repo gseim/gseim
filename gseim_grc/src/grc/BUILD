@@ -13,6 +13,7 @@ py_binary(
         requirement("PyGObject"),
         requirement("pyyaml"),
         requirement("psutil"),
+        requirement("importlib_resources"),
     ],
     data = [
         "//gseim:gseim_parser",

@@ -56,6 +56,7 @@ py_binary(
     deps = [":gseim"],
     data = [
         "//gseim_cpp_lib:headers",
+        requirement("importlib-resources"),
     ] + glob([
         "data/ebe/*.ebe"
     ]),
@@ -67,6 +68,7 @@ py_binary(
     deps = [":gseim"],
     data = [
         "//gseim_cpp_lib:headers",
+        requirement("importlib-resources"),
     ] + glob([
         "data/xbe/*.xbe"
     ]),

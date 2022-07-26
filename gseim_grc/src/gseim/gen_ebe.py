@@ -1,8 +1,9 @@
-from importlib.resources import files
 import os
 import subprocess
 import sys
 import tempfile
+
+from importlib_resources import files
 
 import gseim.gutils_gseim as gu
 

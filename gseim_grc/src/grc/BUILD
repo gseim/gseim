@@ -22,3 +22,12 @@ py_binary(
         'data/icon.png',
     ],
 )
+
+py_test(
+    name = "gseim_gui_test",
+    srcs = ["gseim_gui_test.py"],
+    deps = [
+        ":gseim_gui",
+        requirement("pytest"),
+    ],
+)

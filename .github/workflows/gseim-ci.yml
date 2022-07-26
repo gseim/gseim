@@ -4,7 +4,7 @@ jobs:
   build-and-test:
     strategy:
       matrix:
-        python-version: ['3.8', '3.9']
+        python-version: ['3.8'] # , '3.9']
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Ubuntu package dependencies
-        run: sudo apt install libgirepository1.0-dev # qtbase5-dev
+        run: sudo apt install libgirepository1.0-dev libcairo2-dev pkg-config gir1.2-gtk-3.0 # qtbase5-dev
       - name: Run Bazel test
         run: |
-          bazel test //gseim/... //gseim_cpp_lib/... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
+          bazel test //gseim/... //gseim_cpp_lib/... //grc/... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors

@@ -1426,8 +1426,11 @@ class Application(Gtk.Application):
             if len(list(flow_graph.selected_blocks())) == 1:
                 for b in flow_graph.selected_blocks():
                     grc_source = b.extra_data.get('grc_source', '')
-                    if grc_source:
-                        main.new_page(grc_source, show=True)
+                    # Note that `os.path.join` will throw away first part if
+                    # `grc_source` is already an absolute path.
+                    grc_source_abs_path = os.path.join(files('gseim').joinpath('data'), grc_source)
+                    if grc_source_abs_path:
+                        main.new_page(grc_source_abs_path, show=True)
                     else:
                         self.display_message("open hier allowed only for hier blocks")
             else:

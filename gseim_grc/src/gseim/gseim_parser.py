@@ -21,7 +21,6 @@ import sys
 import os
 from itertools import islice
 import subprocess
-import tempfile
 
 from importlib_resources import files
 

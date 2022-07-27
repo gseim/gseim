@@ -10,11 +10,6 @@ from gseim import gseim_parser
 def _test_parser(folder, fname):
     gseim_parser.main(
         str(files('gseim').joinpath('test_data', 'input', folder, fname + '.in')),
-        str(files('gseim').joinpath('data', 'blocks')),
-        str(files('gseim').joinpath('data', 'subckt')),
-        str(files('gseim').joinpath('data', 'xbe')),
-        str(files('gseim').joinpath('data', 'ebe')),
-        str(files('gseim').joinpath('data', 'bbe')),
         str(files('gseim').joinpath('test_data', 'input', folder, fname + '.grc')),
     )
 
@@ -26,6 +21,9 @@ def _test_parser(folder, fname):
 
 def test_parse_ac_controller_3():
     _test_parser('ac_controller', 'ac_controller_3')
+
+def test_cyclo_converter_1ph_1():
+    _test_parser('ac_to_ac', 'cyclo_converter_1ph_1')
 
 def test_parse_boost():
     _test_parser('dc_to_dc', 'boost')

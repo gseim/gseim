@@ -1362,11 +1362,6 @@ class Application(Gtk.Application):
 
                     cmd = str(files('gseim').joinpath('gseim_parser'))
                     cmd += ' ' + cct_fname
-                    cmd += ' ' + self.config.block_lib_dir + '/'
-                    cmd += ' ' + self.config.hier_block_lib_dir + '/'
-                    cmd += ' ' + self.config.gseim_xbe_dir + '/'
-                    cmd += ' ' + self.config.gseim_ebe_dir + '/'
-                    cmd += ' ' + self.config.gseim_bbe_dir + '/'
                     cmd += ' ' + page.file_path
 
                     print('grc/gui/Application.py: cmd:', cmd)

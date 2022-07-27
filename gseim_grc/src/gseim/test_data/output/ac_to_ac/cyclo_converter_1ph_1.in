@@ -1,0 +1,78 @@
+title: cyclo_converter_1ph_1.grc
+begin_circuit
+   xelement name=clock_thyr$0 type=clock_thyr y=n0_0 T=0 alpha=10 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   xelement name=or_2$0 type=or_2 x1=n0_0 x2=n0_1 y=n0_6 y_high=1.0
+   xelement name=clock_thyr$1 type=clock_thyr y=n0_1 T=0 alpha=130 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   xelement name=clock_thyr$2 type=clock_thyr y=n0_2 T=0 alpha=310 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   xelement name=or_2$1 type=or_2 x1=n0_3 x2=n0_2 y=n0_7 y_high=1.0
+   xelement name=clock_thyr$3 type=clock_thyr y=n0_3 T=0 alpha=190 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   xelement name=clock_thyr$4 type=clock_thyr y=n0_4 T=0 alpha=250 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   xelement name=clock_thyr$5 type=clock_thyr y=n0_5 T=0 alpha=70 dt=1u
++     flag_frequency=1 flag_period=0 flag_tw_degrees=1 frequency=1.6667e+01
++     tw=0 tw_deg=2.5 x_high=1
+   eelement name=s0#thyristor$0 type=thyristor g_in=n0_6 anode=n0_8
++     cathode=n0_12
+   eelement name=s0#c$0 type=c p=n0_8 n=n0_12 c=10p k_scale=1.0
+   eelement name=s1#thyristor$0 type=thyristor g_in=n0_5 anode=0 cathode=n0_8
+   eelement name=s1#c$0 type=c p=0 n=n0_8 c=10p k_scale=1.0
+   eelement name=s2#thyristor$0 type=thyristor g_in=n0_5 anode=n0_9
++     cathode=n0_12
+   eelement name=s2#c$0 type=c p=n0_9 n=n0_12 c=10p k_scale=1.0
+   eelement name=s3#thyristor$0 type=thyristor g_in=n0_6 anode=0 cathode=n0_9
+   eelement name=s3#c$0 type=c p=0 n=n0_9 c=10p k_scale=1.0
+   eelement name=s4#thyristor$0 type=thyristor g_in=n0_7 anode=n0_10 cathode=0
+   eelement name=s4#c$0 type=c p=n0_10 n=0 c=10p k_scale=1.0
+   eelement name=s5#thyristor$0 type=thyristor g_in=n0_4 anode=n0_12
++     cathode=n0_10
+   eelement name=s5#c$0 type=c p=n0_12 n=n0_10 c=10p k_scale=1.0
+   eelement name=s6#thyristor$0 type=thyristor g_in=n0_7 anode=n0_12
++     cathode=n0_11
+   eelement name=s6#c$0 type=c p=n0_12 n=n0_11 c=10p k_scale=1.0
+   eelement name=s7#thyristor$0 type=thyristor g_in=n0_4 anode=n0_11 cathode=0
+   eelement name=s7#c$0 type=c p=n0_11 n=0 c=10p k_scale=1.0
+   eelement name=vsrc_ac$0 type=vsrc_ac p=n0_8 n=n0_9 a=325 f_hz=50
+   eelement name=vsrc_ac$1 type=vsrc_ac p=n0_11 n=n0_10 a=325 f_hz=50
+   eelement name=r$0 type=r p=n0_12 n=0 k_scale=1.0 r=10
+   ref_node=0
+   outvar: g1=xvar_of_n0_6
+   outvar: g2=xvar_of_n0_5
+   outvar: g3=xvar_of_n0_4
+   outvar: g4=xvar_of_n0_7
+   outvar: v_in=v_of_vsrc_ac$0
+   outvar: v_out=v_of_r$0
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: delt_min_ex=1u
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: ex_nr_check_delx_all=no
+   method: t_end=200m
+   method: t_start=0
+   method: tstep0_ex=0.1m
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: v_in v_out
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: g1 g2 g3 g4
+   end_output
+end_solve
+end_cf

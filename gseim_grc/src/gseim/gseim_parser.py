@@ -21,6 +21,7 @@ import sys
 import os
 from itertools import islice
 import subprocess
+import tempfile
 
 from importlib_resources import files
 
@@ -1138,7 +1139,7 @@ def compute_prm_0(f, d_prm):
 
 def compute_prm_1(input_entity, d_prm):
     if input_entity.flag_top:
-        name1 = input_entity.prm_file_name.split('.')[0]
+        name1 = os.path.splitext(os.path.basename(input_entity.prm_file_name))[0]
         f = name1.split('/')[-1]
     else:
         name1 = input_entity.name.split('$')[0]
@@ -1305,8 +1306,14 @@ def resolve_outvar(ov_main, ov_temp, input_entity, d_ov, l_lib,
             sys.exit()
 
 # main program:
-def main(gseim_file, dir_block, dir_sub, dir_xbe, dir_ebe, dir_bbe, cct_file):
-    dir_exec = os.path.dirname(__file__)
+def main(gseim_file, cct_file):
+    dir_block = files('gseim').joinpath('data', 'blocks')
+    dir_sub   = files('gseim').joinpath('data', 'subckt')
+    dir_xbe   = files('gseim').joinpath('data', 'xbe')
+    dir_ebe   = files('gseim').joinpath('data', 'ebe')
+    dir_bbe   = files('gseim').joinpath('data', 'bbe')
+
+    dir_cct = os.path.dirname(cct_file)
 
     print('Parser started. Wait for Program Completed message...', flush=True) 
 
@@ -1459,7 +1466,8 @@ def main(gseim_file, dir_block, dir_sub, dir_xbe, dir_ebe, dir_bbe, cct_file):
 # concatenate the prm computation files:
 # for subckt s_1, expect file s_1_parm.py
 
-    filename = os.path.join(dir_exec, 'compute_prm.py')
+    filename = os.path.join(dir_cct, 'compute_prm.py')
+    sys.path.insert(0, os.path.dirname(filename))
     with open(os.path.expanduser(filename), 'w') as f_out:
         for infile in l_prm_files:
             with open(os.path.expanduser(infile), 'r') as f_in:
@@ -1795,24 +1803,14 @@ def main(gseim_file, dir_block, dir_sub, dir_xbe, dir_ebe, dir_bbe, cct_file):
     print('Program completed.', flush=True) 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 8:
-        print('gseim-parser: need 7 arguments. Halting...')
+    if len(sys.argv) != 3:
+        print('gseim-parser: need 2 arguments. Halting...')
         sys.exit()
 
     gseim_file = sys.argv[1]
-    dir_block  = sys.argv[2]
-    dir_sub    = sys.argv[3]
-    dir_xbe    = sys.argv[4]
-    dir_ebe    = sys.argv[5]
-    dir_bbe    = sys.argv[6]
-    cct_file   = sys.argv[7]
+    cct_file   = sys.argv[2]
 
     main(
         gseim_file,
-        dir_block,
-        dir_sub,
-        dir_xbe,
-        dir_ebe,
-        dir_bbe,
         cct_file,
     )

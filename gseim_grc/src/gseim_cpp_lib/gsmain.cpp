@@ -36,14 +36,14 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-   std::string file_xbe_folder;
-   std::string file_ebe_folder;
+   fs::path element_dir;
+
+   std::string file_xbe_dir;
+   std::string file_ebe_dir;
    std::string file_circuit;
    int n_xbel;
    int n_ebel;
    int i_ebeu,i_ebel,i_xbeu,i_xbel;
-
-   std::string homedir;
 
    Global global;
    CctFile cct_file;
@@ -58,21 +58,32 @@ int main(int argc, char** argv) {
 
    std::ofstream outf;
 
-   file_xbe_folder = "./gseim/data/xbe/";
-   file_ebe_folder = "./gseim/data/ebe/";
-
-   cout << "Running in directory: " << fs::current_path() << endl;
-
-   if (argc == 1) {
-     file_circuit = "rrtest.in";
-   } else {
+   if (argc == 3) {
      file_circuit = argv[1];
+     element_dir = fs::path(argv[2]);
+   } else if (argc == 2) {
+     file_circuit = argv[1];
+     element_dir = fs::current_path() / "gseim" / "data";
+   } else {
+       cout << "Usage: gseim-solver (cct_file) [element_folder]" << endl;
+       cout << "  element_folder should contain ebe/*.ebe and xbe/*.xbe folders." << endl;
+       cout << "  If empty, assume the current path + \"gseim/data\"." << endl;
+       exit(1);
+   }
+
+   file_xbe_dir = element_dir / "xbe";
+   file_ebe_dir = element_dir / "ebe";
+
+   if (!fs::is_directory(file_ebe_dir) || !fs::is_directory(file_xbe_dir)) {
+       cout << "Did not find ebe and xbe folders in provided directory:" << endl;
+       cout << "  " << element_dir << endl;
+       exit(1);
    }
 
    cct_file = CctFile(file_circuit);
 
-   xbe_lib = get_lib_elements<XbeLib>(global, file_xbe_folder, ".xbe");
-   ebe_lib = get_lib_elements<EbeLib>(global, file_ebe_folder, ".ebe");
+   xbe_lib = get_lib_elements<XbeLib>(global, file_xbe_dir, ".xbe");
+   ebe_lib = get_lib_elements<EbeLib>(global, file_ebe_dir, ".ebe");
 
    n_xbel = xbe_lib.size();
    n_ebel = ebe_lib.size();
@@ -123,7 +134,7 @@ int main(int argc, char** argv) {
      slv.index_solve = i_solve;
      assign_const_1<bool>(global.flags,false);
      cout << "main: i_solve = " << i_solve << endl;
-     slv.set_values_1(file_circuit,cct,global,cct_file);
+     slv.set_values_1(element_dir, file_circuit,cct,global,cct_file);
 
      if (slv.flag_ssw) {
        for (i_ebeu=0; i_ebeu < cct.n_ebeu; i_ebeu++) {

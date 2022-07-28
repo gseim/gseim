@@ -33,6 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "solveparm.h"
 
 using namespace std; 
+namespace fs = std::experimental::filesystem;
 
 class SolveBlocks {
 
@@ -419,6 +420,7 @@ public:
   SolveBlocks();
 
   void set_values_1(
+   fs::path &element_dir,
    const std::string &filename,
    Circuit &cct,
    Global &global,
@@ -429,6 +431,7 @@ public:
   void write_flags_failed();
 
   void method_default(
+   fs::path &element_dir,
    Global &global);
 
   void trns_constants_1();

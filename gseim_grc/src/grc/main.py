@@ -22,7 +22,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk
 
-from core.Config import DummyPrefs
+from grc.core.Config import DummyPrefs
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GSEIM %s

@@ -19,3 +19,13 @@ jobs:
       - name: Run Bazel test
         run: |
           bazel test //gseim/... //gseim_cpp_lib/... //grc/... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
+      - name: Build Linux wheel
+        run: |
+          bazel build //:gseim_wheel --cxxopt=-std=c++17 --linkopt=-lstdc++fs
+          # This is required due to https://github.com/actions/upload-artifact/issues/92.
+          cp bazel-bin/gseim-*.whl /home/runner/work/gseim/gseim
+      - name: Upload Linux wheel
+        uses: actions/upload-artifact@v3
+        with:
+          name: gseim-wheel
+          path: gseim-*.whl

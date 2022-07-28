@@ -25,6 +25,7 @@ using namespace std;
 SolveBlocks::SolveBlocks(){}
 // -----------------------------------------------------------------------------
 void SolveBlocks::set_values_1(
+   fs::path &element_dir,
    const std::string &filename,
    Circuit &cct,
    Global &global,
@@ -79,7 +80,7 @@ void SolveBlocks::set_values_1(
 // assign default values to method parameters and trns constants
 
    parms.clear();
-   method_default(global);
+   method_default(element_dir, global);
 
 // fixed constants (which do not depend on time step):
    trns_constants_1();
@@ -780,6 +781,7 @@ void SolveBlocks::write_flags_failed() {
 } //end of SolveBlocks::write_flags_failed
 // -----------------------------------------------------------------------------
 void SolveBlocks::method_default(
+   fs::path &element_dir,
    Global &global) {
 
    string filename;
@@ -804,7 +806,7 @@ void SolveBlocks::method_default(
    delt_min_ex = 0.0;
    delt_max_ex = 0.0;
 
-   filename = "./gseim/data/slvparms.in";
+   filename = element_dir / "slvparms.in";
 
    flag_fixed_delt_x = false;
    flag_fixed_delt_e = false;

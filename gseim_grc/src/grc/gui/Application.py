@@ -1360,7 +1360,8 @@ class Application(Gtk.Application):
                 else:
                     cct_fname = os.path.splitext(page.file_path)[0] + '.in'
 
-                    cmd = str(files('gseim').joinpath('gseim_parser'))
+                    cmd = 'python3 '
+                    cmd += str(files('gseim').joinpath('gseim_parser.py'))
                     cmd += ' ' + cct_fname
                     cmd += ' ' + page.file_path
 
@@ -1391,6 +1392,7 @@ class Application(Gtk.Application):
 
                 cmd = str(files('gseim_cpp_lib').joinpath('gseim_solver'))
                 cmd += ' ' + cct_fname
+                cmd += ' ' + str(files('gseim').joinpath('data'))
 
                 print('grc/gui/Application.py: cmd:', cmd)
                 s = flow_graph.options_block.params['engine_output'].get_value()

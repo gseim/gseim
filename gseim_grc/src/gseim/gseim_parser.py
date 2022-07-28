@@ -24,7 +24,7 @@ import subprocess
 
 from importlib_resources import files
 
-import gutils_gseim as gu
+import gseim.gutils_gseim as gu
 
 flag_read_yml_once = True
 d_yml = {}
@@ -1801,7 +1801,7 @@ def main(gseim_file, cct_file):
 
     print('Program completed.', flush=True) 
 
-if __name__ == '__main__':
+def console_entry():
     if len(sys.argv) != 3:
         print('gseim-parser: need 2 arguments. Halting...')
         sys.exit()
@@ -1813,3 +1813,6 @@ if __name__ == '__main__':
         gseim_file,
         cct_file,
     )
+
+if __name__ == '__main__':
+    sys.exit(console_entry())

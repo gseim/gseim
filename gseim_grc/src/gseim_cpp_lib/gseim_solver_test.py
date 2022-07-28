@@ -7,7 +7,6 @@ from importlib_resources import files
 import pytest
 
 def _test_solver(fname):
-    # Note: The solver segfaults if the HOME environment variable is not set.
     r = subprocess.run(
         [
             str(files('gseim_cpp_lib').joinpath('gseim_solver')),

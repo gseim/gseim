@@ -1,5 +1,8 @@
 load("@rules_python//python:packaging.bzl", "py_package", "py_wheel")
 
+
+
+# Rules for generating Python wheels
 py_package(
     name = "gseim_pkg",
     deps = [
@@ -19,6 +22,7 @@ py_wheel(
     distribution = "gseim",
     python_tag = "py3",
     version = "0.0.1",
+    platform = "manylinux_2_31_x86_64",
     deps = [
         ":gseim_pkg",
     ],

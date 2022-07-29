@@ -1409,13 +1409,17 @@ class Application(Gtk.Application):
 
         elif action == Actions.FLOW_GRAPH_PLOT:
             print('Starting GSEIM plot subprocess')
-            p = Process(
-                target=gseim_plot_main,
-                args=(
-                    os.path.join(self.config.gseim_cache_dir, 'plot_history.dat'),
-                ),
-            )
-            p.start()
+            cmd = 'python3 '
+            cmd += str(files('gseim_plot').joinpath('main.py'))
+            cmd += ' ' + os.path.join(self.config.gseim_cache_dir, 'plot_history.dat')
+            os.system(cmd)
+            # p = Process(
+            #     target=gseim_plot_main,
+            #     args=(
+            #         os.path.join(self.config.gseim_cache_dir, 'plot_history.dat'),
+            #     ),
+            # )
+            # p.start()
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             flow_graph_update()
         elif action == Actions.FIND_BLOCKS:

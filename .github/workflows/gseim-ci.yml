@@ -24,15 +24,15 @@ jobs:
           bazel build //:gseim_wheel --cxxopt=-std=c++17 --linkopt=-lstdc++fs
           # This is required due to https://github.com/actions/upload-artifact/issues/92.
           cp bazel-bin/gseim-*.whl /home/runner/work/gseim/gseim
-      # - name: Try installing wheel
-      #   run: |
-      #     pip3 install gseim-*.whl
-      #     `python3 -c "import gseim_cpp_lib; from importlib_resources import files; str(print(files('gseim_cpp_lib').joinpath('gseim_solver')))"` ./gseim_grc/src/gseim_cpp_lib/test_data/input/ac_controller_1.in ./gseim_grc/src/gseim/data
-      #   working-directory: /home/runner/work/gseim/gseim
-      # - name: Audit wheel
-      #   run:
-      #     pip3 install auditwheel
-      #     auditwheel bazel-bin/gseim-*.whl
+      - name: Try installing wheel
+        run: |
+          pip3 install gseim-*.whl
+          `python3 -c "import gseim_cpp_lib; from importlib_resources import files; str(print(files('gseim_cpp_lib').joinpath('gseim_solver')))"` ./gseim_grc/src/gseim_cpp_lib/test_data/input/ac_controller_1.in ./gseim_grc/src/gseim/data
+        working-directory: /home/runner/work/gseim/gseim
+      - name: Audit wheel
+        run:
+          pip3 install auditwheel
+          auditwheel bazel-bin/gseim-*.whl
       - name: Upload Linux wheel
         uses: actions/upload-artifact@v3
         with:

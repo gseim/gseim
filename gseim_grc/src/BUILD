@@ -22,7 +22,7 @@ py_wheel(
     distribution = "gseim",
     python_tag = "py3",
     version = "0.0.1",
-    platform = "manylinux_2_31_x86_64",
+    # platform = "manylinux_2_31_x86_64",
     deps = [
         ":gseim_pkg",
     ],

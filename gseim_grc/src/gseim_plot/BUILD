@@ -6,7 +6,6 @@ py_library(
     deps = [
         requirement("matplotlib"),
         requirement("numpy"),
-        requirement("PyQt6"),
     ],
     visibility = ["//visibility:public"],
 )

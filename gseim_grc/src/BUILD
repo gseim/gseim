@@ -33,7 +33,6 @@ py_wheel(
         "numpy",
         "psutil",
         "PyGObject",
-        "pyqt6",
         "pyyaml",
     ],
     entry_points = {

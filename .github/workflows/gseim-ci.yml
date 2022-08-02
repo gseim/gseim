@@ -14,11 +14,13 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Ubuntu package dependencies
-        run: sudo apt install libgirepository1.0-dev libcairo2-dev pkg-config gir1.2-gtk-3.0 # qtbase5-dev
+      - name: Install Ubuntu and Python package dependencies
+        run: |
+          sudo apt install libgirepository1.0-dev libcairo2-dev pkg-config gir1.2-gtk-3.0 qtbase5-dev libxkbcommon-x11-0
+          pip3 install pyqt5
       - name: Run Bazel test
         run: |
-          bazel test //gseim/... //gseim_cpp_lib/... //grc/... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
+          bazel test //... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
       - name: Build Linux wheel
         run: |
           bazel build //:gseim_wheel --cxxopt=-std=c++17 --linkopt=-lstdc++fs

@@ -20,6 +20,8 @@ jobs:
           pip3 install pyqt5
       - name: Run Bazel test
         run: |
+          mkdir ~/.cache/gseim/
+          chmod 777 ~/.cache/gseim/
           bazel test //... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
       - name: Build Linux wheel
         run: |

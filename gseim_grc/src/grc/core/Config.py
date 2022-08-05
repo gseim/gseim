@@ -44,6 +44,8 @@ class Config(object):
         if name:
             self.name = name
 
+        self.hier_block_user_dir = os.environ.get('HIER_BLOCK_USER_DIR', None)
+
         if not os.path.exists(self.gseim_cache_dir):
             os.makedirs(self.gseim_cache_dir)
 
@@ -51,6 +53,8 @@ class Config(object):
     def block_paths(self):
 
         valid_paths = [self.hier_block_lib_dir, self.block_lib_dir]
+        if self.hier_block_user_dir is not None:
+            valid_paths.insert(0, self.hier_block_user_dir)
 
         return valid_paths
 

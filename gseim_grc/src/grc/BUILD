@@ -37,4 +37,7 @@ py_test(
         ":gseim_gui",
         requirement("pytest"),
     ],
+    data = glob([
+        "test_data/input/*.grc",
+    ]),
 )

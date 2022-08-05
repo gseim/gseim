@@ -1,12 +1,19 @@
 import collections
 import os
+from pathlib import Path
 
 import codecs
+from importlib_resources import files
 
 from .top_block import TopBlockGenerator
 
 from .. import Constants
 from ..io import yaml
+
+UNKNOWN_OUTPUT_DIR = \
+    'Do not know where to write user hierarchical block. Please set ' \
+    'the environment variable HIER_BLOCK_USER_DIR to the intended ' \
+    'output directory.'
 
 class HierBlockGenerator(TopBlockGenerator):
     """Extends the top block generator to also generate a block YML file"""
@@ -22,14 +29,25 @@ class HierBlockGenerator(TopBlockGenerator):
         TopBlockGenerator.__init__(self, flow_graph, file_path)
         platform = flow_graph.parent
 
-        hier_block_lib_dir = platform.config.hier_block_lib_dir
-        if not os.path.exists(hier_block_lib_dir):
-            os.mkdir(hier_block_lib_dir)
+        subckt_grc_dir = files('gseim')/'data'/'subckt_grc'
+
+        if subckt_grc_dir in Path(file_path).parents:
+            # This hierarchical block is part of the application library. We
+            # should generate into the library directory.
+            hier_block_dir = platform.config.hier_block_lib_dir
+        else:
+            # This hierarchical block was created by a user and is not a part
+            # of the application library. It should be written to the directory
+            # specified by the environment variable HIER_BLOCK_USER_DIR. If
+            # that variable is not set, we do not know where to write the
+            # output.
+            hier_block_dir = platform.config.hier_block_user_dir
+            assert hier_block_dir is not None, UNKNOWN_OUTPUT_DIR
 
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        print('HierBlockGenerator: hier_block_lib_dir:', hier_block_lib_dir)
-        self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id'))
-        self.file_path_yml = self.file_path + '.hblock.yml'
+        print('HierBlockGenerator: hier_block_lib_dir:', hier_block_dir)
+        yml_filename = self._flow_graph.get_option('id') + '.hblock.yml'
+        self.file_path_yml = Path(hier_block_dir, yml_filename)
         print('HierBlockGenerator: self.file_path_yml:', self.file_path_yml)
 
     def write(self, flow_graph):

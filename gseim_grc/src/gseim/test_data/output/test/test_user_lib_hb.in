@@ -1,0 +1,29 @@
+title: test_user_lib_hb.grc
+begin_circuit
+   eelement name=c$0 type=c p=n0_3 n=n0_0 c=1e-6 k_scale=1.0
+   eelement name=s0#r$0 type=r p=0 n=n0_0 k_scale=1.0 r=10k
+   eelement name=vsrc_dc$0 type=vsrc_dc p=n0_3 n=0 k_scale=1.0 vdc=10
+   ref_node=0
+   outvar: i_c=i_of_c$0
+   outvar: rc_out=nodev_of_n0_0
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=trz
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: e_nr_check_delx_all=no
+   method: ex_nr_check_delx_all=no
+   method: t_end=1
+   method: t_start=0
+   method: tstep0_e=1e-3
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=rc_out.dat limit_lines=1000000
+     control: out_tstart=0 out_tend=1
+     variables: i_c rc_out
+   end_output
+end_solve
+end_cf

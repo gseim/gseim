@@ -16,18 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import yaml
-import sys
-import os
+import importlib
 from itertools import islice
+import os
 import subprocess
+import sys
 
 from importlib_resources import files
+import yaml
 
 import gseim.gutils_gseim as gu
 
 flag_read_yml_once = True
 d_yml = {}
+
+def lookup_subckt(subckt_name):
+    dir_sub_user = os.environ.get('HIER_BLOCK_USER_DIR', None)
+    yml_base_fname = '{}.hblock.yml'.format(subckt_name)
+
+    if dir_sub_user:
+        yml_user_fname = os.path.join(dir_sub_user, yml_base_fname)
+        if os.path.exists(yml_user_fname):
+            return yml_user_fname
+
+    dir_sub_lib  = files('gseim').joinpath('data', 'subckt')
+    return os.path.join(dir_sub_lib, yml_base_fname)
 
 def treat_text_blocks(d):
     lnew = []
@@ -507,7 +520,7 @@ class cct:
         c.parent = self
         self.flag_block = False
 
-def parse_1(parent, child_name, dir_block, dir_sub, n_sub):
+def parse_1(parent, child_name, dir_block, n_sub):
 
     name1 = child_name.split('$')[0]
     filename = os.path.join(dir_block, name1 + '.block.yml')
@@ -517,7 +530,7 @@ def parse_1(parent, child_name, dir_block, dir_sub, n_sub):
         parent.add_child(cct0)
         return
     else:
-        filename = os.path.join(dir_sub, name1 + '.hblock.yml')
+        filename = lookup_subckt(name1)
         if (os.path.exists(filename)):
             cct0 = cct(child_name, False)
             parent.add_child(cct0)
@@ -540,7 +553,7 @@ def parse_1(parent, child_name, dir_block, dir_sub, n_sub):
                     data = yaml.safe_load(f)
 
             grc_filename = os.path.normpath(
-                os.path.join(dir_sub, '..', data['grc_source']),
+                os.path.join(os.path.dirname(filename), '..', data['grc_source']),
             )
             cct0.grc_file_name = grc_filename
 
@@ -563,13 +576,13 @@ def parse_1(parent, child_name, dir_block, dir_sub, n_sub):
             l_connections = data['connections']
             l_unique = get_unique_names_1(l_connections)
             for i in l_unique:
-                parse_1(cct0, i, dir_block, dir_sub, n_sub)
+                parse_1(cct0, i, dir_block, n_sub)
         else:
             print('parse_1:', child_name, 'is not block or subckt.', flush=True)
             print('   Halting...', flush=True)
             sys.exit()
 
-def make_lib(input_entity, l_lib, dir_block, dir_sub):
+def make_lib(input_entity, l_lib, dir_block):
 #
 #   We will assume that block names and subckt names are different.
 
@@ -581,7 +594,7 @@ def make_lib(input_entity, l_lib, dir_block, dir_sub):
             map0 = l_names.index(name1)
             input_entity.lib_map = map0
         else:
-            filename = os.path.join(dir_sub, name1 + '.hblock.yml')
+            filename = lookup_subckt(name1)
             lib0 = lib_entity(name1, filename)
             map0 = len(l_lib)
             l_lib.append(lib0)
@@ -592,7 +605,7 @@ def make_lib(input_entity, l_lib, dir_block, dir_sub):
             input_entity.node_map.append(None)
             input_entity.node_type.append(None)
         for i in input_entity.children:
-            make_lib(i, l_lib, dir_block, dir_sub)
+            make_lib(i, l_lib, dir_block)
     else:
         if name1 in l_names:
             map0 = l_names.index(name1)
@@ -680,7 +693,7 @@ def merge_wires(wires):
     return flag_done, wires_new
 
 def assign_node_names(input_entity, l_lib, cct_file,
-    dir_block, dir_sub, d_names, node_counter):
+    dir_block, d_names, node_counter):
     if input_entity.flag_top:
         l_connections = input_entity.l_connections
     else:
@@ -843,9 +856,9 @@ def assign_node_names(input_entity, l_lib, cct_file,
     for i in input_entity.children:
         if i.flag_subckt:
             assign_node_names(i, l_lib, cct_file,
-               dir_block, dir_sub, d_names, node_counter)
+               dir_block, d_names, node_counter)
 
-def assign_gseim_prm(input_entity, l_lib, cct_file, dir_block, dir_sub):
+def assign_gseim_prm(input_entity, l_lib, cct_file, dir_block):
     if input_entity.flag_top:
 #       main cct: take parms from grc file of the cct:
         filename = cct_file
@@ -887,7 +900,7 @@ def assign_gseim_prm(input_entity, l_lib, cct_file, dir_block, dir_sub):
 
     if input_entity.flag_subckt or input_entity.flag_top:
         for i in input_entity.children:
-            assign_gseim_prm(i, l_lib, cct_file, dir_block, dir_sub)
+            assign_gseim_prm(i, l_lib, cct_file, dir_block)
 
 def get_pad_in_name(subckt, input_pad_name, l_lib):
 
@@ -1117,22 +1130,27 @@ def make_gseim_line(input_entity, l_lib, l_lines):
 
             l_lines.append(l_line)
 
-def make_prm_files(input_entity, l_lib, dir_block, dir_sub, l_files):
+def make_prm_files(input_entity, l_lib, dir_block, l_files):
     if input_entity.flag_subckt:
         name1 = input_entity.name.split('$')[0]
-        filename = os.path.join(dir_sub, name1 + '_parm.py')
-        if os.path.exists(filename):
-            input_entity.flag_prm_file = True
-            input_entity.prm_file_name = filename
-            l_files.append(filename)
+        hblock_fname = lookup_subckt(name1)
+        if os.path.exists(hblock_fname):
+            parm_fname = os.path.join(os.path.dirname(hblock_fname), name1 + '_parm.py')
+            if os.path.exists(parm_fname):
+                input_entity.flag_prm_file = True
+                input_entity.prm_file_name = parm_fname
+                l_files.append(parm_fname)
 
-        for i in input_entity.children:
-            make_prm_files(i, l_lib, dir_block, dir_sub, l_files)
+            for i in input_entity.children:
+                make_prm_files(i, l_lib, dir_block, l_files)
     else:
         return
 
-def compute_prm_0(f, d_prm):
+def compute_prm_0(prm_filename, f, d_prm):
+    importlib.invalidate_caches()
     import compute_prm as comp
+    importlib.reload(comp)
+
     method_to_call = getattr(comp, f)
     method_to_call(d_prm)
 
@@ -1145,7 +1163,7 @@ def compute_prm_1(input_entity, d_prm):
         f = name1.split('/')[-1] + '_parm'
 
 #   need to remove path from name1, keeping only the last part:
-    compute_prm_0(f, d_prm)
+    compute_prm_0(input_entity.prm_file_name, f, d_prm)
 
     for prm in d_prm.values():
         if not isinstance(prm, str):
@@ -1307,7 +1325,6 @@ def resolve_outvar(ov_main, ov_temp, input_entity, d_ov, l_lib,
 # main program:
 def main(gseim_file, cct_file):
     dir_block = files('gseim').joinpath('data', 'blocks')
-    dir_sub   = files('gseim').joinpath('data', 'subckt')
     dir_xbe   = files('gseim').joinpath('data', 'xbe')
     dir_ebe   = files('gseim').joinpath('data', 'ebe')
     dir_bbe   = files('gseim').joinpath('data', 'bbe')
@@ -1359,14 +1376,14 @@ def main(gseim_file, cct_file):
     n_sub = [0, 0]
 
     for i in l_top_elements:
-        parse_1(cct1, i, dir_block, dir_sub, n_sub)
+        parse_1(cct1, i, dir_block, n_sub)
 
 # prepare list of library entities (which includes basic
 # elements and subcircuits)
 
     l_lib = []
     for i in cct1.children:
-        make_lib(i, l_lib, dir_block, dir_sub)
+        make_lib(i, l_lib, dir_block)
 
 # prepare dict (to be used in circuit node names):
     d_names = {}
@@ -1376,7 +1393,7 @@ def main(gseim_file, cct_file):
 
     node_counter = 0
     assign_node_names(cct1, l_lib, cct_file,
-        dir_block, dir_sub, d_names, node_counter)
+        dir_block, d_names, node_counter)
 
 # extract input/output nodes names from GSEIM templates.
 # Assume the template name to be xxx.xbe/xxx.ebe where
@@ -1460,19 +1477,19 @@ def main(gseim_file, cct_file):
         l_prm_files.append(filename)
 
     for i in cct1.children:
-        make_prm_files(i, l_lib, dir_block, dir_sub, l_prm_files)
+        make_prm_files(i, l_lib, dir_block, l_prm_files)
 
 # concatenate the prm computation files:
 # for subckt s_1, expect file s_1_parm.py
 
     filename = os.path.join(dir_cct, 'compute_prm.py')
-    sys.path.insert(0, os.path.dirname(filename))
+    sys.path.insert(0, dir_cct)
     with open(os.path.expanduser(filename), 'w') as f_out:
         for infile in l_prm_files:
             with open(os.path.expanduser(infile), 'r') as f_in:
                 f_out.write(f_in.read())
 
-    assign_gseim_prm(cct1, l_lib, cct_file, dir_block, dir_sub)
+    assign_gseim_prm(cct1, l_lib, cct_file, dir_block)
 
 # evaluate main cct prm expression, if file exisits:
 
@@ -1489,6 +1506,8 @@ def main(gseim_file, cct_file):
 
     for i in cct1.children:
         compute_prm_2(i)
+
+    sys.path.pop(0)
 
     assign_node_map(cct1, l_lib)
 

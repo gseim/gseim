@@ -1,0 +1,130 @@
+title: dual_active_bridge_converter.grc
+begin_circuit
+   xelement name=const$0 type=const y=n0_0 k=380
+   xelement name=diff$0 type=diff x1=n0_0 x2=n0_6 y=n0_1
+   xelement name=sampler_1$0 type=sampler_1 x=n0_1 y=n0_10 T=2.0000e-04
++     dt=2.0000e-07 index=1
+   eelement name=s0#switch_1$0 type=switch_1 x=n0_2 p=n0_20 n=0 x_high=1
+   eelement name=s0#diode_r$0 type=diode_r p=0 n=n0_20 r_on=1m
+   eelement name=s1#switch_1$0 type=switch_1 x=n0_3 p=n0_14 n=0 x_high=1
+   eelement name=s1#diode_r$0 type=diode_r p=0 n=n0_14 r_on=1m
+   eelement name=s2#switch_1$0 type=switch_1 x=n0_2 p=n0_15 n=n0_14 x_high=1
+   eelement name=s2#diode_r$0 type=diode_r p=n0_14 n=n0_15 r_on=1m
+   eelement name=s3#switch_1$0 type=switch_1 x=n0_3 p=n0_15 n=n0_20 x_high=1
+   eelement name=s3#diode_r$0 type=diode_r p=n0_20 n=n0_15 r_on=1m
+   eelement name=s4#switch_1$0 type=switch_1 x=n0_4 p=n0_12 n=n0_17 x_high=1
+   eelement name=s4#diode_r$0 type=diode_r p=n0_17 n=n0_12 r_on=1m
+   eelement name=s5#switch_1$0 type=switch_1 x=n0_5 p=n0_12 n=n0_16 x_high=1
+   eelement name=s5#diode_r$0 type=diode_r p=n0_16 n=n0_12 r_on=1m
+   eelement name=s6#switch_1$0 type=switch_1 x=n0_5 p=n0_17 n=0 x_high=1
+   eelement name=s6#diode_r$0 type=diode_r p=0 n=n0_17 r_on=1m
+   eelement name=s7#switch_1$0 type=switch_1 x=n0_4 p=n0_16 n=0 x_high=1
+   eelement name=s7#diode_r$0 type=diode_r p=0 n=n0_16 r_on=1m
+   xelement name=not$0 type=not x=n0_2 y=n0_3 y_high=1.0
+   xelement name=not$1 type=not x=n0_5 y=n0_4 y_high=1.0
+   xelement name=pulse10$0 type=pulse10 y=n0_7 n1=1 t1=0.4 t_fall=0.1m
++     t_rise=0.1m y_high=1
+   eelement name=switch_1$0 type=switch_1 x=n0_7 p=n0_8 n=n0_19 x_high=1
+   eelement name=r$1 type=r p=n0_8 n=0 k_scale=1.0 r=1.4440e+02
+   xelement name=s8#linear$0 type=linear x=n9_11 y=n9_0 a1=1.0 a2=1.0
++     b1=-3.3742e-03 b2=1.0000e+00 c2=1.0
+   xelement name=s8#sum_2$3 type=sum_2 x1=n9_0 x2=n9_3 y=n9_8 k1=1.0 k2=1.0
+   xelement name=s8#linear$1 type=linear x=n9_9 y=n9_1 a1=1.0 a2=1.0
++     b1=1.6983e-03 b2=1.0000e+00 c2=1.0
+   xelement name=s8#sum_2$1 type=sum_2 x1=n9_1 x2=n9_8 y=n0_9 k1=1.0 k2=1.0
+   xelement name=s8#linear$2 type=linear x=n9_11 y=n9_2 a1=-1 a2=1.0
++     b1=-2.0000e+00 b2=1.0000e+00 c2=1.0
+   xelement name=s8#sum_2$2 type=sum_2 x1=n9_4 x2=n9_2 y=n9_7 k1=1.0 k2=1.0
+   xelement name=s8#linear$3 type=linear x=n9_10 y=n9_3 a1=1.0 a2=1.0
++     b1=1.6759e-03 b2=1.0000e+00 c2=1.0
+   xelement name=s8#linear$4 type=linear x=n9_10 y=n9_4 a1=-1 a2=1.0
++     b1=1.0000e+00 b2=1.0000e+00 c2=1.0
+   xelement name=s8#sum_2$0 type=sum_2 x1=n0_10 x2=n9_7 y=n9_9 k1=1.0 k2=1.0
+   xelement name=s8#delay_discrete_1$0 type=delay_discrete_1 x=n9_9 y=n9_11
++     sampler_index=1
+   xelement name=s8#delay_discrete_1$1 type=delay_discrete_1 x=n9_11 y=n9_10
++     sampler_index=1
+   xelement name=s9#cmpr_1_1$0 type=cmpr_1_1 x=n10_5 y=n10_0 delt_min=0.01u
++     delt_nrml=1.5u x0=0.0
+   xelement name=s9#monostable_1$2 type=monostable_1 x=n10_0 y=n10_11
++     T=8.0000e-08
+   xelement name=s9#cmpr_1_1$1 type=cmpr_1_1 x=n10_4 y=n10_1 delt_min=0.01u
++     delt_nrml=1.5u x0=0.0
+   xelement name=s9#monostable_1$3 type=monostable_1 x=n10_1 y=n10_12
++     T=8.0000e-08
+   xelement name=s9#cmpr_1_1$2 type=cmpr_1_1 x=n10_7 y=n10_2 delt_min=0.01u
++     delt_nrml=1.5u x0=0.0
+   xelement name=s9#monostable_1$0 type=monostable_1 x=n10_2 y=n10_9
++     T=8.0000e-08
+   xelement name=s9#cmpr_1_1$3 type=cmpr_1_1 x=n10_6 y=n10_3 delt_min=0.01u
++     delt_nrml=1.5u x0=0.0
+   xelement name=s9#monostable_1$1 type=monostable_1 x=n10_3 y=n10_10
++     T=8.0000e-08
+   xelement name=s9#diff$1 type=diff x1=n10_18 x2=n10_16 y=n10_4
+   xelement name=s9#diff$2 type=diff x1=n10_17 x2=n10_16 y=n10_5
+   xelement name=s9#diff$3 type=diff x1=n10_18 x2=n10_19 y=n10_6
+   xelement name=s9#diff$4 type=diff x1=n10_17 x2=n10_19 y=n10_7
+   xelement name=s9#limiter$0 type=limiter x=n0_9 y=n10_8
+   xelement name=s9#multscl$0 type=multscl x=n10_8 y=n10_21 k=0.25
+   xelement name=s9#srff_nor$0 type=srff_nor s=n10_9 r=n10_10 q=n0_2 qbar=n0
++     x_high=1.0
+   xelement name=s9#srff_nor$1 type=srff_nor s=n10_11 r=n10_12 q=n0_5 qbar=n1
++     x_high=1.0
+   xelement name=s9#sum_2$0 type=sum_2 x1=n10_21 x2=n10_20 y=n10_16 k1=1.0
++     k2=1.0
+   xelement name=s9#triangle_4$0 type=triangle_4 y=n10_17 D=0.999 L1=0 T=0
++     flag_frequency=1 flag_period=0 frequency=250e3
+   xelement name=s9#triangle_4$1 type=triangle_4 y=n10_18 D=0.999 L1=0 T=0
++     flag_frequency=1 flag_period=0 frequency=250e3 t0=2.0000e-06
+   xelement name=s9#diff$0 type=diff x1=n10_20 x2=n10_21 y=n10_19
+   xelement name=s9#const$0 type=const y=n10_20 k=0.5
+   eelement name=voltmeter_fb$0 type=voltmeter_fb v_fb=n0_6 p=n0_12 n=0
++     k_scale=1.0
+   eelement name=xfmr_level0_1ph$0 type=xfmr_level0_1ph p_p=n0_11 s_p=n0_16
++     p_n=n0_20 s_n=n0_17 p_turns=4 s_turns=16
+   eelement name=l$0 type=l p=n0_14 n=n0_11 k_scale=1.0 l=2.052e-6
+   eelement name=ammeter$0 type=ammeter p=n0_12 n=n0_19
+   eelement name=c$0 type=c p=n0_12 n=0 c=30e-6 k_scale=1.0
+   eelement name=r$3 type=r p=n0_19 n=0 k_scale=1.0 r=1.4440e+02
+   eelement name=vsrc_dc$0 type=vsrc_dc p=n0_15 n=0 k_scale=1.0 vdc=95
+   ref_node=0
+   outvar: Io=i_of_ammeter$0
+   outvar: Vo=v_fb_of_voltmeter_fb$0
+   outvar: g1=q_of_s9#srff_nor$0
+   outvar: g2=q_of_s9#srff_nor$1
+   outvar: m=y_of_s8#sum_2$1
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=trz_auto
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: delt_min_ex=0.01u
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: ex_nr_check_delx_all=yes
+   method: itmax_stepred=3
+   method: itmax_trns=20000000
+   method: t_end=0.8
+   method: t_start=0
+   method: tstep0_ex=1.5u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=10000000
+     control: fixed_interval=50u
+     variables: Io Vo m
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     control: out_tstart=0.39 out_tend=0.3901
+     variables: g1 g2
+   end_output
+   begin_output
+     filename=out3.dat limit_lines=1000000
+     control: out_tstart=0.79 out_tend=0.7901
+     variables: g1 g2
+   end_output
+end_solve
+end_cf

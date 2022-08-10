@@ -18,7 +18,6 @@ def _test_parser(folder, fname):
         str(files('gseim').joinpath('test_data', 'output', folder, fname + '.in')),
     )
 
-
 def test_parse_ac_controller_3():
     _test_parser('ac_controller', 'ac_controller_3')
 
@@ -28,6 +27,9 @@ def test_cyclo_converter_1ph_1():
 def test_parse_boost():
     _test_parser('dc_to_dc', 'boost')
 
+def test_parse_dual_active_bridge():
+    _test_parser('dc_to_dc', 'dual_active_bridge_converter')
+
 def test_parse_resonant_full_bridge():
     _test_parser('resonant_converter', 'resonant_full_bridge_1')
 
@@ -36,6 +38,12 @@ def test_parse_rectifier_4():
 
 def test_parse_dc_commutation_3():
     _test_parser('dc_commutation', 'dc_commutation_3')
+
+def test_parse_user_lib(monkeypatch):
+    monkeypatch.setenv('HIER_BLOCK_USER_DIR',
+        str(files('gseim')/'test_data'/'input'/'user_lib'))
+
+    _test_parser('test', 'test_user_lib_hb')
 
 if __name__ == '__main__':
     sys.exit(pytest.main(sys.argv))

@@ -94,6 +94,29 @@ page of the [GSEIM manual](https://gseim.github.io).
 
 The wheel will be located in `bazel-bin/gseim-*.whl`.
 
+## Usage notes
+
+### Using custom hierarchical blocks
+
+In order to generate hierarchical blocks, it's necessary to set the
+environment variable `HIER_BLOCK_USER_DIR` to a folder where the generated
+outputs are saved.
+
+This can be done by adding the following line to your `.bashrc`/`.zshrc`/etc.
+setup file:
+```shell
+export HIER_BLOCK_USER_DIR=/home/$USER/user_folder/
+```
+or by running the GUI with the environment variable specified, such as:
+```shell
+HIER_BLOCK_USER_DIR=/home/$USER/user_folder/ gseim-gui
+```
+when running an installed package, or
+```shell
+HIER_BLOCK_USER_DIR=/home/$USER/user_folder/ bazel run ...
+```
+when running from source.
+
 ## Documentation
 
 The GSEIM documentation can be accessed

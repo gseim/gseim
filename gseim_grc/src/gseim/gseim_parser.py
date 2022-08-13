@@ -1808,7 +1808,8 @@ def main(gseim_file, cct_file):
     if flag_filter_1:
         r = subprocess.run(
             [
-                files('gseim').joinpath('parse_filters'),
+                'python3',
+                files('gseim')/'parse_filters.py',
                 gseim_file,
             ],
             capture_output=True,

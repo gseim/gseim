@@ -39,6 +39,12 @@ def test_parse_rectifier_4():
 def test_parse_dc_commutation_3():
     _test_parser('dc_commutation', 'dc_commutation_3')
 
+def test_parse_test_filter_1():
+    _test_parser('test', 'test_filter_1')
+
+def test_parse_test_filter_2():
+    _test_parser('test', 'test_filter_2')
+
 def test_parse_user_lib(monkeypatch):
     monkeypatch.setenv('HIER_BLOCK_USER_DIR',
         str(files('gseim')/'test_data'/'input'/'user_lib'))

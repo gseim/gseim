@@ -1,0 +1,32 @@
+title: test_filter_2.grc
+begin_circuit
+   xelement name=src_ac$0 type=src_ac y=n0_0 f_hz=100
+   xelement name=xfer_fn$0 type=xfer_fn x=n0_0 y=n0_1 a0=1 a1=0.0 a2=0.0 a3=0.0
++     a4=0.0 a5=0.0 b0=10000 b1=20 b2=1 b3=0.0 b4=0.0 b5=0.0 f0=0.0
+   xelement name=xfer_fn$1 type=xfer_fn x=n0_1 y=n0 a0=0.0 a1=100000 a2=0.0
++     a3=0.0 a4=0.0 a5=0.0 b0=1 b1=1 b2=0.0 b3=0.0 b4=0.0 b5=0.0 f0=0.0
+   outvar: x=x_of_xfer_fn$0
+   outvar: x1=y_of_xfer_fn$0
+   outvar: y=y_of_xfer_fn$1
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=modified_euler
+   method: e_nr_check_delx_all=no
+   method: e_nr_spice_abstol=1.0e-12
+   method: e_nr_spice_vntol=1.0e-6
+   method: ex_nr_check_delx_all=no
+   method: t_end=1000m
+   method: t_start=0
+   method: tstep0_x=0.05m
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: x x1 y
+   end_output
+end_solve
+end_cf

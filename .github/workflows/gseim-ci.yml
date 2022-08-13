@@ -22,10 +22,10 @@ jobs:
         run: |
           mkdir ~/.cache/gseim/
           chmod 777 ~/.cache/gseim/
-          bazel test //... --cxxopt=-std=c++17 --linkopt=-lstdc++fs --test_output=errors
+          bazel test //...
       - name: Build Linux wheel
         run: |
-          bazel build //:gseim_wheel --cxxopt=-std=c++17 --linkopt=-lstdc++fs
+          bazel build //:gseim_wheel
           # This is required due to https://github.com/actions/upload-artifact/issues/92.
           cp bazel-bin/gseim-*.whl /home/runner/work/gseim/gseim
       - name: Try installing wheel

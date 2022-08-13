@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 #include <queue>
 #include <string>
-#include <experimental/filesystem>
+#include <filesystem>
 
 #include "global.h"
 #include "matrix_2.h"
@@ -40,7 +40,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define int_T  1
 
 using namespace std;
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 void replace_first(
    std::string& text,

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstring>
 #include <fstream>
 #include <math.h>
+#include <filesystem>
 
 #include "global.h"
 #include "cctfile.h"
@@ -33,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "solveparm.h"
 
 using namespace std; 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 class SolveBlocks {
 

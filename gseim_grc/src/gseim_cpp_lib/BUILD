@@ -59,6 +59,7 @@ cc_library(
         "user_f.h",
         "get_yyy.h",
     ],
+    copts = ["-std=c++17"],
     visibility = ["//visibility:public"],
 )
 
@@ -71,6 +72,7 @@ cc_binary(
     data = [
         "//gseim:element_data",
     ],
+    copts = ["-std=c++17"],
     visibility = ["//visibility:public"],
 )
 
@@ -102,6 +104,6 @@ cc_binary(
         "ijmat.h",
     ],
     linkstatic = False,
-    copts = ["-fPIC"],
+    copts = ["-std=c++17", "-fPIC"],
     visibility = ["//visibility:public"],
 )

@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <fstream>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <filesystem>
 
 #include "global.h"
 #include "cctfile.h"

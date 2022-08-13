@@ -70,27 +70,18 @@ You're now ready to run GSEIM directly, or build a distributable wheel package.
 
 #### Running the GSEIM GUI
 
-- On Linux:
-  ```
-  bazel run //grc:gseim_gui --cxxopt=-std=c++17 --linkopt=-lstdc++fs
-  ```
-- On Mac:
-  ```
-  bazel run //grc:gseim_gui --cxxopt=-std=c++17
-  ```
+```
+bazel run //grc:gseim_gui
+```
+
 The GSEIM GUI should show up. Follow instructions in the **Getting started**
 page of the [GSEIM manual](https://gseim.github.io).
 
 #### Building distributable Python wheels
 
-- On Linux:
-  ```
-  bazel build //:gseim_wheel --cxxopt=-std=c++17 --linkopt=-lstdc++fs
-  ```
-- On Mac:
-  ```
-  bazel build //:gseim_wheel --cxxopt=-std=c++17
-  ```
+```
+bazel build //:gseim_wheel
+```
 
 The wheel will be located in `bazel-bin/gseim-*.whl`.
 

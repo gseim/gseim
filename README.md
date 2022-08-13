@@ -23,7 +23,7 @@ a Qt-python plotting GUI, and a few additional python programs.
 Pre-compiled images are available on GitHub. To install the latest image,
 download the Python wheel image from the latest GitHub CI run.
 
-1. [GitHub Actions for GSEIM project](https://github.com/gseim/gseim/actions?query=branch%3Amain)
+1. [GitHub Actions for GSEIM project](https://github.com/gseim/gseim/actions?query=branch%3Amaster)
 2. Click on latest passing (green) CI run
 3. Download `gseim-wheel` package at the bottom of the page, which will expand
    to a `.whl` file.

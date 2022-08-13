@@ -103,7 +103,8 @@ cc_binary(
         "matrix_2.h",
         "ijmat.h",
     ],
-    linkstatic = False,
+    # linkstatic = False,
+    linkshared = True,
     copts = ["-std=c++17", "-fPIC"],
     visibility = ["//visibility:public"],
 )

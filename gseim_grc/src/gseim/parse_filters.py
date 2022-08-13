@@ -47,7 +47,7 @@ def main():
 
     # load the library
     basedir = os.path.dirname(__file__)
-    lib_filename = files('gseim_cpp_lib').joinpath('libfilter.so')
+    lib_filename = files('gseim_cpp_lib')/'libfilter.so'
     lib = cdll.LoadLibrary(lib_filename)
       
     temp_file_1 = tempfile.TemporaryFile(mode='w+')

@@ -18,17 +18,18 @@ jobs:
         run: |
           sudo apt install libgirepository1.0-dev libcairo2-dev pkg-config gir1.2-gtk-3.0 qtbase5-dev libxkbcommon-x11-0
           pip3 install pyqt5
-      - name: Run Bazel test
+      - name: Run Bazel test and generate coverage report
         run: |
           mkdir ~/.cache/gseim/
           chmod 777 ~/.cache/gseim/
-          bazel test //...
+          bazel coverage //...
+          cp $(bazel info output_path)/_coverage/_coverage_report.dat /home/runner/work/gseim/gseim/coverage_report.dat
       - name: Build Linux wheel
         run: |
           bazel build //:gseim_wheel
           # This is required due to https://github.com/actions/upload-artifact/issues/92.
           cp bazel-bin/gseim-*.whl /home/runner/work/gseim/gseim
-      - name: Try installing wheel
+      - name: Try installing and running wheel
         run: |
           pip3 install gseim-*.whl
           `python3 -c "import gseim_cpp_lib; from importlib_resources import files; str(print(files('gseim_cpp_lib').joinpath('gseim_solver')))"` ./gseim_grc/src/gseim_cpp_lib/test_data/input/ac_controller_1.in ./gseim_grc/src/gseim/data
@@ -42,3 +43,8 @@ jobs:
         with:
           name: gseim-wheel
           path: gseim-*.whl
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage_report.dat

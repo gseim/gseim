@@ -33,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using namespace std;
 
-int main(int argc, char** argv) {
+int solve(int argc, char** argv) {
 
    fs::path element_dir;
 

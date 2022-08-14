@@ -11,6 +11,7 @@ filegroup(
 cc_library(
     name = "gseim_solver_lib",
     srcs = [
+        "gseim_solver.cpp",
         "cctfile.cpp",
         "global.cpp",
         "utils.cpp",
@@ -36,6 +37,7 @@ cc_library(
         "//gseim:subxbe_cpp",
     ],
     hdrs = [
+        "gseim_solver.h",
         "cctfile.h",
         "global.h",
         "utils.h",
@@ -65,7 +67,7 @@ cc_library(
 
 cc_binary(
     name = "gseim_solver",
-    srcs = ["gsmain.cpp"],
+    srcs = ["main.cpp"],
     deps = [
         ":gseim_solver_lib"
     ],
@@ -74,6 +76,20 @@ cc_binary(
     ],
     copts = ["-std=c++17"],
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "gseim_solver_test_cpp",
+    srcs = ["gseim_solver_test.cpp"],
+    deps = [
+        ":gseim_solver_lib",
+    ],
+    data = [
+        "//gseim:element_data",
+    ] + glob([
+        "test_data/**",
+    ]),
+    copts = ["-std=c++17"],
 )
 
 py_test(

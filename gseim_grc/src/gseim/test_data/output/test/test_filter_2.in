@@ -1,13 +1,15 @@
 title: test_filter_2.grc
 begin_circuit
    xelement name=src_ac$0 type=src_ac y=n0_0 f_hz=100
-   xelement name=xfer_fn$0 type=xfer_fn x=n0_0 y=n0_1 a0=1 a1=0.0 a2=0.0 a3=0.0
-+     a4=0.0 a5=0.0 b0=10000 b1=20 b2=1 b3=0.0 b4=0.0 b5=0.0 f0=0.0
-   xelement name=xfer_fn$1 type=xfer_fn x=n0_1 y=n0 a0=0.0 a1=100000 a2=0.0
-+     a3=0.0 a4=0.0 a5=0.0 b0=1 b1=1 b2=0.0 b3=0.0 b4=0.0 b5=0.0 f0=0.0
-   outvar: x=x_of_xfer_fn$0
-   outvar: x1=y_of_xfer_fn$0
-   outvar: y=y_of_xfer_fn$1
+   xelement type=pole_complex_order_1 a=0.0000000e+00 b=-5.0251900e-03
++     alpha=-1.0000000e+01 beta=9.9498700e+01 x=n0_0 y=n0_1 y_st=0.0000000e+00
+   xelement type=pole_real_order_1 a=-1.0000000e+05 alpha=-1.0000000e+00 x=n0_1
++     y=n0_1_f_1_1 y_st=0.0000000e+00
+   xelement type=multscl x=n0_1 y=n0_1_f_1_2 k=1.0000000e+05
+   xelement type=sum_2 x1=n0_1_f_1_1 x2=n0_1_f_1_2 y=n0
+   outvar: x=xvar_of_n0_0
+   outvar: x1=xvar_of_n0_1
+   outvar: y=xvar_of_n0
 end_circuit
 begin_solve
    solve_type=trns

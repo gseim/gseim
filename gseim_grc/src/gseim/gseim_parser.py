@@ -1806,18 +1806,15 @@ def main(gseim_file, cct_file):
                 break
     f1.close()
     if flag_filter_1:
-        r = subprocess.run(
-            [
-                'python3',
-                files('gseim')/'parse_filters.py',
-                gseim_file,
-            ],
-            capture_output=True,
-            text=True,
-        )
+        for i in range(2):
+            cmd = ['python3', files('gseim')/'parse_filters.py', gseim_file]
+            r = subprocess.run(cmd, capture_output=True, text=True)
 
-        if r.stderr: print('parse filter stderr:', r.stderr)
-        r.check_returncode()
+            if r.stderr: print('parse filter stderr:', r.stderr)
+            r.check_returncode()
+
+            with open(gseim_file, 'w') as fout:
+                fout.write(r.stdout)
 
     print('Program completed.', flush=True) 
 

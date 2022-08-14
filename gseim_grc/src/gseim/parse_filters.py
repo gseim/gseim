@@ -262,9 +262,9 @@ def main():
                     else:
                         temp_file_2.write(line)
 
-                temp_file_2.seek(0)
-                for line in temp_file_2:
-                    print(line, end='')
+    temp_file_2.seek(0)
+    for line in temp_file_2:
+        print(line, end='')
 
 if __name__ == '__main__':
     main()

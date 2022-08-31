@@ -6,6 +6,7 @@ from importlib_resources import files
 import pytest
 
 from gseim import gseim_parser
+from test_support.compare_files import diff
 
 def _test_parser(folder, fname):
     gseim_parser.main(
@@ -13,7 +14,7 @@ def _test_parser(folder, fname):
         str(files('gseim').joinpath('test_data', 'input', folder, fname + '.grc')),
     )
 
-    assert filecmp.cmp(
+    diff(
         str(files('gseim').joinpath('test_data', 'input', folder, fname + '.in')),
         str(files('gseim').joinpath('test_data', 'output', folder, fname + '.in')),
     )

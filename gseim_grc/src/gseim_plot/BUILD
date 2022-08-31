@@ -4,6 +4,7 @@ py_library(
     name = "gseim_plot_lib",
     srcs = ["main.py"],
     deps = [
+        "//gseim/cct_parser:parser",
         requirement("matplotlib"),
         requirement("numpy"),
     ],
@@ -28,4 +29,5 @@ py_test(
         requirement("pytest-qt"),
         requirement("pytest-xvfb"),
     ],
+    data = glob(["test_data/**"]),
 )

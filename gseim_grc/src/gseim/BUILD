@@ -7,10 +7,17 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+filegroup(
+    name = "test_data",
+    srcs = glob(["test_data/**"]),
+    visibility = ["//visibility:public"],
+)
+
 py_library(
     name = "gseim",
     srcs = glob(["*.py"]),
     deps = [
+        "//gseim/cct_parser:parser",
         requirement("numpy"),
         requirement("pyyaml"),
         requirement("importlib_resources"),
@@ -37,17 +44,23 @@ py_test(
     srcs = ["gseim_parser_test.py"],
     deps = [
         ":gseim",
+        "//test_support:lib",
         requirement("pytest"),
+        requirement("termcolor"),
     ],
-    data = glob([
-        "test_data/**",
-    ]),
+    data = [
+        ":test_data",
+    ],
 )
 
 py_binary(
     name = "parse_filters",
     srcs = ["parse_filters.py"],
-    deps = [":gseim"],
+    deps = [
+        ":gseim",
+        "//test_support:lib",
+        requirement("termcolor"),
+    ],
 )
 
 py_binary(

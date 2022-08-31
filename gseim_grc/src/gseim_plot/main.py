@@ -21,13 +21,16 @@ import sys
 import time
 import numpy as np
 import csv
+import os
+from os.path import expanduser
+
 import matplotlib
 import matplotlib.pylab as plt
 from matplotlib.ticker import MaxNLocator
 
 from matplotlib.backends.qt_compat import QT_API, QT_API_PYQT5, QtCore, QtWidgets
 
-from os.path import expanduser
+
 if QT_API == QT_API_PYQT5:
     print('Matplotlib selected PyQt5, so trying to import that version')
     from PyQt5.QtCore import *
@@ -56,8 +59,6 @@ else:
 
 import numpy as np
 import random
-import os.path
-from os import path
 from matplotlib.figure import Figure
 
 # This will use the PyQt6 backend because it depends on the previously-
@@ -70,6 +71,8 @@ except ImportError:
             ' to matplotlib.backends.backend_qt5agg')
     from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+
+from gseim.cct_parser.parser import parse_file as parse_netlist
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
     toolitems = [t for t in NavigationToolbar.toolitems if
@@ -4192,7 +4195,7 @@ class ApplicationWindow(QMainWindow):
                 self.fileName = None
             else:
                 self.fileName = os.path.join(self.DefaultPath, self.DataFiles[prev])
-                if path.exists(self.fileName):
+                if os.path.exists(self.fileName):
                     self.readFile();
                 else:
                     self.labelR.setEnabled(0)
@@ -4273,7 +4276,7 @@ class ApplicationWindow(QMainWindow):
 
         options = QFileDialog.Option.DontUseNativeDialog#"All Files (*);;Python Files (*.py)"*.xlsx *.csv
 
-        if path.exists(self.file_last_opened):
+        if os.path.exists(self.file_last_opened):
             with open(os.path.expanduser(self.file_last_opened),'r') as f:
                     netlistlines=f.readlines()
             self.DefaultPath=netlistlines[0]
@@ -4288,18 +4291,18 @@ class ApplicationWindow(QMainWindow):
     def openFile1(self):
         print('openFile1: self.ProjectfileName:', self.ProjectfileName)
 
-        if path.exists(self.ProjectfileName):
+        assert os.path.splitext(self.ProjectfileName)[1] == '.in'
+
+        if os.path.exists(self.ProjectfileName):
             self.labelFile.setText(self.ProjectfileName)
             self.labelFile.setEnabled(1)
             self.labelFilen.setText(self.ProjectfileName[self.ProjectfileName.rindex('/')+1:])
             self.labelFilen.setEnabled(1)
             self.labelR.setEnabled(0)
             self.label.setEnabled(0)
-            self.SolveBlkLine = []
             self.DefaultPath = os.path.dirname(self.ProjectfileName)
             with open(os.path.expanduser(self.file_last_opened), 'w+') as filetowrite:
                 filetowrite.write(self.DefaultPath)
-            self.netlist = os.path.splitext(self.ProjectfileName)[0] + '.in'
 
             self.avgrmsObject_1.setAvg(False)
             self.avgrmsObject_1.setRms(False)
@@ -4307,74 +4310,36 @@ class ApplicationWindow(QMainWindow):
             self.fourierObject_1.setFourier(False)
             self.multiPlotObject_1.setMultiPlot(False)
 
-            if path.exists(self.netlist):
-                NoOfOPFiles =self.OPFiles.count()
-                self.FileIndex = None
-                for ic in range(0,NoOfOPFiles):
-                    self.OPFiles.takeItem(0)
+            self.OPFiles.clear()
+            self.DataFiles = []
+            self.variables = []
 
-                with open(os.path.expanduser(self.netlist),'r') as f:
-                    netlistlines=f.readlines()
-                    self.SolveBlkLine = []
-                    self.SolveBlkEndLine = []
-                    self.OPBlkLine = []
-                    self.OPBlkEndLine = []
-                    self.DataFiles =[]
+            cct_file = parse_netlist(self.ProjectfileName)
+            for solve_block in cct_file.solve_blocks:
+                for output_block in solve_block.output_blocks:
+                    output_fname = output_block['assignments']['filename']
+                    self.DataFiles.append(output_fname)
 
-                    LineNumber = 0
-                    for line in netlistlines:
-                        if 'begin_solve' in line:
-                            self.SolveBlkLine.append(LineNumber)
-                        if 'end_solve' in line:
-                            self.SolveBlkEndLine.append(LineNumber)
-                        if 'begin_output' in line:
-                            flag_sol_file = False
-                            if '.dat' in netlistlines[LineNumber+1]:
-                                self.OPBlkLine.append(LineNumber)
-                                opFileLine = netlistlines[LineNumber+1]
-                                dfile = opFileLine[opFileLine.index('=')+1:opFileLine.index('.dat')+4]
-                                self.DataFiles.append(dfile)
+                    itm = QListWidgetItem()
+                    itm.setText(output_fname)
+                    itm.setFlags(itm.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
+                    itm.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-                                itm = QListWidgetItem()
-                                itm.setText(dfile)
-                                itm.setFlags(itm.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
-                                itm.setCheckState(QtCore.Qt.CheckState.Unchecked)
+                    self.OPFiles.addItem(itm)
 
-                                self.OPFiles.addItem(itm)
-                            else:
-                                flag_sol_file = True
-                        if 'end_output' in line:
-                            if not flag_sol_file:
-                                self.OPBlkEndLine.append(LineNumber)
-                        LineNumber+=1
+                    for var_group in output_block['variables']:
+                        self.variables.append(var_group)
 
-                    iblk =0;
-                    self.variables=[]
-                    self.varCnt = []
-                    if len(self.SolveBlkLine)==0:
-                        self.msg.setText("No Solve blocks for selected project!")
-                        self.showWarningDialog();
-                    else:
-                        for blk in self.OPBlkLine:
-                            for ln in range(blk, self.OPBlkEndLine[iblk]):
-                                lin = netlistlines[ln]
-                                if 'variables:' in lin:
-                                    var = lin[lin.index(':')+2:-1].split(' ')
-                                    self.variables.append(var)
-                                    self.varCnt.append(len(var))
-                            iblk+=1
+            if len(cct_file.solve_blocks) == 0:
+                self.msg.setText("No Solve blocks for selected project!")
+                self.showWarningDialog();
 
-                NoOfItem =self.senList.count()
-                for ic in range(0,NoOfItem):
-                    self.senList.takeItem(0)
-                    self.YCols.takeItem(ic,2);
-                    self.YCols.takeItem(ic,1);
-                    self.YCols.takeItem(ic,0);
-                self.YCols.setRowCount(0)
-            else:
-                self.displayMessage2("File Error:" + \
-                    "\nFile " + self.netlist + \
-                    "\ndoes not exist.")
+            self.senList.clear()
+            self.YCols.clear()
+        else:
+            self.displayMessage2("File Error:" + \
+                "\nFile " + self.ProjectfileName + \
+                "\ndoes not exist.")
 
     def reloadFile(self):
 
@@ -4418,7 +4383,7 @@ class ApplicationWindow(QMainWindow):
             self.YCols.takeItem(ic,1);
             self.YCols.takeItem(ic,0);
         self.YCols.setRowCount(0)
-        if self.fileName and path.exists(self.fileName):
+        if self.fileName and os.path.exists(self.fileName):
             self.scriptBtn.setEnabled(1)
             self.ext = self.fileName[self.fileName.rindex('.'):]
             self.plotObject_1 = [];

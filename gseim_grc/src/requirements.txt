@@ -11,3 +11,5 @@ pytest-qt
 PyYAML==6.0
 appdirs
 pytest-xvfb
+termcolor
+more-itertools

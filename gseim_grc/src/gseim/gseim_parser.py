@@ -26,6 +26,7 @@ from importlib_resources import files
 import yaml
 
 import gseim.gutils_gseim as gu
+from gseim.cct_parser import CctFile, SolveBlock
 
 flag_read_yml_once = True
 d_yml = {}
@@ -1045,68 +1046,69 @@ def make_netlist_name(input_entity, l_lib):
                 name1 = input_entity.name
             input_entity.netlist_name = name1
 
-def make_gseim_line(input_entity, l_lib, l_lines):
-#   l_lines is a list of lists, each entry corresponds to a line in
-#   the gseim circuit file, e.g.,
-#   [
-#    ['xelement', 'name=xxx', 'type=xxx', 'x1=xx', ..],
-#    ['eelement', 'name=xxx', 'type=xxx', 'x1=xx', ..],
-#    ['belement', 'name=xxx', 'type=xxx', 'x1=xx', ..],
-#    ...
-#   ]
+def build_cct_elements(input_entity, l_lib):
+    """Returns a list of circuit elements of type (kind, assignments_dict)
+
+    [
+        ('xelement', {'name': 'xxx', 'type': 'xxx', 'x1': 'xxx'}),
+        ('eelement', {'name': 'xxx', 'type': 'xxx', 'x1': 'xxx'}),
+        ('belement', {'name': 'xxx', 'type': 'xxx', 'x1': 'xxx'}),
+    ]
+    """
+
+    cct_elems = []
 
     if input_entity.flag_subckt:
         for i in input_entity.children:
-            make_gseim_line(i, l_lib, l_lines)
+            cct_elems.extend(build_cct_elements(i, l_lib))
     else:
+        assignments = {}
+
         if l_lib[input_entity.lib_map].has_b_nodes:
-            l_line = ['belement']
+            kind = 'belement'
         elif l_lib[input_entity.lib_map].has_e_nodes:
-            l_line = ['eelement']
+            kind = 'eelement'
         else:
-            l_line = ['xelement']
+            kind = 'xelement'
 
         if not input_entity.name.startswith('pad'):
-            name1 = input_entity.netlist_name
-
-            l_line.append('name=' + name1)
-            l_line.append('type=' + input_entity.name.split('$')[0])
+            assignments['name'] = input_entity.netlist_name
+            assignments['type'] = input_entity.name.split('$')[0]
 
             for i_node, node_name in enumerate(input_entity.l_in_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_in_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_out_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_out_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
 
             for i_node, node_name in enumerate(input_entity.l_e_left_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_e_left_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_e_right_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_e_right_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_e_top_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_e_top_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_e_bottom_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_e_bottom_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
 
             for i_node, node_name in enumerate(input_entity.l_b_left_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_b_left_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_b_right_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_b_right_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_b_top_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_b_top_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
             for i_node, node_name in enumerate(input_entity.l_b_bottom_names):
                 lib_node_name = l_lib[input_entity.lib_map].gseim_b_bottom_names[i_node]
-                l_line.append(lib_node_name + '=' + node_name)
+                assignments[lib_node_name] = node_name
 
             for k, v in input_entity.gseim_prm.items():
-
                 v1 = v.strip()
 
 #               We will reserve some keywords for GUI use only. Skip them here.
@@ -1126,9 +1128,11 @@ def make_gseim_line(input_entity, l_lib, l_lines):
                 ]
                 if k not in l_exclude:
                     if v1 != l_lib[input_entity.lib_map].gseim_prm[k]:
-                        l_line.append(k + '=' + v1)
+                        assignments[k] = v1
 
-            l_lines.append(l_line)
+            cct_elems.append((kind, assignments))
+
+    return cct_elems
 
 def make_prm_files(input_entity, l_lib, dir_block, l_files):
     if input_entity.flag_subckt:
@@ -1517,7 +1521,6 @@ def main(gseim_file, cct_file):
     for i in cct1.children:
         make_netlist_name(i, l_lib)
 
-    n_outvars = len(cct1.d_outvars)
     d_resolved_outvars = {}
     d_flag_resolved = {}
     for k in cct1.d_outvars.keys():
@@ -1532,43 +1535,28 @@ def main(gseim_file, cct_file):
             print('main: outvar', k, ' not resolved. Halting...', flush=True)
             sys.exit()
 
-# prepare list of lines to be written to gseim file:
-    l_lines = []
-
+    cct_ast = CctFile(os.path.basename(cct_file))
     for i in cct1.children:
-        make_gseim_line(i, l_lib, l_lines)
+        cct_ast.cct_elems.extend(build_cct_elements(i, l_lib))
 
-    l_new = []
-    for l_line in l_lines:
-        flag_dummy_b = False
-        if l_line[0] == 'belement':
-            l1 = l_line[2].split('=')
-            if l1[0] != 'type':
-                print('main: expected type in', l_line, 'at position 2')
-                print('   Halting...')
-                sys.exit()
-            bus_type = l1[-1]
-            if bus_type == 'dummy_b': flag_dummy_b = True
-        if not flag_dummy_b:
-            l_new.append(l_line)
-    l_lines = l_new.copy()
+    cct_ast.cct_elems = [
+        (orig_cct_kind, orig_cct_assignments)
+        for orig_cct_kind, orig_cct_assignments in cct_ast.cct_elems
+        if orig_cct_assignments['type'] != 'dummy_b'
+    ]
 
-    for i_pass in range(len(l_lines)):
+    for i_pass, _ in enumerate(cct_ast.cct_elems):
         flag_belement = False
-        for i_line, l_line in enumerate(l_lines):
+        for i_line, cct_elem in enumerate(cct_ast.cct_elems):
+            cct_elem_kind, cct_elem_assignments = cct_elem
             l_bus_line_no = []
 
-            if l_line[0] == 'belement':
+            if cct_elem_kind == 'belement':
                 flag_belement = True
-                l1 = l_line[2].split('=')
-                if l1[0] != 'type':
-                    print('main: expected type in', l_line, 'at position 2')
-                    print('   Halting...')
-                    sys.exit()
-                bus_type = l1[-1]
+
+                bus_type = cct_elem_assignments['type']
                 l_bus_line_no.append(i_line)
-                bus_node_index = [l_line.index(x) for x in l_line if x.startswith(bus_type + '=')][0]
-                bus_cct_node = l_line[bus_node_index].split('=')[-1]
+                bus_cct_node = cct_elem_assignments[bus_type]
 
                 if bus_type.startswith('bus_e_'):
                      bus_type_to_search = bus_type
@@ -1577,56 +1565,47 @@ def main(gseim_file, cct_file):
                 elif bus_type.startswith('bus_f_o_'):
                      bus_type_to_search = bus_type.replace('_o_', '_i_')
 
-                for i1_line in range(i_line+1, len(l_lines)):
-                    l1_line = l_lines[i1_line].copy()
-                    if l1_line[0] == 'belement':
-                        l1a = l1_line[2].split('=')
-                        if l1a[0] != 'type':
-                            print('main: expected type in', l1_line, 'at position 2')
-                            print('   Halting...')
-                            sys.exit()
-                        bus1_type = l1a[-1]
+                for i1_line in range(i_line+1, len(cct_ast.cct_elems)):
+                    l1_cct_elem_kind, l1_cct_elem_assignments = cct_ast.cct_elems[i1_line]
+                    if l1_cct_elem_kind == 'belement':
+                        bus1_type = l1_cct_elem_assignments['type']
                         if bus1_type == bus_type_to_search:
-                            bus1_node_index = [l1_line.index(x) for x in l1_line if x.startswith(bus1_type + '=')][0]
-                            bus1_cct_node = l1_line[bus1_node_index].split('=')[-1]
+                            bus1_cct_node = l1_cct_elem_assignments[bus1_type]
                             if bus1_cct_node == bus_cct_node:
                                 l_bus_line_no.append(i1_line)
 
                 d_nodemap = {}
                 s1 = 'b' + str(i_pass + 1) + '_'
                 for i1_line in l_bus_line_no:
-                    l1_line = l_lines[i1_line].copy()
-                    bus1_type = l1_line[2].split('=')[-1]
+                    l1_cct_elem_kind, l1_cct_elem_assignments = cct_ast.cct_elems[i1_line]
+                    bus1_type = l1_cct_elem_assignments['type']
 
                     if bus1_type.startswith('bus_e_'):
                         n_nodes = int(bus1_type.split('bus_e_')[-1])
                         for i_node in range(n_nodes):
-                            element_node = 'e' + str(i_node + 1)
-                            cct_node = [x for x in l1_line if x.startswith(element_node + '=')][0].split('=')[-1]
+                            cct_node = l1_cct_elem_assignments['e' + str(i_node + 1)]
                             if cct_node not in d_nodemap.keys():
                                 d_nodemap[cct_node] = s1 + str(i_node + 1)
                     elif bus1_type.startswith('bus_f_i_'):
                         n_nodes = int(bus1_type.split('bus_f_i_')[-1])
                         for i_node in range(n_nodes):
-                            element_node = 'out' + str(i_node + 1)
-                            cct_node = [x for x in l1_line if x.startswith(element_node + '=')][0].split('=')[-1]
+                            cct_node = l1_cct_elem_assignments['out' + str(i_node + 1)]
                             if cct_node not in d_nodemap.keys():
                                 d_nodemap[cct_node] = s1 + str(i_node + 1)
                     elif bus1_type.startswith('bus_f_o_'):
                         n_nodes = int(bus1_type.split('bus_f_o_')[-1])
                         for i_node in range(n_nodes):
-                            element_node = 'in' + str(i_node + 1)
-                            cct_node = [x for x in l1_line if x.startswith(element_node + '=')][0].split('=')[-1]
+                            cct_node = l1_cct_elem_assignments['in' + str(i_node + 1)]
                             if cct_node not in d_nodemap.keys():
                                 d_nodemap[cct_node] = s1 + str(i_node + 1)
 
-                for i1_line in range(len(l_lines)):
+                for i1_line, cct_elem in enumerate(cct_ast.cct_elems):
+                    l1_cct_elem_kind, l1_cct_elem_assignments = cct_elem
                     if i1_line not in l_bus_line_no:
-                        for i1, s1 in enumerate(l_lines[i1_line]):
-                            s2 = s1.split('=')[-1]
-                            if s2 in d_nodemap.keys():
-                                new_node = d_nodemap[s2]
-                                l_lines[i1_line][i1] = s1.split('=')[0] + '=' + new_node
+                        for k, v in l1_cct_elem_assignments.items():
+                            if v in d_nodemap:
+                                new_node = d_nodemap[v]
+                                l1_cct_elem_assignments[k] = new_node
 
                 for k, v in d_resolved_outvars.items():
                     if v.startswith('nodev_of_'):
@@ -1638,11 +1617,10 @@ def main(gseim_file, cct_file):
                         if old_node in d_nodemap.keys():
                             d_resolved_outvars[k] = 'xvar_of_' + d_nodemap[old_node]
 
-                l_new = []
-                for i1_line, l1_line in enumerate(l_lines):
-                    if i1_line not in l_bus_line_no:
-                        l_new.append(l1_line)
-                l_lines = l_new.copy()
+                cct_ast.cct_elems = [
+                    cct_elem for idx, cct_elem in enumerate(cct_ast.cct_elems)
+                    if idx not in l_bus_line_no
+                ]
 
                 break
 
@@ -1655,46 +1633,44 @@ def main(gseim_file, cct_file):
     l_solve_blocks = sorted(data['solve_blocks'], key=lambda x: int(x['index']))
     l_output_blocks = data['output_blocks']
 
-    nmax = 80
-    indent1 = '   '
-    indent2 = '+     '
-    indent3 = '     '
-    indent4 = '+       '
-    f1 = open(os.path.expanduser(gseim_file), 'w')
-    f1.write('title: ' + os.path.basename(cct_file) + '\n')
-    f1.write('begin_circuit\n')
-
 # take care of ground elements/ref_node statement
 
     n_grounds = 0
 
-    for i in range(len(l_lines)):
+    for _ in cct_ast.cct_elems:
         flag_ground = False
-        for k, line in enumerate(l_lines):
-            if line[0] == 'eelement':
-                if line[2] == 'type=ground':
+        for k, cct_elem in enumerate(cct_ast.cct_elems):
+            cct_elem_kind, cct_elem_assignments = cct_elem
+            if cct_elem_kind == 'eelement':
+                if cct_elem_assignments['type'] == 'ground':
                     flag_ground = True
                     k_ground = k
                     n_grounds += 1
-                    node_ground = line[3].split('=')[1]
+                    node_ground = cct_elem_assignments['g']
                     break
-        if not flag_ground: break
-        del l_lines[k_ground]
-        for k, line in enumerate(l_lines):
-            if line[0] == 'eelement':
-                l_lines[k] = [x.split('=')[0] + '=0' if x.endswith('=' + node_ground) else x for x in line]
+        if not flag_ground:
+            break
+        del cct_ast.cct_elems[k_ground]
+        for j, cct_elem1 in enumerate(cct_ast.cct_elems):
+            cct_elem_kind, cct_elem_assignments = cct_elem1
+            if cct_elem_kind == 'eelement':
+                for k, v in cct_elem_assignments.items():
+                    if v == node_ground:
+                        cct_elem_assignments[k] = '0'
 
-    for line in l_lines:
-        if not 'dummy_' in line[2]:
-            gu.format_string_4a(f1, nmax, indent1, indent2, line)
+    cct_ast.cct_elems = [
+        (cct_elem_kind, cct_elem_assignments)
+        for cct_elem_kind, cct_elem_assignments in cct_ast.cct_elems
+        if 'dummy_' not in cct_elem_assignments['name']
+    ]
 
     if n_grounds > 0:
-        gu.format_string_4a(f1, nmax, indent1, indent2, ['ref_node=0'])
+        cct_ast.cct_assignments['ref_node'] = '0'
 
     n_ebe = n_xbe = 0
-    for line in l_lines:
-        if 'eelement' in line: n_ebe += 1
-        if 'xelement' in line: n_xbe += 1
+    for cct_elem_kind, cct_elem_assignments in cct_ast.cct_elems:
+        if cct_elem_kind == 'eelement': n_ebe += 1
+        if cct_elem_kind == 'xelement': n_xbe += 1
 
     if n_ebe > 0:
         if n_grounds == 0:
@@ -1702,17 +1678,16 @@ def main(gseim_file, cct_file):
             sys.exit()
 
     for k,v in d_resolved_outvars.items():
-        f1.write(indent1 + 'outvar: ' + k + '=' + v + '\n')
-
-    f1.write('end_circuit\n')
+        cct_ast.cct_outvars.append((k, v))
 
     for slv in l_solve_blocks:
-        f1.write('begin_solve\n')
-        f1.write(indent1 + 'solve_type=' + slv['d_parms']['solve_type'] + '\n')
-        f1.write(indent1 + 'initial_sol=' + slv['d_parms']['initial_sol'] + '\n')
+        slv_block = SolveBlock()
+        cct_ast.solve_blocks.append(slv_block)
+
+        slv_block.assignments['solve_type'] = slv['d_parms']['solve_type']
+        slv_block.assignments['initial_sol'] = slv['d_parms']['initial_sol']
         if slv['d_parms']['initial_sol'] == 'read_from_file':
-            f1.write(indent1 + 'initial_sol_file='
-              + slv['d_parms']['initial_sol_file'] + '\n')
+            slv_block.assignments['initial_sol_file'] = slv['d_parms']['initial_sol_file']
 
         l_skip = [
           'solve_type',
@@ -1728,10 +1703,10 @@ def main(gseim_file, cct_file):
                 if v in l2:
                     if d_slvlib[k]['flag_force_write']:
                         v1 = cct1.gseim_prm[v] if v in cct1.gseim_prm.keys() else v
-                        f1.write(indent1 + 'method: ' + k + '=' + v1 + '\n')
+                        slv_block.methods.append((k, v1))
                 else:
                     v1 = cct1.gseim_prm[v] if v in cct1.gseim_prm.keys() else v
-                    f1.write(indent1 + 'method: ' + k + '=' + v1 + '\n')
+                    slv_block.methods.append((k, v1))
 
         for out_name in slv['output_blocks']:
             l_out_1 = list(filter(lambda x: x['name'] == out_name, l_output_blocks))
@@ -1740,71 +1715,49 @@ def main(gseim_file, cct_file):
                   'in circuit file. Halting...', flush=True)
                 sys.exit()
             out = l_out_1[0]
-            f1.write(indent1 + 'begin_output\n')
+            output_block = {'assignments': {}, 'control': [], 'variables': [[]]}
+            slv_block.output_blocks.append(output_block)
             if out['d_parms']['filename'] == 'none':
                 print('filename not specified in output block', out['name'], flush=True)
                 print('Halting...', flush=True)
                 sys.exit()
 
-            l_line = []
-            l_line.append('filename=' + out['d_parms']['filename'])
+            output_block['assignments']['filename'] = out['d_parms']['filename']
             if out['d_parms']['append'] == 'yes':
-                l_line.append('append=yes')
+                output_block['assignments']['append'] = 'yes'
 
-            l_line.append('limit_lines=' + out['d_parms']['limit_lines'])
+            output_block['assignments']['limit_lines'] = out['d_parms']['limit_lines']
 
-            gu.format_string_4a(f1, nmax, indent3, indent4, l_line)
-
-            l_control = ['control:']
+            control_block = {}
             if out['d_parms']['fixed_interval'] != 'none':
-                l_control.append('fixed_interval=' + out['d_parms']['fixed_interval'])
+                control_block['fixed_interval'] = out['d_parms']['fixed_interval']
             if out['d_parms']['t_start'] != 'none':
-                l_control.append('out_tstart=' + out['d_parms']['t_start'])
+                control_block['out_tstart'] = out['d_parms']['t_start']
             if out['d_parms']['t_end'] != 'none':
-                l_control.append('out_tend=' + out['d_parms']['t_end'])
+                control_block['out_tend'] = out['d_parms']['t_end']
 
-            if len(l_control) > 1:
-                gu.format_string_4a(f1, nmax, indent3, indent4, l_control)
+            if control_block:
+                output_block['control'].append([None, control_block])
 
             if not out['outvars']:
                 print('no outvars specified in output block',
                   out.name, 'Halting...', flush=True)
                 sys.exit()
-            l_line = []
-            l_line.append('variables:')
 
             l_ov1 = list(cct1.d_outvars.keys())
             for ov in sorted(out['outvars'], key=l_ov1.index):
-                l_line.append(ov)
-            gu.format_string_4a(f1, nmax, indent3, indent4, l_line)
+                output_block['variables'][0].append(ov)
 
-            f1.write(indent1 + 'end_output\n')
+    with open(gseim_file, 'w') as out_f:
+        out_f.write(cct_ast.dump())
 
-        if slv['d_parms']['output_solution_file'] != 'none':
-            f1.write(indent1 + 'begin_output\n')
-            f1.write(indent3 + 'filename=' + slv['d_parms']['output_solution_file'] + '\n')
-            f1.write(indent3 + 'variables: solution' + '\n')
-            f1.write(indent1 + 'end_output\n')
-
-        f1.write('end_solve\n')
-
-    f1.write('end_cf\n')
-    f1.close()
-
-# check if there are xfer_fn elements in the file
-
-    f1 = open(os.path.expanduser(gseim_file), 'r')
+    # check if there are xfer_fn elements in the circuit
     flag_filter_1 = False
-    while True:
-        line = f1.readline()
-        l = line.split()
-        if l[0] == 'end_cf':
+    for cct_elem_kind, cct_elem_assignments in cct_ast.cct_elems:
+        if cct_elem_kind == 'xelement' and cct_elem_assignments['type'] == 'xfer_fn':
+            flag_filter_1 = True
             break
-        elif l[0] == 'xelement':
-            if 'type=xfer_fn' in l:
-                flag_filter_1 = True
-                break
-    f1.close()
+
     if flag_filter_1:
         for i in range(2):
             cmd = ['python3', files('gseim')/'parse_filters.py', gseim_file]

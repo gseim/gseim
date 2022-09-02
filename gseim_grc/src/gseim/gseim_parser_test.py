@@ -25,6 +25,9 @@ def test_parse_ac_controller_3():
 def test_cyclo_converter_1ph_1():
     _test_parser('ac_to_ac', 'cyclo_converter_1ph_1')
 
+def test_parse_CMLI_7level_1():
+    _test_parser('dc_to_ac', 'CMLI_7level_1')
+
 def test_parse_boost():
     _test_parser('dc_to_dc', 'boost')
 

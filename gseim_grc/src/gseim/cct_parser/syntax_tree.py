@@ -22,7 +22,7 @@ from termcolor import cprint
 
 class SolveBlock(object):
     def __init__(self, assignments=None, methods=None, output_blocks=None):
-        self.assignments = assignments or []
+        self.assignments = assignments or {}
         self.methods = methods or []
         self.output_blocks = output_blocks or []
 
@@ -52,7 +52,7 @@ class CctFile(object):
     def __init__(self, project_fname=None):
         self.project_fname = project_fname or 'undefined'
         self.cct_elems = []
-        self.cct_assignments = []
+        self.cct_assignments = {}
         self.cct_outvars = []
         self.solve_blocks = []
 

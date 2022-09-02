@@ -1,0 +1,255 @@
+title: CMLI_7level_1.grc
+begin_circuit
+   eelement name=s1#switch_1$0 type=switch_1 x=b1_1 p=n1_7 n=n0_11 r_on=0.1m
++     x_high=1
+   eelement name=s1#diode_r$0 type=diode_r p=n0_11 n=n1_7 r_on=0.1m
+   eelement name=s2#switch_1$0 type=switch_1 x=b1_2 p=n0_11 n=n1_8 r_on=0.1m
++     x_high=1
+   eelement name=s2#diode_r$0 type=diode_r p=n1_8 n=n0_11 r_on=0.1m
+   eelement name=s3#switch_1$0 type=switch_1 x=b1_3 p=n1_7 n=n0_14 r_on=0.1m
++     x_high=1
+   eelement name=s3#diode_r$0 type=diode_r p=n0_14 n=n1_7 r_on=0.1m
+   eelement name=s4#switch_1$0 type=switch_1 x=b1_4 p=n0_14 n=n1_8 r_on=0.1m
++     x_high=1
+   eelement name=s4#diode_r$0 type=diode_r p=n1_8 n=n0_14 r_on=0.1m
+   eelement name=s0#vsrc_dc$0 type=vsrc_dc p=n1_7 n=n1_8 k_scale=1.0 vdc=200
+   eelement name=s6#switch_1$0 type=switch_1 x=b2_1 p=n6_7 n=n0_12 r_on=0.1m
++     x_high=1
+   eelement name=s6#diode_r$0 type=diode_r p=n0_12 n=n6_7 r_on=0.1m
+   eelement name=s7#switch_1$0 type=switch_1 x=b2_2 p=n0_12 n=n6_8 r_on=0.1m
++     x_high=1
+   eelement name=s7#diode_r$0 type=diode_r p=n6_8 n=n0_12 r_on=0.1m
+   eelement name=s8#switch_1$0 type=switch_1 x=b2_3 p=n6_7 n=n0_13 r_on=0.1m
++     x_high=1
+   eelement name=s8#diode_r$0 type=diode_r p=n0_13 n=n6_7 r_on=0.1m
+   eelement name=s9#switch_1$0 type=switch_1 x=b2_4 p=n0_13 n=n6_8 r_on=0.1m
++     x_high=1
+   eelement name=s9#diode_r$0 type=diode_r p=n6_8 n=n0_13 r_on=0.1m
+   eelement name=s5#vsrc_dc$0 type=vsrc_dc p=n6_7 n=n6_8 k_scale=1.0 vdc=200
+   eelement name=s11#switch_1$0 type=switch_1 x=b3_1 p=n11_7 n=n0_15 r_on=0.1m
++     x_high=1
+   eelement name=s11#diode_r$0 type=diode_r p=n0_15 n=n11_7 r_on=0.1m
+   eelement name=s12#switch_1$0 type=switch_1 x=b3_2 p=n0_15 n=n11_8 r_on=0.1m
++     x_high=1
+   eelement name=s12#diode_r$0 type=diode_r p=n11_8 n=n0_15 r_on=0.1m
+   eelement name=s13#switch_1$0 type=switch_1 x=b3_3 p=n11_7 n=0 r_on=0.1m
++     x_high=1
+   eelement name=s13#diode_r$0 type=diode_r p=0 n=n11_7 r_on=0.1m
+   eelement name=s14#switch_1$0 type=switch_1 x=b3_4 p=0 n=n11_8 r_on=0.1m
++     x_high=1
+   eelement name=s14#diode_r$0 type=diode_r p=n11_8 n=0 r_on=0.1m
+   eelement name=s10#vsrc_dc$0 type=vsrc_dc p=n11_7 n=n11_8 k_scale=1.0 vdc=200
+   eelement name=s16#switch_1$0 type=switch_1 x=b4_1 p=n16_7 n=n0_13 r_on=0.1m
++     x_high=1
+   eelement name=s16#diode_r$0 type=diode_r p=n0_13 n=n16_7 r_on=0.1m
+   eelement name=s17#switch_1$0 type=switch_1 x=b4_2 p=n0_13 n=n16_8 r_on=0.1m
++     x_high=1
+   eelement name=s17#diode_r$0 type=diode_r p=n16_8 n=n0_13 r_on=0.1m
+   eelement name=s18#switch_1$0 type=switch_1 x=b4_3 p=n16_7 n=0 r_on=0.1m
++     x_high=1
+   eelement name=s18#diode_r$0 type=diode_r p=0 n=n16_7 r_on=0.1m
+   eelement name=s19#switch_1$0 type=switch_1 x=b4_4 p=0 n=n16_8 r_on=0.1m
++     x_high=1
+   eelement name=s19#diode_r$0 type=diode_r p=n16_8 n=0 r_on=0.1m
+   eelement name=s15#vsrc_dc$0 type=vsrc_dc p=n16_7 n=n16_8 k_scale=1.0 vdc=200
+   eelement name=s21#switch_1$0 type=switch_1 x=b5_1 p=n21_7 n=n0_14 r_on=0.1m
++     x_high=1
+   eelement name=s21#diode_r$0 type=diode_r p=n0_14 n=n21_7 r_on=0.1m
+   eelement name=s22#switch_1$0 type=switch_1 x=b5_2 p=n0_14 n=n21_8 r_on=0.1m
++     x_high=1
+   eelement name=s22#diode_r$0 type=diode_r p=n21_8 n=n0_14 r_on=0.1m
+   eelement name=s23#switch_1$0 type=switch_1 x=b5_3 p=n21_7 n=0 r_on=0.1m
++     x_high=1
+   eelement name=s23#diode_r$0 type=diode_r p=0 n=n21_7 r_on=0.1m
+   eelement name=s24#switch_1$0 type=switch_1 x=b5_4 p=0 n=n21_8 r_on=0.1m
++     x_high=1
+   eelement name=s24#diode_r$0 type=diode_r p=n21_8 n=0 r_on=0.1m
+   eelement name=s20#vsrc_dc$0 type=vsrc_dc p=n21_7 n=n21_8 k_scale=1.0 vdc=200
+   eelement name=s26#switch_1$0 type=switch_1 x=b6_1 p=n26_7 n=n0_24 r_on=0.1m
++     x_high=1
+   eelement name=s26#diode_r$0 type=diode_r p=n0_24 n=n26_7 r_on=0.1m
+   eelement name=s27#switch_1$0 type=switch_1 x=b6_2 p=n0_24 n=n26_8 r_on=0.1m
++     x_high=1
+   eelement name=s27#diode_r$0 type=diode_r p=n26_8 n=n0_24 r_on=0.1m
+   eelement name=s28#switch_1$0 type=switch_1 x=b6_3 p=n26_7 n=n0_10 r_on=0.1m
++     x_high=1
+   eelement name=s28#diode_r$0 type=diode_r p=n0_10 n=n26_7 r_on=0.1m
+   eelement name=s29#switch_1$0 type=switch_1 x=b6_4 p=n0_10 n=n26_8 r_on=0.1m
++     x_high=1
+   eelement name=s29#diode_r$0 type=diode_r p=n26_8 n=n0_10 r_on=0.1m
+   eelement name=s25#vsrc_dc$0 type=vsrc_dc p=n26_7 n=n26_8 k_scale=1.0 vdc=200
+   eelement name=s31#switch_1$0 type=switch_1 x=b7_1 p=n31_7 n=n0_27 r_on=0.1m
++     x_high=1
+   eelement name=s31#diode_r$0 type=diode_r p=n0_27 n=n31_7 r_on=0.1m
+   eelement name=s32#switch_1$0 type=switch_1 x=b7_2 p=n0_27 n=n31_8 r_on=0.1m
++     x_high=1
+   eelement name=s32#diode_r$0 type=diode_r p=n31_8 n=n0_27 r_on=0.1m
+   eelement name=s33#switch_1$0 type=switch_1 x=b7_3 p=n31_7 n=n0_11 r_on=0.1m
++     x_high=1
+   eelement name=s33#diode_r$0 type=diode_r p=n0_11 n=n31_7 r_on=0.1m
+   eelement name=s34#switch_1$0 type=switch_1 x=b7_4 p=n0_11 n=n31_8 r_on=0.1m
++     x_high=1
+   eelement name=s34#diode_r$0 type=diode_r p=n31_8 n=n0_11 r_on=0.1m
+   eelement name=s30#vsrc_dc$0 type=vsrc_dc p=n31_7 n=n31_8 k_scale=1.0 vdc=200
+   eelement name=s36#switch_1$0 type=switch_1 x=b8_1 p=n36_7 n=n0_25 r_on=0.1m
++     x_high=1
+   eelement name=s36#diode_r$0 type=diode_r p=n0_25 n=n36_7 r_on=0.1m
+   eelement name=s37#switch_1$0 type=switch_1 x=b8_2 p=n0_25 n=n36_8 r_on=0.1m
++     x_high=1
+   eelement name=s37#diode_r$0 type=diode_r p=n36_8 n=n0_25 r_on=0.1m
+   eelement name=s38#switch_1$0 type=switch_1 x=b8_3 p=n36_7 n=n0_12 r_on=0.1m
++     x_high=1
+   eelement name=s38#diode_r$0 type=diode_r p=n0_12 n=n36_7 r_on=0.1m
+   eelement name=s39#switch_1$0 type=switch_1 x=b8_4 p=n0_12 n=n36_8 r_on=0.1m
++     x_high=1
+   eelement name=s39#diode_r$0 type=diode_r p=n36_8 n=n0_12 r_on=0.1m
+   eelement name=s35#vsrc_dc$0 type=vsrc_dc p=n36_7 n=n36_8 k_scale=1.0 vdc=200
+   eelement name=s41#switch_1$0 type=switch_1 x=b9_1 p=n41_7 n=n0_10 r_on=0.1m
++     x_high=1
+   eelement name=s41#diode_r$0 type=diode_r p=n0_10 n=n41_7 r_on=0.1m
+   eelement name=s42#switch_1$0 type=switch_1 x=b9_2 p=n0_10 n=n41_8 r_on=0.1m
++     x_high=1
+   eelement name=s42#diode_r$0 type=diode_r p=n41_8 n=n0_10 r_on=0.1m
+   eelement name=s43#switch_1$0 type=switch_1 x=b9_3 p=n41_7 n=n0_15 r_on=0.1m
++     x_high=1
+   eelement name=s43#diode_r$0 type=diode_r p=n0_15 n=n41_7 r_on=0.1m
+   eelement name=s44#switch_1$0 type=switch_1 x=b9_4 p=n0_15 n=n41_8 r_on=0.1m
++     x_high=1
+   eelement name=s44#diode_r$0 type=diode_r p=n41_8 n=n0_15 r_on=0.1m
+   eelement name=s40#vsrc_dc$0 type=vsrc_dc p=n41_7 n=n41_8 k_scale=1.0 vdc=200
+   eelement name=s46#ammeter_fb$0 type=ammeter_fb i_fb=b10_1 p=n0_24 n=n0_17
++     k_scale=1.0
+   eelement name=s46#ammeter_fb$1 type=ammeter_fb i_fb=b10_2 p=n0_27 n=n0_18
++     k_scale=1.0
+   eelement name=s46#ammeter_fb$2 type=ammeter_fb i_fb=b10_3 p=n0_25 n=n0_19
++     k_scale=1.0
+   xelement name=s46#x_dummy$2 type=x_dummy x=b10_1
+   xelement name=s46#x_dummy$1 type=x_dummy x=b10_2
+   xelement name=s46#x_dummy$0 type=x_dummy x=b10_3
+   eelement name=s47#voltmeter_fb$0 type=voltmeter_fb v_fb=b12_1 p=n0_24
++     n=n0_27 k_scale=1.0
+   eelement name=s47#voltmeter_fb$2 type=voltmeter_fb v_fb=b12_3 p=n0_25
++     n=n0_24 k_scale=1.0
+   eelement name=s47#voltmeter_fb$1 type=voltmeter_fb v_fb=b12_2 p=n0_27
++     n=n0_25 k_scale=1.0
+   xelement name=s47#x_dummy$2 type=x_dummy x=b12_1
+   xelement name=s47#x_dummy$1 type=x_dummy x=b12_2
+   xelement name=s47#x_dummy$0 type=x_dummy x=b12_3
+   eelement name=s48#voltmeter_fb$0 type=voltmeter_fb v_fb=b11_1 p=n0_24 n=0
++     k_scale=1.0
+   eelement name=s48#voltmeter_fb$1 type=voltmeter_fb v_fb=b11_2 p=n0_27 n=0
++     k_scale=1.0
+   eelement name=s48#voltmeter_fb$2 type=voltmeter_fb v_fb=b11_3 p=n0_25 n=0
++     k_scale=1.0
+   xelement name=s48#x_dummy$1 type=x_dummy x=b11_2
+   xelement name=s48#x_dummy$2 type=x_dummy x=b11_3
+   xelement name=s48#x_dummy$0 type=x_dummy x=b11_1
+   xelement name=s49#cmpr_2_2$0 type=cmpr_2_2 x1=n0_21 x2=n50_15 y1=b9_1
++     y2=b9_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#cmpr_2_2$1 type=cmpr_2_2 x1=n0_21 x2=n50_16 y1=b9_3
++     y2=b9_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#cmpr_2_2$2 type=cmpr_2_2 x1=n0_21 x2=n50_18 y1=b1_1
++     y2=b1_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#cmpr_2_2$3 type=cmpr_2_2 x1=n0_21 x2=n50_17 y1=b1_3
++     y2=b1_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#cmpr_2_2$4 type=cmpr_2_2 x1=n0_21 x2=n50_19 y1=b2_3
++     y2=b2_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#cmpr_2_2$5 type=cmpr_2_2 x1=n0_21 x2=n50_20 y1=b2_1
++     y2=b2_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s49#src_ac$0 type=src_ac y=n50_15 f_hz=50
+   xelement name=s49#src_ac$1 type=src_ac y=n50_16 f_hz=50 phi_deg=180
+   xelement name=s49#src_ac$2 type=src_ac y=n50_17 f_hz=50 phi_deg=300
+   xelement name=s49#src_ac$3 type=src_ac y=n50_18 f_hz=50 phi_deg=120
+   xelement name=s49#src_ac$4 type=src_ac y=n50_19 f_hz=50 phi_deg=60
+   xelement name=s49#src_ac$5 type=src_ac y=n50_20 f_hz=50 phi_deg=-120
+   xelement name=s50#cmpr_2_2$0 type=cmpr_2_2 x1=n0_22 x2=n51_15 y1=b3_1
++     y2=b3_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#cmpr_2_2$1 type=cmpr_2_2 x1=n0_22 x2=n51_16 y1=b3_3
++     y2=b3_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#cmpr_2_2$2 type=cmpr_2_2 x1=n0_22 x2=n51_18 y1=b5_1
++     y2=b5_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#cmpr_2_2$3 type=cmpr_2_2 x1=n0_22 x2=n51_17 y1=b5_3
++     y2=b5_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#cmpr_2_2$4 type=cmpr_2_2 x1=n0_22 x2=n51_19 y1=b4_3
++     y2=b4_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#cmpr_2_2$5 type=cmpr_2_2 x1=n0_22 x2=n51_20 y1=b4_1
++     y2=b4_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s50#src_ac$0 type=src_ac y=n51_15 f_hz=50
+   xelement name=s50#src_ac$1 type=src_ac y=n51_16 f_hz=50 phi_deg=180
+   xelement name=s50#src_ac$2 type=src_ac y=n51_17 f_hz=50 phi_deg=300
+   xelement name=s50#src_ac$3 type=src_ac y=n51_18 f_hz=50 phi_deg=120
+   xelement name=s50#src_ac$4 type=src_ac y=n51_19 f_hz=50 phi_deg=60
+   xelement name=s50#src_ac$5 type=src_ac y=n51_20 f_hz=50 phi_deg=-120
+   xelement name=s51#cmpr_2_2$0 type=cmpr_2_2 x1=n0_20 x2=n52_15 y1=b6_1
++     y2=b6_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#cmpr_2_2$1 type=cmpr_2_2 x1=n0_20 x2=n52_16 y1=b6_3
++     y2=b6_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#cmpr_2_2$2 type=cmpr_2_2 x1=n0_20 x2=n52_18 y1=b7_1
++     y2=b7_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#cmpr_2_2$3 type=cmpr_2_2 x1=n0_20 x2=n52_17 y1=b7_3
++     y2=b7_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#cmpr_2_2$4 type=cmpr_2_2 x1=n0_20 x2=n52_19 y1=b8_3
++     y2=b8_4 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#cmpr_2_2$5 type=cmpr_2_2 x1=n0_20 x2=n52_20 y1=b8_1
++     y2=b8_2 delt_min=1n delt_nrml=0.1u
+   xelement name=s51#src_ac$0 type=src_ac y=n52_15 f_hz=50
+   xelement name=s51#src_ac$1 type=src_ac y=n52_16 f_hz=50 phi_deg=180
+   xelement name=s51#src_ac$2 type=src_ac y=n52_17 f_hz=50 phi_deg=300
+   xelement name=s51#src_ac$3 type=src_ac y=n52_18 f_hz=50 phi_deg=120
+   xelement name=s51#src_ac$4 type=src_ac y=n52_19 f_hz=50 phi_deg=60
+   xelement name=s51#src_ac$5 type=src_ac y=n52_20 f_hz=50 phi_deg=-120
+   xelement name=s52#average_mv_2$0 type=average_mv_2 x=b11_1 y=b13_1
++     T=1.0000e-04
+   xelement name=s52#average_mv_2$1 type=average_mv_2 x=b11_2 y=b13_2
++     T=1.0000e-04
+   xelement name=s52#average_mv_2$2 type=average_mv_2 x=b11_3 y=b13_3
++     T=1.0000e-04
+   eelement name=s53#l$0 type=l p=n54_2 n=n0_23 i0=0 k_scale=1.0 l=10m
+   eelement name=s53#r$0 type=r p=n0_17 n=n54_2 k_scale=1.0 r=10
+   eelement name=s54#l$0 type=l p=n55_2 n=n0_23 i0=0 k_scale=1.0 l=10m
+   eelement name=s54#r$0 type=r p=n0_18 n=n55_2 k_scale=1.0 r=10
+   eelement name=s55#l$0 type=l p=n56_2 n=n0_23 i0=0 k_scale=1.0 l=10m
+   eelement name=s55#r$0 type=r p=n0_19 n=n56_2 k_scale=1.0 r=10
+   xelement name=triangle_2$0 type=triangle_2 y=n0_20 T=0 flag_frequency=1
++     flag_period=0 frequency=10e3
+   xelement name=triangle_2$1 type=triangle_2 y=n0_21 T=0 flag_frequency=1
++     flag_period=0 frequency=10e3 t0=-1.6667e-05
+   xelement name=triangle_2$2 type=triangle_2 y=n0_22 T=0 flag_frequency=1
++     flag_period=0 frequency=10e3 t0=-3.3333e-05
+   ref_node=0
+   outvar: ia=i_of_s53#r$0
+   outvar: ib=i_of_s54#r$0
+   outvar: ic=i_of_s55#r$0
+   outvar: v_an=x_of_s52#average_mv_2$0
+   outvar: v_an_avg=y_of_s52#average_mv_2$0
+   outvar: v_bn=x_of_s52#average_mv_2$1
+   outvar: v_bn_avg=y_of_s52#average_mv_2$1
+   outvar: v_cn=x_of_s52#average_mv_2$2
+   outvar: v_cn_avg=y_of_s52#average_mv_2$2
+end_circuit
+begin_solve
+   solve_type=trns
+   initial_sol=initialize
+   method: algorithm_e=backward_euler
+   method: algorithm_ex=backward_euler
+   method: algorithm_x_startup=explicit
+   method: algorithm_x_trns=RK4
+   method: delt_min_ex=1n
+   method: e_nr_check_delx_all=no
+   method: e_nr_check_spice=yes
+   method: ex_nr_check_delx_all=yes
+   method: ex_nr_eps_delx_all=1.0e-2
+   method: t_end=40m
+   method: t_start=0
+   method: tstep0_ex=0.1u
+   method: x_nr_check_delx_all=no
+   begin_output
+     filename=out1.dat limit_lines=1000000
+     variables: ia ib ic
+   end_output
+   begin_output
+     filename=out2.dat limit_lines=1000000
+     variables: v_an v_an_avg v_bn v_bn_avg v_cn v_cn_avg
+   end_output
+end_solve
+end_cf

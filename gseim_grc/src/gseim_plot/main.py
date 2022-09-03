@@ -710,7 +710,7 @@ class ScriptObject(QWidget):
                         self.text +="\nls.append(l[0])"
                         self.text +="\nlbs.append('"+str(self.mainWin.plotObject_1[self.mainWin.YIndexR[i]].label)+"')"
                     if self.mainWin.axesPropObject_1.yScale2 == 'linear':
-                        if len(self.mainWin.YIndexR)!=0:
+                        if len(self.mainWin.YIndexR) != 0:
                             self.text += "\nax2.ticklabel_format(axis='y', style='sci', scilimits=(" \
                             +str(self.mainWin.axesPropObject_1.ySNL2)+","
                             self.text += str(self.mainWin.axesPropObject_1.ySNU2)+"), useMathText=" + \
@@ -720,7 +720,7 @@ class ScriptObject(QWidget):
                             +str(self.mainWin.axesPropObject_1.ySNL)+","
                             self.text += str(self.mainWin.axesPropObject_1.ySNU)+"), useMathText=" + \
                                 str(self.mainWin.axesPropObject_1.ySNM)+")"
-                    if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR)!=0:
+                    if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR) != 0:
                         self.text += "\nax2.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale2) + "')"
                     else:
                         self.text += "\nax2.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale) + "')"
@@ -729,7 +729,7 @@ class ScriptObject(QWidget):
 
                 if self.mainWin.axesPropObject_1.xScale != None:
                     self.text += "\nax.set_xscale('" + str(self.mainWin.axesPropObject_1.xScale) + "')"
-                if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex)!=0:
+                if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex) != 0:
                     self.text += "\nax.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale) + "')"
                 else:
                     self.text += "\nax.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale2) + "')"
@@ -774,7 +774,7 @@ class ScriptObject(QWidget):
                     self.text += "', linewidth = "+ str(self.mainWin.gridObject_1.width) + ")"
 
                 if self.mainWin.legendEnable:
-                    if len(self.mainWin.YIndex)>0 and len(self.mainWin.YIndexR)==0:
+                    if len(self.mainWin.YIndex) > 0 and len(self.mainWin.YIndexR) == 0:
                         self.text += "\nax.legend(loc = '" + self.mainWin.legendObject_1.location
                         self.text += "',frameon = " + str(self.mainWin.legendObject_1.frameon)
                         self.text += ", fontsize = " + str(self.mainWin.legendObject_1.fontsize)
@@ -786,7 +786,7 @@ class ScriptObject(QWidget):
                         self.text += ", markerscale = " + str(self.mainWin.legendObject_1.markerscale)
                         self.text += ", labelspacing = " + str(self.mainWin.legendObject_1.labelspacing)
                         self.text += ", columnspacing = "+ str(self.mainWin.legendObject_1.columnspacing)+")"
-                    elif len(self.mainWin.YIndexR)>0 and len(self.mainWin.YIndex)==0:
+                    elif len(self.mainWin.YIndexR) > 0 and len(self.mainWin.YIndex) == 0:
                         self.text += "\nax2.legend(loc = '" + self.mainWin.legendObject_1.location
                         self.text += "',frameon = " + str(self.mainWin.legendObject_1.frameon)
                         self.text += ", fontsize = " + str(self.mainWin.legendObject_1.fontsize)
@@ -816,7 +816,7 @@ class ScriptObject(QWidget):
                         str(self.mainWin.axesPropObject_1.xSNL)+","
                     self.text += str(self.mainWin.axesPropObject_1.xSNU)+"), useMathText=" + \
                         str(self.mainWin.axesPropObject_1.xSNM)+")"
-                if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex)!=0:
+                if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex) != 0:
                     self.text += "\nax.ticklabel_format(axis='y', style='sci', scilimits=(" + \
                         str(self.mainWin.axesPropObject_1.ySNL)+","
                     self.text += str(self.mainWin.axesPropObject_1.ySNU)+"), useMathText=" + \
@@ -946,7 +946,7 @@ class ScriptObject(QWidget):
                         i_ax += 1
 
                     if self.mainWin.axesPropObject_1.yScale2 == 'linear':
-                        if len(self.mainWin.YIndexR)!=0:
+                        if len(self.mainWin.YIndexR) != 0:
                             self.text += "\nax2.ticklabel_format(axis='y', style='sci', scilimits=(" \
                             +str(self.mainWin.axesPropObject_1.ySNL2)+","
                             self.text += str(self.mainWin.axesPropObject_1.ySNU2)+"), useMathText=" + \
@@ -956,7 +956,7 @@ class ScriptObject(QWidget):
                             +str(self.mainWin.axesPropObject_1.ySNL)+","
                             self.text += str(self.mainWin.axesPropObject_1.ySNU)+"), useMathText=" + \
                                 str(self.mainWin.axesPropObject_1.ySNM)+")"
-                    if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR)!=0:
+                    if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR) != 0:
                         self.text += "\nax2.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale2) + "')"
                     else:
                         self.text += "\nax2.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale) + "')"
@@ -965,7 +965,7 @@ class ScriptObject(QWidget):
 
                 if self.mainWin.axesPropObject_1.xScale != None:
                     self.text += "\nax.set_xscale('" + str(self.mainWin.axesPropObject_1.xScale) + "')"
-                if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex)!=0:
+                if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex) != 0:
                     self.text += "\nax.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale) + "')"
                 else:
                     self.text += "\nax.set_yscale('" + str(self.mainWin.axesPropObject_1.yScale2) + "')"
@@ -1010,7 +1010,7 @@ class ScriptObject(QWidget):
                     self.text += "', linewidth = "+ str(self.mainWin.gridObject_1.width) + ")"
 
                 if self.mainWin.legendEnable:
-                    if len(self.mainWin.YIndex)>0 and len(self.mainWin.YIndexR)==0:
+                    if len(self.mainWin.YIndex) > 0 and len(self.mainWin.YIndexR) == 0:
                         self.text += "\nax.legend(loc = '" + self.mainWin.legendObject_1.location
                         self.text += "',frameon = " + str(self.mainWin.legendObject_1.frameon)
                         self.text += ", fontsize = " + str(self.mainWin.legendObject_1.fontsize)
@@ -1022,7 +1022,7 @@ class ScriptObject(QWidget):
                         self.text += ", markerscale = " + str(self.mainWin.legendObject_1.markerscale)
                         self.text += ", labelspacing = " + str(self.mainWin.legendObject_1.labelspacing)
                         self.text += ", columnspacing = "+ str(self.mainWin.legendObject_1.columnspacing)+")"
-                    elif len(self.mainWin.YIndexR)>0 and len(self.mainWin.YIndex)==0:
+                    elif len(self.mainWin.YIndexR) > 0 and len(self.mainWin.YIndex) == 0:
                         self.text += "\nax2.legend(loc = '" + self.mainWin.legendObject_1.location
                         self.text += "',frameon = " + str(self.mainWin.legendObject_1.frameon)
                         self.text += ", fontsize = " + str(self.mainWin.legendObject_1.fontsize)
@@ -1052,7 +1052,7 @@ class ScriptObject(QWidget):
                         str(self.mainWin.axesPropObject_1.xSNL)+","
                     self.text += str(self.mainWin.axesPropObject_1.xSNU)+"), useMathText=" + \
                         str(self.mainWin.axesPropObject_1.xSNM)+")"
-                if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex)!=0:
+                if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex) != 0:
                     self.text += "\nax.ticklabel_format(axis='y', style='sci', scilimits=(" + \
                         str(self.mainWin.axesPropObject_1.ySNL)+","
                     self.text += str(self.mainWin.axesPropObject_1.ySNU)+"), useMathText=" + \
@@ -1414,7 +1414,7 @@ class LinePropPopup(QMainWindow):
         self.facecolor = QColor('white');
 
     def applyBtnAction(self):
-        if self.combo1.currentText()!= '':
+        if self.combo1.currentText() != '':
             linePropSelect = self.combo1.currentText()
             selIndexL = self.mainWin.YCols.indexFromItem(self.mainWin.YCols.findItems(linePropSelect,Qt.MatchFlag.MatchContains)[0])
             selIndex = int(selIndexL.row())
@@ -2520,15 +2520,15 @@ class AxesPopup(QMainWindow):
         self.okBtn.clicked.connect(self.okBtnAction)
 
     def applyBtnAction(self):
-        if self.combo2.currentText()!='None':
+        if self.combo2.currentText() != 'None':
             self.mainWin.axesPropObject_1.setxScale(self.combo2.currentText())
-        if self.labelEdit.text() !='None':
+        if self.labelEdit.text() != 'None':
             self.mainWin.axesPropObject_1.setxLabel(self.labelEdit.text())
 
         print('AxesPopup: applyBtnAction: setting xmin')
         if self.XLimL.text().strip() != '':
             self.mainWin.axesPropObject_1.setxMin(self.XLimL.text())
-        if self.XLimR.text().strip() !='':
+        if self.XLimR.text().strip() != '':
             self.mainWin.axesPropObject_1.setxMax(self.XLimR.text())
         print('AxesPopup: applyBtnAction: self.mainWin.axesPropObject_1.s_xMin:', \
             self.mainWin.axesPropObject_1.s_xMin)
@@ -4164,21 +4164,24 @@ class ApplicationWindow(QMainWindow):
         NoOfItems = self.OPFiles.count()
         prev = self.FileIndex;
         listOfFileIndex = []
+
         for i in range(0,NoOfItems):
             item=self.OPFiles.item(i)
-            if item.checkState():
+            checked = QtCore.Qt.CheckState.Checked
+            if item.checkState() == checked:
                 listOfFileIndex.append(i)
-        if len(listOfFileIndex)>1:
+        if len(listOfFileIndex) > 1:
             for i in range(0,len(listOfFileIndex)):
                 if self.FileIndex == listOfFileIndex[i]:
                     self.OPFiles.item(listOfFileIndex[i]).setCheckState(QtCore.Qt.CheckState.Unchecked)
                 else:
                     prev = listOfFileIndex[i]
         else:
-            if len(listOfFileIndex) ==0:
+            if len(listOfFileIndex) == 0:
                 prev = None
             else:
                 prev = listOfFileIndex[0]
+
         if self.FileIndex != prev:
             self.FileIndex = prev
             if self.FileIndex == None:
@@ -4211,9 +4214,10 @@ class ApplicationWindow(QMainWindow):
         listOfXIndex = []
         for i in range(0,NoOfItems):
             item=self.senList.item(i)
-            if item.checkState():
+            checked = QtCore.Qt.CheckState.Checked
+            if item.checkState() == checked:
                 listOfXIndex.append(i)
-        if len(listOfXIndex)>1:
+        if len(listOfXIndex) > 1:
             for i in range(0,len(listOfXIndex)):
                 if self.XIndex == listOfXIndex[i]:
                     self.senList.item(listOfXIndex[i]).setCheckState(QtCore.Qt.CheckState.Unchecked)
@@ -4221,7 +4225,7 @@ class ApplicationWindow(QMainWindow):
                     prev = listOfXIndex[i]
 
         else:
-            if len(listOfXIndex) ==0:
+            if len(listOfXIndex) == 0:
                 prev = None
             else:
                 prev = listOfXIndex[0]
@@ -4242,7 +4246,7 @@ class ApplicationWindow(QMainWindow):
             self.redIcon= QIcon(pixmap);
 
             checked = QtCore.Qt.CheckState.Checked
-            if (item.checkState()==checked and item2.checkState()!=checked) or (item.checkState()==checked and \
+            if (item.checkState() == checked and item2.checkState() != checked) or (item.checkState() == checked and \
                 (self.FlagLR[i] == 'N' or self.FlagLR[i] == 'R')):
 
                 listOfYIndex.append(i)
@@ -4253,10 +4257,10 @@ class ApplicationWindow(QMainWindow):
             else:
                 self.YCols.item(i,0).setIcon(QIcon(self.redIcon))
 
-            if (item2.checkState()==checked and (item.checkState()!=checked)) or \
-               (item2.checkState()==checked and (self.FlagLR[i] == 'N' or self.FlagLR[i] == 'L')):
+            if (item2.checkState() == checked and (item.checkState() != checked)) or \
+               (item2.checkState() == checked and (self.FlagLR[i] == 'N' or self.FlagLR[i] == 'L')):
                 listOfYIndexR.append(i)
-                self.FlagLR[i]='R'
+                self.FlagLR[i] = 'R'
                 self.YCols.item(i,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
                 self.YCols.item(i,0).setIcon(QIcon(self.redIcon))
             else:
@@ -4389,7 +4393,7 @@ class ApplicationWindow(QMainWindow):
             self.plotObject_1 = [];
             if (self.ext == '.dat') | (self.ext == '.txt'):
                 self.reader = np.loadtxt(self.fileName)
-            if str(self.reader)=='[]':
+            if str(self.reader) == '[]':
                 self.msg.setText("Output file has no data!")
                 self.showWarningDialog();
             else:
@@ -4449,7 +4453,7 @@ class ApplicationWindow(QMainWindow):
                 self.label.setEnabled(1)
                 self.labelR.setText(texR)
                 self.labelR.setEnabled(1)
-                if (self.n_col) >=2:
+                if (self.n_col) >= 2:
                     self.XIndex = 0;
                     self.YIndex = [];
                     self.YIndexR = [];
@@ -4511,7 +4515,7 @@ class PlotCanvas(FigureCanvas):
                 fontsize = self.mainWin.legendObject_1.fontsize, title = self.mainWin.legendObject_1.title,
                 markerfirst = self.mainWin.legendObject_1.markerfirst, markerscale = self.mainWin.legendObject_1.markerscale,
                 labelspacing = self.mainWin.legendObject_1.labelspacing, columnspacing = self.mainWin.legendObject_1.columnspacing)
-        elif len(self.mainWin.YIndexR)>0 and len(self.mainWin.YIndex) == 0:
+        elif len(self.mainWin.YIndexR) > 0 and len(self.mainWin.YIndex) == 0:
             self.ax2.legend(loc = self.mainWin.legendObject_1.location,frameon = self.mainWin.legendObject_1.frameon,
                 fontsize = self.mainWin.legendObject_1.fontsize, title = self.mainWin.legendObject_1.title,
                 markerfirst = self.mainWin.legendObject_1.markerfirst, markerscale = self.mainWin.legendObject_1.markerscale,
@@ -4535,11 +4539,11 @@ class PlotCanvas(FigureCanvas):
         ax = ax[0]
         if self.mainWin.axesPropObject_1.xScale != None:
             self.ax.set_xscale(self.mainWin.axesPropObject_1.xScale)
-        if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex)!=0:
+        if self.mainWin.axesPropObject_1.yScale != None and len(self.mainWin.YIndex) != 0:
             self.ax.set_yscale(self.mainWin.axesPropObject_1.yScale)
         else:
             self.ax.set_yscale(self.mainWin.axesPropObject_1.yScale2)
-        if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR)!=0:
+        if self.mainWin.axesPropObject_1.yScale2 != None and len(self.mainWin.YIndexR) != 0:
             self.ax2.set_yscale(self.mainWin.axesPropObject_1.yScale2)
         else:
             self.ax2.set_yscale(self.mainWin.axesPropObject_1.yScale)
@@ -4547,12 +4551,12 @@ class PlotCanvas(FigureCanvas):
         if self.mainWin.axesPropObject_1.xLabel != None:
             self.ax.set_xlabel(self.mainWin.axesPropObject_1.xLabel)
 
-        if self.mainWin.axesPropObject_1.yLabel != None and len(self.mainWin.YIndex)!=0:
+        if self.mainWin.axesPropObject_1.yLabel != None and len(self.mainWin.YIndex) != 0:
             self.ax.set_ylabel(self.mainWin.axesPropObject_1.yLabel)
         else:
             self.ax.set_ylabel(self.mainWin.axesPropObject_1.yLabel2)
 
-        if self.mainWin.axesPropObject_1.yLabel2 != None and len(self.mainWin.YIndexR)!=0:
+        if self.mainWin.axesPropObject_1.yLabel2 != None and len(self.mainWin.YIndexR) != 0:
             self.ax2.set_ylabel(self.mainWin.axesPropObject_1.yLabel2)
         else:
             self.ax2.set_ylabel(self.mainWin.axesPropObject_1.yLabel)
@@ -4585,13 +4589,13 @@ class PlotCanvas(FigureCanvas):
         if self.mainWin.axesPropObject_1.xScale == 'linear':
             self.ax.ticklabel_format(axis="x", style="sci", scilimits=(self.mainWin.axesPropObject_1.xSNL,\
                     self.mainWin.axesPropObject_1.xSNU),useMathText=self.mainWin.axesPropObject_1.xSNM)
-        if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex)!=0:
+        if self.mainWin.axesPropObject_1.yScale == 'linear' and len(self.mainWin.YIndex) != 0:
             self.ax.ticklabel_format(axis="y", style="sci", scilimits=(self.mainWin.axesPropObject_1.ySNL,\
             self.mainWin.axesPropObject_1.ySNU),useMathText=self.mainWin.axesPropObject_1.ySNM)
         else:
             self.ax.ticklabel_format(axis="y", style="sci", scilimits=(self.mainWin.axesPropObject_1.ySNL2,\
             self.mainWin.axesPropObject_1.ySNU2),useMathText=self.mainWin.axesPropObject_1.ySNM2)
-        if self.mainWin.axesPropObject_1.yScale2 == 'linear' and len(self.mainWin.YIndexR)!=0:
+        if self.mainWin.axesPropObject_1.yScale2 == 'linear' and len(self.mainWin.YIndexR) != 0:
             self.ax2.ticklabel_format(axis="y", style="sci", scilimits=(self.mainWin.axesPropObject_1.ySNL2,\
             self.mainWin.axesPropObject_1.ySNU2),useMathText=self.mainWin.axesPropObject_1.ySNM2)
         else:
@@ -4613,13 +4617,13 @@ class PlotCanvas(FigureCanvas):
 
     def changeGridProps(self):
         if self.mainWin.gridObject_1.gridEnable:
-            self.ax.grid(b=True,color = self.mainWin.gridObject_1.lineColor,
+            self.ax.grid(visible=True,color = self.mainWin.gridObject_1.lineColor,
                     linestyle = self.mainWin.gridObject_1.lineStyle,
                     axis = self.mainWin.gridObject_1.axis,
                     which = self.mainWin.gridObject_1.which,
                     linewidth = self.mainWin.gridObject_1.width)
         else:
-            self.ax.grid(b=None)
+            self.ax.grid(visible=None)
 
         self.draw()
 
@@ -4721,6 +4725,7 @@ def main(file_last_opened):
     sys.exit( app.exec())
 
 if __name__ == '__main__':
+
     if len(sys.argv) != 2:
         print('plot_main: need 2 arguments. Halting...')
         sys.exit(0)

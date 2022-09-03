@@ -34,6 +34,8 @@ py_wheel(
         "psutil",
         "PyGObject",
         "pyyaml",
+        "more_itertools",
+        "termcolor",
     ],
     entry_points = {
         'gui_scripts': [

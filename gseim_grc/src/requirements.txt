@@ -11,3 +11,4 @@ pytest-qt
 PyYAML==6.0
 appdirs
 pytest-xvfb
+notebook>=5.6.0

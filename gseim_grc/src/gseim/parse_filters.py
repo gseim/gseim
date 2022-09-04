@@ -30,7 +30,6 @@ import tempfile
 from importlib_resources import files
 
 import gseim.gutils_gseim as gu
-from gseim import cct_parser
 
 XFER_FN_PARMS = [
     'a0', 'a1', 'a2', 'a3', 'a4', 'a5',

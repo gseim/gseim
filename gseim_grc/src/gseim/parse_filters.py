@@ -23,12 +23,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import sys
 import os
 import numpy as np
-import gseim.gutils_gseim as gu
 from ctypes import cdll
 import pkgutil
 import tempfile
 
 from importlib_resources import files
+
+import gseim.gutils_gseim as gu
+from gseim import cct_parser
+
+XFER_FN_PARMS = [
+    'a0', 'a1', 'a2', 'a3', 'a4', 'a5',
+    'b0', 'b1', 'b2', 'b3', 'b4', 'b5',
+    'scale_coef', 'f0'
+]
 
 class PICDummy(object):
     def __init__(self, lib):
@@ -38,233 +46,201 @@ class PICDummy(object):
     def filter_compute_coef(self):
         self.lib.PICDummy_filter_compute_coef(self.obj)
 
-def main():
+def compute_params(d, dummy):
+    flag_scale = False
+
+    if d['scale_coef'] != '0':
+        k_scale = 2.0*np.pi*float(d['f0'])
+        flag_scale = True
+
+    f_temp = open('temp_coef_1.dat', 'w')
+    for k in XFER_FN_PARMS:
+        f_temp.write(d[k] + '  -- '+ k + '\n')
+    f_temp.close()
+
+    # call C++ program to compute partial fractions
+    dummy.filter_compute_coef()
+
+    # read partial fraction info from file
+    f_temp = open('temp_coef_2.dat', 'r')
+
+    line = f_temp.readline()
+    l = line.split()
+    n_roots = int(l[0])
+    gain = float(l[1])
+    a0p = float(l[2])
+
+    flag_real = []
+    root_power = []
+    alpha = []
+    beta = []
+    a = []
+    b = []
+
+    for i in range(n_roots):
+        line = f_temp.readline()
+        l = line.split()
+        flag_real.append(int(l[0]))
+        power_dummy = int(l[1])
+        root_power.append(power_dummy)
+
+        if flag_scale:
+            alpha_scale = k_scale
+            if power_dummy == 1:
+                a_scale = k_scale
+            elif power_dummy == 2:
+                a_scale = k_scale*k_scale
+        else:
+            alpha_scale = 1.0
+            a_scale = 1.0
+
+        line = f_temp.readline()
+        l = line.split()
+        alpha_dummy = float(l[0])
+        beta_dummy = float(l[1])
+        alpha.append(alpha_scale*alpha_dummy)
+        beta.append(alpha_scale*beta_dummy)
+
+        line = f_temp.readline()
+        l = line.split()
+        a_dummy = float(l[0])
+        b_dummy = float(l[1])
+        a.append(a_scale*a_dummy)
+        b.append(a_scale*b_dummy)
+
+    f_temp.close()
+
+    for i in range(n_roots):
+        a[i] *= gain
+        b[i] *= gain
+
+    n_elements_ttl = 0
+
+    for i in range(n_roots):
+        if a[i] != 0.0 or b[i] != 0.0:
+            n_elements_ttl += 1
+    if a0p != 0.0:
+        n_elements_ttl += 1
+
+    return {
+        'a': a,
+        'b': b,
+        'a0p': a0p,
+        'alpha': alpha,
+        'beta': beta,
+        'gain': gain,
+        'n_roots': n_roots,
+        'root_power': root_power,
+        'flag_real': flag_real,
+        'n_elements_ttl': n_elements_ttl,
+    }
+
+
+def process(dummy, ast_1):
+    new_elems = []
+    n_filters = 1
+    for cct_elem_kind, cct_elem_assignments in ast_1.cct_elems:
+        if cct_elem_kind == 'xelement' and cct_elem_assignments['type'] == 'xfer_fn':
+            element_name = cct_elem_assignments['name']
+
+            x_node = cct_elem_assignments['x']
+            y_node = cct_elem_assignments['y']
+
+            d = {
+                k: cct_elem_assignments.get(k, '0')
+                for k in XFER_FN_PARMS
+            }
+
+            r = compute_params(d, dummy)
+            a = r['a']
+            b = r['b']
+            a0p = r['a0p']
+            alpha = r['alpha']
+            beta = r['beta']
+            gain = r['gain']
+            n_roots = r['n_roots']
+            root_power = r['root_power']
+            flag_real = r['flag_real']
+            n_elements_ttl = r['n_elements_ttl']
+
+            n_elements = 0
+
+            for i in range(n_roots):
+                if a[i] != 0.0 or b[i] != 0.0:
+                    n_elements += 1
+                    kind = "xelement"
+                    assgns = {}
+
+                    if n_elements_ttl > 1:
+                        y_nd = x_node + "_f_" + str(n_filters) + "_" + str(n_elements)
+                    else:
+                        y_nd = y_node
+
+                    if flag_real[i] == 1:
+                        assgns['type'] = 'pole_real_order_' + str(root_power[i])
+                        assgns['a'] = ('%14.7e' % a[i]).replace(' ', '')
+                        assgns['alpha'] = ('%14.7e' % alpha[i]).replace(' ', '')
+                    else:
+                        assgns['type'] = 'pole_complex_order_' + str(root_power[i])
+                        assgns['a'] = ('%14.7e' % a[i]).replace(' ', '')
+                        assgns['b'] = ('%14.7e' % b[i]).replace(' ', '')
+                        assgns['alpha'] = ('%14.7e' % alpha[i]).replace(' ', '')
+                        assgns['beta'] = ('%14.7e' % beta[i]).replace(' ', '')
+
+                    assgns['x'] = x_node
+                    assgns['y'] = y_nd
+
+                    if n_elements == 1:
+                        y_st = float(cct_elem_assignments.get('y_st', '0'))
+                        assgns['y_st'] = ('%14.7e' % y_st).replace(' ', '')
+
+                    new_elems.append((kind, assgns))
+
+            if a0p != 0.0:
+                n_elements += 1
+                kind = 'xelement'
+                assgns = {'type': 'multscl'}
+
+                y_nd = x_node + "_f_" + str(n_filters) + "_" + str(n_elements)
+                assgns['x'] = x_node
+                assgns['y'] = y_nd
+                assgns['k'] = ('%14.7e' % (gain*a0p)).replace(' ', '')
+
+                new_elems.append((kind, assgns))
+
+            if n_elements > 1:
+                kind = 'xelement'
+                assgns = {'type': 'sum_' + str(n_elements)}
+
+                for i in range(n_elements):
+                    x_nd = x_node + "_f_" + str(n_filters) + "_" + str(i+1)
+                    assgns['x' + str(i+1)] = str(x_nd)
+                assgns['y'] = y_node
+
+                new_elems.append((kind, assgns))
+
+            for k1, v1 in ast_1.cct_outvars.items():
+                if v1.split('_of_')[-1] == element_name:
+                    if v1.split('_of_')[0] == 'x':
+                        ast_1.cct_outvars[k1] = 'xvar_of_' + x_node
+                    elif v1.split('_of_')[0] == 'y':
+                        ast_1.cct_outvars[k1] = 'xvar_of_' + y_node
+        else:
+            new_elems.append((cct_elem_kind, cct_elem_assignments))
+
+    ast_1.cct_elems = new_elems
+
+def process_xfer_fns(cct_ast):
+    # load the library
+    lib_filename = files('gseim_cpp_lib')/'libfilter.so'
+    lib = cdll.LoadLibrary(lib_filename)
+    dummy = PICDummy(lib)
+
+    process(dummy, cct_ast)
+
+if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('parse_filters.py: need 2 arguments. Halting...')
         sys.exit()
 
-    cct_fname = sys.argv[1]
-
-    # load the library
-    basedir = os.path.dirname(__file__)
-    lib_filename = files('gseim_cpp_lib')/'libfilter.so'
-    lib = cdll.LoadLibrary(lib_filename)
-      
-    temp_file_1 = tempfile.TemporaryFile(mode='w+')
-    temp_file_2 = tempfile.TemporaryFile(mode='w+')
-
-    with open(cct_fname, 'r') as cct_file:
-        for line in cct_file:
-            temp_file_1.write(line)
-            temp_file_2.write(line)
-
-    temp_file_1.seek(0)
-    temp_file_2.seek(0)
-
-    nmax = 80
-    indent1 = '   '
-    indent2 = '+     '
-
-    flag_break = False
-
-    dummy = PICDummy(lib)
-    n_filters = 0
-
-    while True:
-    # Check if there is any xfer_fn
-        line = temp_file_1.readline()
-        l = line.split()
-        if len(l) == 0 or l[0] == 'end_cf':
-            temp_file_1.close()
-            break
-        elif l[0] == 'xelement':
-            if 'type=xfer_fn' in l:
-                flag_break = False
-                n_filters += 1
-                temp_file_1.seek(0)
-                temp_file_2.seek(0)
-                while True:
-                    if flag_break:
-                        break
-                    pos = temp_file_1.tell()
-                    line = temp_file_1.readline()
-                    l = line.split()
-                    if l[0] == 'xelement':
-                        if 'type=xfer_fn' in l:
-                            element_name = l[1].split('=')[-1]
-
-                            temp_file_1.seek(pos)
-                            pos, l0 = gu.next_line_1(temp_file_1, pos)
-
-                            x_node = l0[l0.index('x') + 1]
-                            y_node = l0[l0.index('y') + 1]
-
-#                       keep values of a0,a1,.. as strings (in l2); no need to convert to float
-
-                            l1 = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5',
-                                  'b0', 'b1', 'b2', 'b3', 'b4', 'b5',
-                                  'scale_coef', 'f0']
-                            d = {}
-
-                            for k1 in l1:
-                                d[k1] = l0[l0.index(k1) + 1] if k1 in l0 else '0'
-
-                            flag_scale = False
-
-                            if d['scale_coef'] != '0':
-                                k_scale = 2.0*np.pi*float(d['f0'])
-                                flag_scale = True
-
-                            f_temp = open('temp_coef_1.dat', 'w')
-                            for k in l1:
-                                f_temp.write(d[k] + '  -- '+ k + '\n')
-                            f_temp.close()
-
-#                       call C++ program to compute partial fractions
-
-                            dummy.filter_compute_coef()
-
-#                       read partial fraction info from file
-
-                            f_temp = open('temp_coef_2.dat', 'r')
-
-                            line = f_temp.readline()
-                            l = line.split()
-                            n_roots = int(l[0])
-                            gain = float(l[1])
-                            a0p = float(l[2])
-
-                            flag_real = []
-                            root_power = []
-                            alpha = []
-                            beta = []
-                            a = []
-                            b = []
-
-                            for i in range(n_roots):
-                                line = f_temp.readline()
-                                l = line.split()
-                                flag_real.append(int(l[0]))
-                                power_dummy = int(l[1])
-                                root_power.append(power_dummy)
-
-                                if flag_scale:
-                                    alpha_scale = k_scale
-                                    if power_dummy == 1:
-                                        a_scale = k_scale
-                                    elif power_dummy == 2:
-                                        a_scale = k_scale*k_scale
-                                else:
-                                    alpha_scale = 1.0
-                                    a_scale = 1.0
-
-                                line = f_temp.readline()
-                                l = line.split()
-                                alpha_dummy = float(l[0])
-                                beta_dummy = float(l[1])
-                                alpha.append(alpha_scale*alpha_dummy)
-                                beta.append(alpha_scale*beta_dummy)
-
-                                line = f_temp.readline()
-                                l = line.split()
-                                a_dummy = float(l[0])
-                                b_dummy = float(l[1])
-                                a.append(a_scale*a_dummy)
-                                b.append(a_scale*b_dummy)
-
-                            f_temp.close()
-
-                            for i in range(n_roots):
-                                a[i] *= gain
-                                b[i] *= gain
-
-                            n_elements_ttl = 0
-
-                            for i in range(n_roots):
-                                if a[i] != 0.0 or b[i] != 0.0:
-                                    n_elements_ttl += 1
-                            if a0p != 0.0:
-                                n_elements_ttl += 1
-
-                            n_elements = 0
-
-                            for i in range(n_roots):
-                                if a[i] != 0.0 or b[i] != 0.0:
-                                    n_elements += 1
-                                    if n_elements_ttl > 1:
-                                        y_nd = x_node + "_f_" + str(n_filters) + "_" + str(n_elements)
-                                    else:
-                                        y_nd = y_node
-
-                                    if flag_real[i] == 1:
-                                        l_line = ['xelement']
-                                        l_line.append('type=pole_real_order_' + str(root_power[i]))
-                                        l_line.append('a=' + ('%14.7e' % (a[i])).replace(" ", ""))
-                                        l_line.append('alpha=' + ('%14.7e' % (alpha[i])).replace(" ", ""))
-                                    else:
-                                        l_line = ['xelement']
-                                        l_line.append('type=pole_complex_order_' + str(root_power[i]))
-                                        l_line.append('a=' + ('%14.7e' % (a[i])).replace(" ", ""))
-                                        l_line.append('b=' + ('%14.7e' % (b[i])).replace(" ", ""))
-                                        l_line.append('alpha=' + ('%14.7e' % (alpha[i])).replace(" ", ""))
-                                        l_line.append('beta=' + ('%14.7e' % (beta[i])).replace(" ", ""))
-
-                                    l_line.append('x=' + x_node)
-                                    l_line.append('y=' + y_nd)
-                                    if n_elements == 1:
-                                        y_st = float(l0[l0.index("y_st") + 1] if "y_st" in l0 else '0')
-                                        l_line.append('y_st=' + ('%14.7e' % (y_st)).replace(" ", ""))
-                                    gu.format_string_4a(temp_file_2, nmax, indent1, indent2, l_line)
-
-                            if a0p != 0.0:
-                                n_elements += 1
-                                l_line = ['xelement type=multscl']
-                                y_nd = x_node + "_f_" + str(n_filters) + "_" + str(n_elements)
-                                l_line.append('x=' + x_node)
-                                l_line.append('y=' + y_nd)
-                                l_line.append('k=' + ('%14.7e' % (gain*a0p)).replace(" ", ""))
-                                gu.format_string_4a(temp_file_2, nmax, indent1, indent2, l_line)
-
-                            if n_elements > 1:
-                                l_line = ['xelement']
-                                l_line.append('type=sum_' + str(n_elements))
-                                for i in range(n_elements):
-                                    x_nd = x_node + "_f_" + str(n_filters) + "_" + str(i+1)
-                                    l_line.append('x' + str(i+1) + '=' + str(x_nd))
-                                l_line.append('y=' + y_node)
-                                gu.format_string_4a(temp_file_2, nmax, indent1, indent2, l_line)
-
-                            temp_file_1.seek(pos)
-#                       now look for outvar statements with element_name
-                            while True:
-                                pos = temp_file_1.tell()
-                                line = temp_file_1.readline()
-                                l = line.split()
-                                if l[0] == 'outvar:':
-                                    if l[1].split('_of_')[-1] == element_name:
-                                        if l[1].split('=')[-1].split('_of_')[0] == 'x':
-                                            ov_name = l[1].split('=')[0]
-                                            temp_file_2.write(indent1 + 'outvar: ' +ov_name +
-                                               '=xvar_of_' + x_node + '\n')
-                                        elif l[1].split('=')[-1].split('_of_')[0] == 'y':
-                                            ov_name = l[1].split('=')[0]
-                                            temp_file_2.write(indent1 + 'outvar: ' +ov_name +
-                                               '=xvar_of_' + y_node + '\n')
-                                    else:
-                                        temp_file_2.write(line)
-                                else:
-                                    temp_file_2.write(line)
-                                    if line.split()[0] == 'end_cf':
-                                        flag_break = True
-                                        break
-                        else:
-                            temp_file_2.write(line)
-                    else:
-                        temp_file_2.write(line)
-
-    temp_file_2.seek(0)
-    for line in temp_file_2:
-        print(line, end='')
-
-if __name__ == '__main__':
-    main()
+    main(sys.argv[1])

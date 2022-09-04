@@ -163,7 +163,7 @@ def parse_file(fname):
         cct_file = CctFile(title)
         cct_file.cct_elems = cct_block['elements']
         cct_file.cct_assignments = cct_block['assignments']
-        cct_file.cct_outvars = cct_block['outvars']
+        cct_file.cct_outvars = dict(cct_block['outvars'])
         for solve_block in solve_blocks:
             cct_file.solve_blocks.append(SolveBlock(
                 solve_block['assignments'],

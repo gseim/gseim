@@ -27,6 +27,7 @@ import yaml
 
 import gseim.gutils_gseim as gu
 from gseim.cct_parser import CctFile, SolveBlock
+from gseim import parse_filters
 
 flag_read_yml_once = True
 d_yml = {}
@@ -1677,8 +1678,8 @@ def main(gseim_file, cct_file):
             print('main: no ref node in the circuit? Halting...')
             sys.exit()
 
-    for k,v in d_resolved_outvars.items():
-        cct_ast.cct_outvars.append((k, v))
+    for k, v in d_resolved_outvars.items():
+        cct_ast.cct_outvars[k] = v
 
     for slv in l_solve_blocks:
         slv_block = SolveBlock()
@@ -1748,9 +1749,6 @@ def main(gseim_file, cct_file):
             for ov in sorted(out['outvars'], key=l_ov1.index):
                 output_block['variables'][0].append(ov)
 
-    with open(gseim_file, 'w') as out_f:
-        out_f.write(cct_ast.dump())
-
     # check if there are xfer_fn elements in the circuit
     flag_filter_1 = False
     for cct_elem_kind, cct_elem_assignments in cct_ast.cct_elems:
@@ -1759,15 +1757,10 @@ def main(gseim_file, cct_file):
             break
 
     if flag_filter_1:
-        for i in range(2):
-            cmd = ['python3', files('gseim')/'parse_filters.py', gseim_file]
-            r = subprocess.run(cmd, capture_output=True, text=True)
+        parse_filters.process_xfer_fns(cct_ast)
 
-            if r.stderr: print('parse filter stderr:', r.stderr)
-            r.check_returncode()
-
-            with open(gseim_file, 'w') as fout:
-                fout.write(r.stdout)
+    with open(gseim_file, 'w') as fout:
+        fout.write(cct_ast.dump())
 
     print('Program completed.', flush=True) 
 

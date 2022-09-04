@@ -53,7 +53,7 @@ class CctFile(object):
         self.project_fname = project_fname or 'undefined'
         self.cct_elems = []
         self.cct_assignments = {}
-        self.cct_outvars = []
+        self.cct_outvars = {}
         self.solve_blocks = []
 
     def dump(self):
@@ -71,7 +71,7 @@ class CctFile(object):
             s += '\n'
         for k, v in self.cct_assignments.items():
             s += f'   {k}={v}\n'
-        for k, v in self.cct_outvars:
+        for k, v in self.cct_outvars.items():
             s += f'   outvar: {k}={v}\n'
         s += 'end_circuit\n'
         for solve_block in self.solve_blocks:

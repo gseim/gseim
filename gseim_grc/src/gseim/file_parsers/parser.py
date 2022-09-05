@@ -22,8 +22,8 @@ import sys
 from more_itertools import peekable
 from termcolor import cprint
 
-from gseim.cct_parser.lexer import lex, TokenKind
-from gseim.cct_parser import syntax_tree
+from gseim.file_parsers.lexer import lex, TokenKind
+from gseim.file_parsers import syntax_tree
 
 
 def expect_token(tok_gen, kind):

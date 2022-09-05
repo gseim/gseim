@@ -5,7 +5,7 @@ import tempfile
 from importlib_resources import files
 import pytest
 
-from gseim.cct_parser import parser
+from gseim.file_parsers import parser
 from test_support.compare_files import diff
 
 
@@ -104,8 +104,8 @@ def test_filter_2():
 
 def test_parms():
     _test_parm_parser(
-        files("gseim") / "cct_parser" / "test_data" / "input" / "parms.in",
-        files("gseim") / "cct_parser" / "test_data" / "output" / "parms.in",
+        files("gseim") / "file_parsers" / "test_data" / "input" / "parms.in",
+        files("gseim") / "file_parsers" / "test_data" / "output" / "parms.in",
     )
 
 

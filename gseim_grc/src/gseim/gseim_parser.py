@@ -26,7 +26,7 @@ from importlib_resources import files
 import yaml
 
 import gseim.gutils_gseim as gu
-from gseim.cct_parser import parse_parms_file, CctFile, SolveBlock
+from gseim.file_parsers import parse_parms_file, CctFile, SolveBlock
 from gseim import parse_filters
 
 flag_read_yml_once = True

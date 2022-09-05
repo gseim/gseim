@@ -72,7 +72,7 @@ except ImportError:
     from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
-from gseim.cct_parser.parser import parse_cct_file
+from gseim.file_parsers.parser import parse_cct_file
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
     toolitems = [t for t in NavigationToolbar.toolitems if

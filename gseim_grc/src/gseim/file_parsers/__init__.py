@@ -16,5 +16,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from gseim.cct_parser.parser import parse_cct_file, parse_parms_file
-from gseim.cct_parser.syntax_tree import SolveBlock, CctFile, ParmBlock, ParmsFile
+from gseim.file_parsers.parser import parse_cct_file, parse_parms_file
+from gseim.file_parsers.syntax_tree import SolveBlock, CctFile, ParmBlock, ParmsFile

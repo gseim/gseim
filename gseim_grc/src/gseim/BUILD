@@ -17,7 +17,7 @@ py_library(
     name = "gseim",
     srcs = glob(["*.py"]),
     deps = [
-        "//gseim/cct_parser:parser",
+        "//gseim/file_parsers:parser",
         requirement("numpy"),
         requirement("pyyaml"),
         requirement("importlib_resources"),

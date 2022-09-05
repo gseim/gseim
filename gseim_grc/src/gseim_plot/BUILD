@@ -4,7 +4,7 @@ py_library(
     name = "gseim_plot_lib",
     srcs = ["main.py"],
     deps = [
-        "//gseim/cct_parser:parser",
+        "//gseim/file_parsers:parser",
         requirement("matplotlib"),
         requirement("numpy"),
     ],

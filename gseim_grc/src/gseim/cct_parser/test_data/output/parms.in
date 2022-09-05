@@ -1,0 +1,21 @@
+begin_file
+  begin_parm force_write
+    keyword: algorithm_x_trns
+    options:
++     forward_euler
++     RK4
+    default: RK4
+  end_parm
+  begin_parm force_write a=b c=d
+    keyword: algorithm_x_startup
+    options:
++     explicit
++     implicit
+    default: explicit
+  end_parm
+  begin_parm
+    keyword: ssw_period_mult
+    options: none
+    default: 2
+  end_parm
+end_file

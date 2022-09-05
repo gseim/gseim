@@ -24,29 +24,41 @@ from termcolor import cprint
 
 
 class TokenKind(Enum):
-    KeywordTitle = 0
-    KeywordBeginCircuit = 1
-    KeywordEndCircuit = 2
-    KeywordOutVar = 3
-    KeywordMethod = 4
-    KeywordControl = 5
-    KeywordVariables = 6
-    KeywordBeginOutput = 7
-    KeywordEndOutput = 8
-    KeywordBeginSolve = 9
-    KeywordEndSolve = 10
-    KeywordEndCircuitFile = 11
-    Ident = 12
-    Equals = 13
-    Number = 14
-    Plus = 15
-    Newline = 16
-    Whitespace = 17
+    Comment = 0
+    KeywordTitle = 1
+    KeywordBeginFile = 2
+    KeywordEndFile = 3
+    KeywordBeginCircuit = 4
+    KeywordEndCircuit = 5
+    KeywordOutVar = 6
+    KeywordMethod = 7
+    KeywordControl = 8
+    KeywordVariables = 9
+    KeywordBeginOutput = 10
+    KeywordEndOutput = 11
+    KeywordBeginSolve = 12
+    KeywordEndSolve = 13
+    KeywordEndCircuitFile = 14
+    KeywordBeginParm = 15
+    KeywordEndParm = 16
+    KeywordKeyword = 17
+    KeywordOptions = 18
+    KeywordDefault = 19
+    KeywordForceWrite = 20
+    Ident = 21
+    Equals = 22
+    Number = 23
+    Plus = 24
+    Newline = 25
+    Whitespace = 26
 
 
 TOKEN_TYPES = [
     # (TokenKind, regex, emit token?)
+    (TokenKind.Comment, re.compile(r"#[^\n\r]+[\n\r]+"), False),
     (TokenKind.KeywordTitle, re.compile(r"title:"), True),
+    (TokenKind.KeywordEndFile, re.compile(r"end_file"), True),
+    (TokenKind.KeywordBeginFile, re.compile(r"begin_file"), True),
     (TokenKind.KeywordEndCircuitFile, re.compile(r"end_cf"), True),
     (TokenKind.KeywordBeginCircuit, re.compile(r"begin_circuit"), True),
     (TokenKind.KeywordEndCircuit, re.compile(r"end_circuit"), True),
@@ -58,12 +70,21 @@ TOKEN_TYPES = [
     (TokenKind.KeywordMethod, re.compile(r"method:"), True),
     (TokenKind.KeywordVariables, re.compile(r"variables:"), True),
     (TokenKind.KeywordControl, re.compile(r"control:"), True),
+    (TokenKind.KeywordBeginParm, re.compile(r"begin_parm"), True),
+    (TokenKind.KeywordEndParm, re.compile(r"end_parm"), True),
+    (TokenKind.KeywordKeyword, re.compile(r"keyword:"), True),
+    (TokenKind.KeywordOptions, re.compile(r"options:"), True),
+    (TokenKind.KeywordDefault, re.compile(r"default:"), True),
+    (TokenKind.KeywordForceWrite, re.compile(r"force_write"), True),
     (TokenKind.Equals, re.compile(r"="), True),
     (TokenKind.Ident, re.compile(r"[A-Za-z][A-Za-z0-9_.$#]*"), True),
     (TokenKind.Number, re.compile(r"-?\d[\d.e+-]*[umMpk]?"), True),
     (TokenKind.Plus, re.compile(r"\+"), True),
-    (TokenKind.Newline, re.compile(r"\n+"), True),
-    (TokenKind.Whitespace, re.compile(r"\s+"), False),
+    (TokenKind.Newline, re.compile(r"[\n\r]+"), True),
+    # The whitespace token explicitly avoids capturing newlines. This is
+    # important because the regex matches greedily, so a whitespace followed
+    # by a newline would otherwise be accidentally matched.
+    (TokenKind.Whitespace, re.compile(r"[^\S\n\r]+"), False),
 ]
 
 

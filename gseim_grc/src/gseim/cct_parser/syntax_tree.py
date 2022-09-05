@@ -80,3 +80,40 @@ class CctFile(object):
             s += solve_block.dump()
         s += "end_cf\n"
         return s
+
+
+class ParmBlock(object):
+    def __init__(self, keyword, options, default, force_write, assignments):
+        self.keyword = keyword
+        self.options = options
+        self.default = default
+        self.force_write = force_write
+        self.assignments = assignments
+
+
+class ParmsFile(object):
+    def __init__(self):
+        self.parms = {}
+
+    def add_parm(self, parm):
+        self.parms[parm.keyword] = parm
+
+    def dump(self):
+        s = "begin_file\n"
+        for k, parm_block in self.parms.items():
+            s += "  begin_parm"
+            if parm_block.force_write:
+                s += " force_write"
+            for k, v in parm_block.assignments.items():
+                s += f" {k}={v}"
+            s += f"\n    keyword: {parm_block.keyword}\n"
+            if len(parm_block.options) > 1:
+                s += "    options:\n"
+                for opt in parm_block.options:
+                    s += f"+     {opt}\n"
+            else:
+                s += f"    options: {parm_block.options[0]}\n"
+            s += f"    default: {parm_block.default}\n"
+            s += "  end_parm\n"
+        s += "end_file\n"
+        return s

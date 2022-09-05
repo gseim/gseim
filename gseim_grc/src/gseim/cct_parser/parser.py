@@ -23,7 +23,7 @@ from more_itertools import peekable
 from termcolor import cprint
 
 from gseim.cct_parser.lexer import lex, TokenKind
-from gseim.cct_parser.syntax_tree import SolveBlock, CctFile
+from gseim.cct_parser import syntax_tree
 
 
 def expect_token(tok_gen, kind):
@@ -82,17 +82,47 @@ def parse_outvar_method(tok_gen):
     return assignment
 
 
-def parse_variables(tok_gen):
+def parse_list(tok_gen):
     next(tok_gen)
+
     r = []
     for tok in tok_gen:
         if tok.kind == TokenKind.Newline:
-            break
+            if tok_gen.peek().kind == TokenKind.Plus:
+                next(tok_gen)  # Skip "plus" token
+                continue
+            else:
+                break
         r.append(tok.s)
     return r
 
 
+def parse_force_write(tok_gen):
+    next(tok_gen)
+    expect_token(tok_gen, TokenKind.Newline)
+    parse_optional_newline(tok_gen)
+    return True
+
+
 BLOCK_PARSERS = {
+    TokenKind.KeywordBeginFile: {
+        "end": TokenKind.KeywordEndFile,
+        "parsers": {
+            TokenKind.KeywordBeginParm: (
+                "parms",
+                lambda tok_gen: parse_block(tok_gen, TokenKind.KeywordBeginParm),
+            ),
+        },
+    },
+    TokenKind.KeywordBeginParm: {
+        "end": TokenKind.KeywordEndParm,
+        "parsers": {
+            TokenKind.KeywordForceWrite: ("force_write", parse_force_write),
+            TokenKind.KeywordKeyword: ("keyword", parse_list),
+            TokenKind.KeywordOptions: ("options", parse_list),
+            TokenKind.KeywordDefault: ("default", parse_list),
+        },
+    },
     TokenKind.KeywordBeginCircuit: {
         "end": TokenKind.KeywordEndCircuit,
         "parsers": {
@@ -113,7 +143,7 @@ BLOCK_PARSERS = {
         "end": TokenKind.KeywordEndOutput,
         "parsers": {
             TokenKind.KeywordControl: ("control", parse_element),
-            TokenKind.KeywordVariables: ("variables", parse_variables),
+            TokenKind.KeywordVariables: ("variables", parse_list),
         },
     },
 }
@@ -121,7 +151,7 @@ BLOCK_PARSERS = {
 
 def parse_block(tok_gen, start_tok_kind):
     expect_token(tok_gen, start_tok_kind)
-    expect_token(tok_gen, TokenKind.Newline)
+    parse_optional_newline(tok_gen)
 
     ret = defaultdict(lambda: [])
     ret["assignments"] = OrderedDict()
@@ -151,13 +181,13 @@ def parse_block(tok_gen, start_tok_kind):
             expect_token(tok_gen, TokenKind.Newline)
             break
         else:
-            print(f"Unexpected token when parsing circuit: {tok}")
+            print(f"Unexpected token when parsing file: {tok}")
             return
 
     return ret
 
 
-def parse_file(fname):
+def parse_cct_file(fname):
     with open(fname, "r", encoding="utf-8") as cct_file:
         tok_gen = peekable(lex(cct_file))
 
@@ -172,13 +202,13 @@ def parse_file(fname):
         for tok in tok_gen:
             cprint(f"Remaining tokens: {tok}", "blue", file=sys.stderr)
 
-        cct_file = CctFile(title)
+        cct_file = syntax_tree.CctFile(title)
         cct_file.cct_elems = cct_block["elements"]
         cct_file.cct_assignments = cct_block["assignments"]
         cct_file.cct_outvars = dict(cct_block["outvars"])
         for solve_block in solve_blocks:
             cct_file.solve_blocks.append(
-                SolveBlock(
+                syntax_tree.SolveBlock(
                     solve_block["assignments"],
                     solve_block["methods"],
                     solve_block["output_blocks"],
@@ -186,3 +216,31 @@ def parse_file(fname):
             )
 
         return cct_file
+
+
+def parse_parms_file(fname):
+    with open(fname, "r", encoding="utf-8") as parms_file:
+        tok_gen = peekable(lex(parms_file))
+
+        parse_optional_newline(tok_gen)
+        file_block = parse_block(tok_gen, TokenKind.KeywordBeginFile)
+
+        for tok in tok_gen:
+            cprint(f"Remaining tokens: {tok}", "blue", file=sys.stderr)
+
+        parms_file = syntax_tree.ParmsFile()
+        for parm in file_block["parms"]:
+            force_write = len(parm["force_write"]) == 1 and parm["force_write"]
+            keyword = parm["keyword"][0][0]
+            options = parm["options"][0]
+            default = parm["default"][0][0]
+            parm_block = syntax_tree.ParmBlock(
+                keyword,
+                options,
+                default,
+                force_write,
+                parm["assignments"],
+            )
+            parms_file.add_parm(parm_block)
+
+        return parms_file

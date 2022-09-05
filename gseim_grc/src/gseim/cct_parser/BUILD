@@ -17,6 +17,11 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+filegroup(
+    name = "test_data",
+    srcs = glob(["test_data/**"]),
+)
+
 py_test(
     name = "parser_test",
     srcs = ["parser_test.py"],
@@ -25,5 +30,8 @@ py_test(
         "//test_support:lib",
         requirement("pytest"),
     ],
-    data = ["//gseim:test_data"],
+    data = [
+        "//gseim:test_data",
+        ":test_data",
+    ],
 )

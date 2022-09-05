@@ -5,18 +5,29 @@ import tempfile
 from importlib_resources import files
 import pytest
 
-from gseim.cct_parser.parser import parse_file
+from gseim.cct_parser import parser
 from test_support.compare_files import diff
 
 
-def _test_cct_parser(path):
-    cct_file = parse_file(path)
+def _test_parser(f, path, expected_output_path=None):
+    if expected_output_path is None:
+        expected_output_path = path
 
-    with tempfile.NamedTemporaryFile(mode="w") as f:
-        f.write(cct_file.dump())
-        f.flush()
+    ast = f(path)
 
-        diff(path, f.name)
+    with tempfile.NamedTemporaryFile(mode="w") as fout:
+        fout.write(ast.dump())
+        fout.flush()
+
+        diff(expected_output_path, fout.name)
+
+
+def _test_cct_parser(path, expected_output_path=None):
+    _test_parser(parser.parse_cct_file, path, expected_output_path)
+
+
+def _test_parm_parser(path, expected_output_path=None):
+    _test_parser(parser.parse_parms_file, path, expected_output_path)
 
 
 def test_ac_controllerer_3():
@@ -88,6 +99,13 @@ def test_filter_1():
 def test_filter_2():
     _test_cct_parser(
         files("gseim") / "test_data" / "output" / "test" / "test_filter_2.in"
+    )
+
+
+def test_parms():
+    _test_parm_parser(
+        files("gseim") / "cct_parser" / "test_data" / "input" / "parms.in",
+        files("gseim") / "cct_parser" / "test_data" / "output" / "parms.in",
     )
 
 

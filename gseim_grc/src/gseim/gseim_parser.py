@@ -26,7 +26,7 @@ from importlib_resources import files
 import yaml
 
 import gseim.gutils_gseim as gu
-from gseim.cct_parser import CctFile, SolveBlock
+from gseim.cct_parser import parse_parms_file, CctFile, SolveBlock
 from gseim import parse_filters
 
 flag_read_yml_once = True
@@ -1628,9 +1628,8 @@ def main(gseim_file, cct_file):
         if not flag_belement:
             break;
 
-    d_slvlib = {}
     filename = str(files('gseim.data').joinpath('gseim_slvparms.in'))
-    gu.get_parms_1(filename, d_slvlib)
+    slvlib_ast = parse_parms_file(filename)
     l_solve_blocks = sorted(data['solve_blocks'], key=lambda x: int(x['index']))
     l_output_blocks = data['output_blocks']
 
@@ -1700,9 +1699,8 @@ def main(gseim_file, cct_file):
 
         for k, v in slv['d_parms'].items():
             if k not in l_skip:
-                l2 = [d_slvlib[k]['default'], 'none']
-                if v in l2:
-                    if d_slvlib[k]['flag_force_write']:
+                if v in [slvlib_ast.parms[k].default, 'none']:
+                    if slvlib_ast.parms[k].force_write:
                         v1 = cct1.gseim_prm[v] if v in cct1.gseim_prm.keys() else v
                         slv_block.methods.append((k, v1))
                 else:

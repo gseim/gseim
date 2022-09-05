@@ -72,7 +72,7 @@ except ImportError:
     from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
-from gseim.cct_parser.parser import parse_file as parse_netlist
+from gseim.cct_parser.parser import parse_cct_file
 
 class GSEIMPlotNavigationToolbar(NavigationToolbar):
     toolitems = [t for t in NavigationToolbar.toolitems if
@@ -4318,7 +4318,7 @@ class ApplicationWindow(QMainWindow):
             self.DataFiles = []
             self.variables = []
 
-            cct_file = parse_netlist(self.ProjectfileName)
+            cct_file = parse_cct_file(self.ProjectfileName)
             for solve_block in cct_file.solve_blocks:
                 for output_block in solve_block.output_blocks:
                     output_fname = output_block['assignments']['filename']

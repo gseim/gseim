@@ -18,7 +18,7 @@
 from __future__ import absolute_import, print_function
 
 from codecs import open
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import os
 import logging
 from itertools import chain
@@ -41,6 +41,7 @@ from .io import yaml
 from .generator import Generator
 from grc.core.FlowGraph import FlowGraph
 from .Connection import Connection
+from gseim.file_parsers import parse_parms_file, ParmBlock
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -58,14 +59,20 @@ class Platform(Element):
 
         self.dict_outvars = {}
 
-        self.d_slvparms = {}
         filename = str(files('gseim.data').joinpath('gseim_slvparms.in'))
-        gu.get_parms(filename, self.d_slvparms)
-        self.d_slvparms['block_index'] = {'options': ['none'], 'default': '0', 'category': 'none'}
+        self.slvparms_ast = parse_parms_file(filename)
+        self.slvparms_ast.add_parm(
+            ParmBlock(
+                keyword='block_index',
+                options=['none'],
+                default='0',
+                assignments={'category': 'none'},
+            )
+        )
 
-        self.d_slv_categories = {} 
+        self.d_slv_categories = defaultdict(lambda: [])
 
-        gu.prepare_dict_1(self.d_slvparms, self.d_slv_categories)
+        gu.prepare_dict_1(self.slvparms_ast, self.d_slv_categories)
 
         self.d_outparms = {}
         filename = str(files('gseim.data').joinpath('gseim_outparms.in'))

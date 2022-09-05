@@ -109,17 +109,11 @@ def assign_parms_1(d_dialog, d_parms):
         elif v['type_widget'] == 'combo':
             d_parms[k] = w.get_active_text()
 
-def prepare_dict_1(d_parms, d_categories):
-
-    for parm, d in d_parms.items():
-        category = d['category']
-
-        d_new = {'parm_name': parm, 'options': d['options'], 'default': d['default']}
-
-        if category in d_categories.keys():
-            d_categories[category].append(d_new)
-        else:
-            d_categories[category] = [d_new]
+def prepare_dict_1(slvparms_ast, d_categories):
+    for k, v in slvparms_ast.parms.items():
+        category = v.assignments.get('category', 'none')
+        d_new = {'parm_name': k, 'options': v.options, 'default': v.default}
+        d_categories[category].append(d_new)
 
 def find_nth(s_in, c, n):
 #   https://stackoverflow.com/questions/30833409/python-deleting-the-first-2-lines-of-a-string

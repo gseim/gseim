@@ -59,7 +59,7 @@ class FlowGraph(Element):
         self.outvars = {}
         self.l_solve_blocks = []
         self.l_output_blocks = []
-        self.d_slvparms = self.parent_platform.d_slvparms
+        self.slvparms_ast = self.parent_platform.slvparms_ast
 
         self._eval_cache = {}
         self.namespace = {}
@@ -318,7 +318,7 @@ class FlowGraph(Element):
             if len(data['solve_blocks']) != 0:
                 for d in data['solve_blocks']:
 
-                    slv = SolveBlock(self.d_slvparms, '', '', d)
+                    slv = SolveBlock(self.slvparms_ast, '', '', d)
                     self.l_solve_blocks.append(slv)
 
         if 'output_blocks' in data.keys():

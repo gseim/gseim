@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 class SolveBlock():
-    def __init__(self, d_slvparms={}, s_name='', s_index='', d_solve_block={}):
+    def __init__(self, slvparms_ast=None, s_name='', s_index='', d_solve_block={}):
         self.d_parms = {}
         self.l_out = []
 
@@ -25,16 +25,16 @@ class SolveBlock():
 #       1. The solve block data is read from a file (a saved grc file)
 #          and passed as d_solve_block.
 #       2. The solve block default parms are read from a file and passed
-#          as d_slvparms. In this case, we also expect s_name and s_index
+#          as slvparms_ast. In this case, we also expect s_name and s_index
 #          to be specified.
 #
 #       Notes:
-#       - Always pass d_slvparms when calling SolveBlock.
+#       - Always pass slvparms_ast when calling SolveBlock.
 #       - even if a stored solve block is being treated, first
 #         assign the default values and then write over those
 
-        for k, v in d_slvparms.items():
-            self.d_parms[k] = v['default']
+        for k, v in slvparms_ast.parms.items():
+            self.d_parms[k] = v.default
 
         if s_name:
             self.name = s_name
@@ -53,7 +53,7 @@ class SolveBlock():
                 self.l_out.append(out)
 
             for k in d_solve_block['d_parms'].keys():
-                if k in d_slvparms.keys():
+                if k in slvparms_ast.parms.keys():
                     self.d_parms[k] = d_solve_block['d_parms'][k]
 
     def block_to_dict(self):

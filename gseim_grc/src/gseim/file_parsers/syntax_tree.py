@@ -83,12 +83,12 @@ class CctFile(object):
 
 
 class ParmBlock(object):
-    def __init__(self, keyword, options, default, force_write, assignments):
+    def __init__(self, keyword, options, default, force_write=False, assignments=None):
         self.keyword = keyword
         self.options = options
         self.default = default
         self.force_write = force_write
-        self.assignments = assignments
+        self.assignments = assignments or {}
 
 
 class ParmsFile(object):

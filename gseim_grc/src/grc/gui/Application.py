@@ -80,7 +80,7 @@ class Application(Gtk.Application):
             platform: platform module
         """
         self.dict_outvars = platform.dict_outvars.copy()
-        self.d_slvparms = platform.d_slvparms.copy()
+        self.slvparms_ast = platform.slvparms_ast
         self.d_slv_categories = platform.d_slv_categories.copy()
         self.d_outparms = platform.d_outparms.copy()
 

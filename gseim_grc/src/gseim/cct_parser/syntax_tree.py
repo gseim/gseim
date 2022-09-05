@@ -20,6 +20,7 @@ from enum import Enum
 
 from termcolor import cprint
 
+
 class SolveBlock(object):
     def __init__(self, assignments=None, methods=None, output_blocks=None):
         self.assignments = assignments or {}
@@ -27,54 +28,55 @@ class SolveBlock(object):
         self.output_blocks = output_blocks or []
 
     def dump(self):
-        s = 'begin_solve\n'
+        s = "begin_solve\n"
         for k, v in self.assignments.items():
-            s += f'   {k}={v}\n'
+            s += f"   {k}={v}\n"
         for k, v in self.methods:
-            s += f'   method: {k}={v}\n'
+            s += f"   method: {k}={v}\n"
         for output_block in self.output_blocks:
-            s += '   begin_output\n    '
-            for k, v in output_block['assignments'].items():
-                s += f' {k}={v}'
-            for control_block in output_block['control']:
-                s += f'\n     control:' 
+            s += "   begin_output\n    "
+            for k, v in output_block["assignments"].items():
+                s += f" {k}={v}"
+            for control_block in output_block["control"]:
+                s += f"\n     control:"
                 for k, v in control_block[1].items():
-                    s += f' {k}={v}'
-            for v_groups in output_block['variables']:
-                s += '\n     variables:'
+                    s += f" {k}={v}"
+            for v_groups in output_block["variables"]:
+                s += "\n     variables:"
                 for v in v_groups:
-                    s += f' {v}'
-            s += '\n   end_output\n'
-        s += 'end_solve\n'
+                    s += f" {v}"
+            s += "\n   end_output\n"
+        s += "end_solve\n"
         return s
+
 
 class CctFile(object):
     def __init__(self, project_fname=None):
-        self.project_fname = project_fname or 'undefined'
+        self.project_fname = project_fname or "undefined"
         self.cct_elems = []
         self.cct_assignments = {}
         self.cct_outvars = {}
         self.solve_blocks = []
 
     def dump(self):
-        s = f'title: {self.project_fname}\n'
-        s += 'begin_circuit\n'
+        s = f"title: {self.project_fname}\n"
+        s += "begin_circuit\n"
         for cct_elem_kind, cct_elem_assignments in self.cct_elems:
-            line = f'   {cct_elem_kind}'
+            line = f"   {cct_elem_kind}"
             for k, v in cct_elem_assignments.items():
-                to_add = f' {k}={v}'
+                to_add = f" {k}={v}"
                 if len(line) + len(to_add) >= 80:
-                    s += line + '\n'
-                    line = '+    '
+                    s += line + "\n"
+                    line = "+    "
                 line += to_add
             s += line
-            s += '\n'
+            s += "\n"
         for k, v in self.cct_assignments.items():
-            s += f'   {k}={v}\n'
+            s += f"   {k}={v}\n"
         for k, v in self.cct_outvars.items():
-            s += f'   outvar: {k}={v}\n'
-        s += 'end_circuit\n'
+            s += f"   outvar: {k}={v}\n"
+        s += "end_circuit\n"
         for solve_block in self.solve_blocks:
             s += solve_block.dump()
-        s += 'end_cf\n'
+        s += "end_cf\n"
         return s

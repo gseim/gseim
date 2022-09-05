@@ -22,6 +22,7 @@ from typing import NamedTuple
 
 from termcolor import cprint
 
+
 class TokenKind(Enum):
     KeywordTitle = 0
     KeywordBeginCircuit = 1
@@ -42,33 +43,36 @@ class TokenKind(Enum):
     Newline = 16
     Whitespace = 17
 
+
 TOKEN_TYPES = [
     # (TokenKind, regex, emit token?)
-    (TokenKind.KeywordTitle, re.compile(r'title:'), True),
-    (TokenKind.KeywordEndCircuitFile, re.compile(r'end_cf'), True),
-    (TokenKind.KeywordBeginCircuit, re.compile(r'begin_circuit'), True),
-    (TokenKind.KeywordEndCircuit, re.compile(r'end_circuit'), True),
-    (TokenKind.KeywordBeginSolve, re.compile(r'begin_solve'), True),
-    (TokenKind.KeywordEndSolve, re.compile(r'end_solve'), True),
-    (TokenKind.KeywordBeginOutput, re.compile(r'begin_output'), True),
-    (TokenKind.KeywordEndOutput, re.compile(r'end_output'), True),
-    (TokenKind.KeywordOutVar, re.compile(r'outvar:'), True),
-    (TokenKind.KeywordMethod, re.compile(r'method:'), True),
-    (TokenKind.KeywordVariables, re.compile(r'variables:'), True),
-    (TokenKind.KeywordControl, re.compile(r'control:'), True),
-    (TokenKind.Equals, re.compile(r'='), True),
-    (TokenKind.Ident, re.compile(r'[A-Za-z][A-Za-z0-9_.$#]*'), True),
-    (TokenKind.Number, re.compile(r'-?\d[\d.e+-]*[umMpk]?'), True),
-    (TokenKind.Plus, re.compile(r'\+'), True),
-    (TokenKind.Newline, re.compile(r'\n+'), True),
-    (TokenKind.Whitespace, re.compile(r'\s+'), False),
+    (TokenKind.KeywordTitle, re.compile(r"title:"), True),
+    (TokenKind.KeywordEndCircuitFile, re.compile(r"end_cf"), True),
+    (TokenKind.KeywordBeginCircuit, re.compile(r"begin_circuit"), True),
+    (TokenKind.KeywordEndCircuit, re.compile(r"end_circuit"), True),
+    (TokenKind.KeywordBeginSolve, re.compile(r"begin_solve"), True),
+    (TokenKind.KeywordEndSolve, re.compile(r"end_solve"), True),
+    (TokenKind.KeywordBeginOutput, re.compile(r"begin_output"), True),
+    (TokenKind.KeywordEndOutput, re.compile(r"end_output"), True),
+    (TokenKind.KeywordOutVar, re.compile(r"outvar:"), True),
+    (TokenKind.KeywordMethod, re.compile(r"method:"), True),
+    (TokenKind.KeywordVariables, re.compile(r"variables:"), True),
+    (TokenKind.KeywordControl, re.compile(r"control:"), True),
+    (TokenKind.Equals, re.compile(r"="), True),
+    (TokenKind.Ident, re.compile(r"[A-Za-z][A-Za-z0-9_.$#]*"), True),
+    (TokenKind.Number, re.compile(r"-?\d[\d.e+-]*[umMpk]?"), True),
+    (TokenKind.Plus, re.compile(r"\+"), True),
+    (TokenKind.Newline, re.compile(r"\n+"), True),
+    (TokenKind.Whitespace, re.compile(r"\s+"), False),
 ]
+
 
 class Token(NamedTuple):
     kind: TokenKind
     s: str
     line_no: int
     pos: int
+
 
 def lex(stream):
     """Lexer for circuit file yields instances of (TokenKind, string)"""
@@ -80,9 +84,12 @@ def lex(stream):
                 if m:
                     if emit:
                         # Line numbers and character positions usually start at 1
-                        yield Token(token_kind, m[0], line_no+1, pos+1)
+                        yield Token(token_kind, m[0], line_no + 1, pos + 1)
                     pos += m.end()
                     break
             else:
-                cprint(f'Did not find any matching token at line {line_no}: {line[pos:]}', 'red')
+                cprint(
+                    f"Did not find any matching token at line {line_no}: {line[pos:]}",
+                    "red",
+                )
                 return

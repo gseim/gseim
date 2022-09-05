@@ -32,36 +32,49 @@ from importlib_resources import files
 import gseim.gutils_gseim as gu
 
 XFER_FN_PARMS = [
-    'a0', 'a1', 'a2', 'a3', 'a4', 'a5',
-    'b0', 'b1', 'b2', 'b3', 'b4', 'b5',
-    'scale_coef', 'f0'
+    "a0",
+    "a1",
+    "a2",
+    "a3",
+    "a4",
+    "a5",
+    "b0",
+    "b1",
+    "b2",
+    "b3",
+    "b4",
+    "b5",
+    "scale_coef",
+    "f0",
 ]
+
 
 class PICDummy(object):
     def __init__(self, lib):
         self.lib = lib
         self.obj = lib.PICDummy_new()
-  
+
     def filter_compute_coef(self):
         self.lib.PICDummy_filter_compute_coef(self.obj)
+
 
 def compute_params(d, dummy):
     flag_scale = False
 
-    if d['scale_coef'] != '0':
-        k_scale = 2.0*np.pi*float(d['f0'])
+    if d["scale_coef"] != "0":
+        k_scale = 2.0 * np.pi * float(d["f0"])
         flag_scale = True
 
-    f_temp = open('temp_coef_1.dat', 'w')
+    f_temp = open("temp_coef_1.dat", "w")
     for k in XFER_FN_PARMS:
-        f_temp.write(d[k] + '  -- '+ k + '\n')
+        f_temp.write(d[k] + "  -- " + k + "\n")
     f_temp.close()
 
     # call C++ program to compute partial fractions
     dummy.filter_compute_coef()
 
     # read partial fraction info from file
-    f_temp = open('temp_coef_2.dat', 'r')
+    f_temp = open("temp_coef_2.dat", "r")
 
     line = f_temp.readline()
     l = line.split()
@@ -88,7 +101,7 @@ def compute_params(d, dummy):
             if power_dummy == 1:
                 a_scale = k_scale
             elif power_dummy == 2:
-                a_scale = k_scale*k_scale
+                a_scale = k_scale * k_scale
         else:
             alpha_scale = 1.0
             a_scale = 1.0
@@ -97,15 +110,15 @@ def compute_params(d, dummy):
         l = line.split()
         alpha_dummy = float(l[0])
         beta_dummy = float(l[1])
-        alpha.append(alpha_scale*alpha_dummy)
-        beta.append(alpha_scale*beta_dummy)
+        alpha.append(alpha_scale * alpha_dummy)
+        beta.append(alpha_scale * beta_dummy)
 
         line = f_temp.readline()
         l = line.split()
         a_dummy = float(l[0])
         b_dummy = float(l[1])
-        a.append(a_scale*a_dummy)
-        b.append(a_scale*b_dummy)
+        a.append(a_scale * a_dummy)
+        b.append(a_scale * b_dummy)
 
     f_temp.close()
 
@@ -122,16 +135,16 @@ def compute_params(d, dummy):
         n_elements_ttl += 1
 
     return {
-        'a': a,
-        'b': b,
-        'a0p': a0p,
-        'alpha': alpha,
-        'beta': beta,
-        'gain': gain,
-        'n_roots': n_roots,
-        'root_power': root_power,
-        'flag_real': flag_real,
-        'n_elements_ttl': n_elements_ttl,
+        "a": a,
+        "b": b,
+        "a0p": a0p,
+        "alpha": alpha,
+        "beta": beta,
+        "gain": gain,
+        "n_roots": n_roots,
+        "root_power": root_power,
+        "flag_real": flag_real,
+        "n_elements_ttl": n_elements_ttl,
     }
 
 
@@ -139,28 +152,25 @@ def process(dummy, ast_1):
     new_elems = []
     n_filters = 1
     for cct_elem_kind, cct_elem_assignments in ast_1.cct_elems:
-        if cct_elem_kind == 'xelement' and cct_elem_assignments['type'] == 'xfer_fn':
-            element_name = cct_elem_assignments['name']
+        if cct_elem_kind == "xelement" and cct_elem_assignments["type"] == "xfer_fn":
+            element_name = cct_elem_assignments["name"]
 
-            x_node = cct_elem_assignments['x']
-            y_node = cct_elem_assignments['y']
+            x_node = cct_elem_assignments["x"]
+            y_node = cct_elem_assignments["y"]
 
-            d = {
-                k: cct_elem_assignments.get(k, '0')
-                for k in XFER_FN_PARMS
-            }
+            d = {k: cct_elem_assignments.get(k, "0") for k in XFER_FN_PARMS}
 
             r = compute_params(d, dummy)
-            a = r['a']
-            b = r['b']
-            a0p = r['a0p']
-            alpha = r['alpha']
-            beta = r['beta']
-            gain = r['gain']
-            n_roots = r['n_roots']
-            root_power = r['root_power']
-            flag_real = r['flag_real']
-            n_elements_ttl = r['n_elements_ttl']
+            a = r["a"]
+            b = r["b"]
+            a0p = r["a0p"]
+            alpha = r["alpha"]
+            beta = r["beta"]
+            gain = r["gain"]
+            n_roots = r["n_roots"]
+            root_power = r["root_power"]
+            flag_real = r["flag_real"]
+            n_elements_ttl = r["n_elements_ttl"]
 
             n_elements = 0
 
@@ -176,70 +186,64 @@ def process(dummy, ast_1):
                         y_nd = y_node
 
                     if flag_real[i] == 1:
-                        assgns['type'] = 'pole_real_order_' + str(root_power[i])
-                        assgns['a'] = ('%14.7e' % a[i]).replace(' ', '')
-                        assgns['alpha'] = ('%14.7e' % alpha[i]).replace(' ', '')
+                        assgns["type"] = "pole_real_order_" + str(root_power[i])
+                        assgns["a"] = ("%14.7e" % a[i]).replace(" ", "")
+                        assgns["alpha"] = ("%14.7e" % alpha[i]).replace(" ", "")
                     else:
-                        assgns['type'] = 'pole_complex_order_' + str(root_power[i])
-                        assgns['a'] = ('%14.7e' % a[i]).replace(' ', '')
-                        assgns['b'] = ('%14.7e' % b[i]).replace(' ', '')
-                        assgns['alpha'] = ('%14.7e' % alpha[i]).replace(' ', '')
-                        assgns['beta'] = ('%14.7e' % beta[i]).replace(' ', '')
+                        assgns["type"] = "pole_complex_order_" + str(root_power[i])
+                        assgns["a"] = ("%14.7e" % a[i]).replace(" ", "")
+                        assgns["b"] = ("%14.7e" % b[i]).replace(" ", "")
+                        assgns["alpha"] = ("%14.7e" % alpha[i]).replace(" ", "")
+                        assgns["beta"] = ("%14.7e" % beta[i]).replace(" ", "")
 
-                    assgns['x'] = x_node
-                    assgns['y'] = y_nd
+                    assgns["x"] = x_node
+                    assgns["y"] = y_nd
 
                     if n_elements == 1:
-                        y_st = float(cct_elem_assignments.get('y_st', '0'))
-                        assgns['y_st'] = ('%14.7e' % y_st).replace(' ', '')
+                        y_st = float(cct_elem_assignments.get("y_st", "0"))
+                        assgns["y_st"] = ("%14.7e" % y_st).replace(" ", "")
 
                     new_elems.append((kind, assgns))
 
             if a0p != 0.0:
                 n_elements += 1
-                kind = 'xelement'
-                assgns = {'type': 'multscl'}
+                kind = "xelement"
+                assgns = {"type": "multscl"}
 
                 y_nd = x_node + "_f_" + str(n_filters) + "_" + str(n_elements)
-                assgns['x'] = x_node
-                assgns['y'] = y_nd
-                assgns['k'] = ('%14.7e' % (gain*a0p)).replace(' ', '')
+                assgns["x"] = x_node
+                assgns["y"] = y_nd
+                assgns["k"] = ("%14.7e" % (gain * a0p)).replace(" ", "")
 
                 new_elems.append((kind, assgns))
 
             if n_elements > 1:
-                kind = 'xelement'
-                assgns = {'type': 'sum_' + str(n_elements)}
+                kind = "xelement"
+                assgns = {"type": "sum_" + str(n_elements)}
 
                 for i in range(n_elements):
-                    x_nd = x_node + "_f_" + str(n_filters) + "_" + str(i+1)
-                    assgns['x' + str(i+1)] = str(x_nd)
-                assgns['y'] = y_node
+                    x_nd = x_node + "_f_" + str(n_filters) + "_" + str(i + 1)
+                    assgns["x" + str(i + 1)] = str(x_nd)
+                assgns["y"] = y_node
 
                 new_elems.append((kind, assgns))
 
             for k1, v1 in ast_1.cct_outvars.items():
-                if v1.split('_of_')[-1] == element_name:
-                    if v1.split('_of_')[0] == 'x':
-                        ast_1.cct_outvars[k1] = 'xvar_of_' + x_node
-                    elif v1.split('_of_')[0] == 'y':
-                        ast_1.cct_outvars[k1] = 'xvar_of_' + y_node
+                if v1.split("_of_")[-1] == element_name:
+                    if v1.split("_of_")[0] == "x":
+                        ast_1.cct_outvars[k1] = "xvar_of_" + x_node
+                    elif v1.split("_of_")[0] == "y":
+                        ast_1.cct_outvars[k1] = "xvar_of_" + y_node
         else:
             new_elems.append((cct_elem_kind, cct_elem_assignments))
 
     ast_1.cct_elems = new_elems
 
+
 def process_xfer_fns(cct_ast):
     # load the library
-    lib_filename = files('gseim_cpp_lib')/'libfilter.so'
+    lib_filename = files("gseim_cpp_lib") / "libfilter.so"
     lib = cdll.LoadLibrary(lib_filename)
     dummy = PICDummy(lib)
 
     process(dummy, cct_ast)
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print('parse_filters.py: need 2 arguments. Halting...')
-        sys.exit()
-
-    main(sys.argv[1])

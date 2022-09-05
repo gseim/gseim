@@ -25,16 +25,19 @@ from termcolor import cprint
 from gseim.cct_parser.lexer import lex, TokenKind
 from gseim.cct_parser.syntax_tree import SolveBlock, CctFile
 
+
 def expect_token(tok_gen, kind):
     t = next(tok_gen)
     if not isinstance(kind, list):
         kind = [kind]
-    assert t.kind in kind, f'Expecting {kind} but saw {t}'
+    assert t.kind in kind, f"Expecting {kind} but saw {t}"
     return t
+
 
 def parse_optional_newline(tok_gen):
     if tok_gen and tok_gen.peek().kind == TokenKind.Newline:
         next(tok_gen)
+
 
 def parse_assignment(tok_gen):
     lvalue = expect_token(tok_gen, TokenKind.Ident)
@@ -42,11 +45,13 @@ def parse_assignment(tok_gen):
     rvalue = expect_token(tok_gen, [TokenKind.Number, TokenKind.Ident])
     return (lvalue.s, rvalue.s)
 
+
 def parse_title(tok_gen):
     expect_token(tok_gen, TokenKind.KeywordTitle)
     title = expect_token(tok_gen, TokenKind.Ident)
     expect_token(tok_gen, TokenKind.Newline)
     return title.s
+
 
 def parse_element(tok_gen):
     elem_tok = next(tok_gen)
@@ -58,7 +63,7 @@ def parse_element(tok_gen):
         k, v = parse_assignment(tok_gen)
         assignments[k] = v
 
-    next(tok_gen) # Already know it is a newline
+    next(tok_gen)  # Already know it is a newline
 
     if tok_gen.peek().kind == TokenKind.Plus:
         # This is a line continuation. Skip the '+' then continue.
@@ -69,11 +74,13 @@ def parse_element(tok_gen):
 
     return (elem_kind, assignments)
 
+
 def parse_outvar_method(tok_gen):
     next(tok_gen)
     assignment = parse_assignment(tok_gen)
     expect_token(tok_gen, TokenKind.Newline)
     return assignment
+
 
 def parse_variables(tok_gen):
     next(tok_gen)
@@ -84,36 +91,40 @@ def parse_variables(tok_gen):
         r.append(tok.s)
     return r
 
+
 BLOCK_PARSERS = {
     TokenKind.KeywordBeginCircuit: {
-        'end': TokenKind.KeywordEndCircuit,
-        'parsers': {
-            TokenKind.KeywordOutVar: ('outvars', parse_outvar_method),
+        "end": TokenKind.KeywordEndCircuit,
+        "parsers": {
+            TokenKind.KeywordOutVar: ("outvars", parse_outvar_method),
         },
     },
     TokenKind.KeywordBeginSolve: {
-        'end': TokenKind.KeywordEndSolve,
-        'parsers': {
-            TokenKind.KeywordMethod: ('methods', parse_outvar_method),
-            TokenKind.KeywordBeginOutput:
-                ('output_blocks', lambda tok_gen: parse_block(tok_gen, TokenKind.KeywordBeginOutput)),
+        "end": TokenKind.KeywordEndSolve,
+        "parsers": {
+            TokenKind.KeywordMethod: ("methods", parse_outvar_method),
+            TokenKind.KeywordBeginOutput: (
+                "output_blocks",
+                lambda tok_gen: parse_block(tok_gen, TokenKind.KeywordBeginOutput),
+            ),
         },
     },
     TokenKind.KeywordBeginOutput: {
-        'end': TokenKind.KeywordEndOutput,
-        'parsers': {
-            TokenKind.KeywordControl: ('control', parse_element),
-            TokenKind.KeywordVariables: ('variables', parse_variables),
+        "end": TokenKind.KeywordEndOutput,
+        "parsers": {
+            TokenKind.KeywordControl: ("control", parse_element),
+            TokenKind.KeywordVariables: ("variables", parse_variables),
         },
     },
 }
+
 
 def parse_block(tok_gen, start_tok_kind):
     expect_token(tok_gen, start_tok_kind)
     expect_token(tok_gen, TokenKind.Newline)
 
     ret = defaultdict(lambda: [])
-    ret['assignments'] = OrderedDict()
+    ret["assignments"] = OrderedDict()
 
     parser_details = BLOCK_PARSERS[start_tok_kind]
 
@@ -123,7 +134,7 @@ def parse_block(tok_gen, start_tok_kind):
             if tok_gen.peek().kind == TokenKind.Equals:
                 tok_gen.prepend(tok)
                 k, v = parse_assignment(tok_gen)
-                ret['assignments'][k] = v
+                ret["assignments"][k] = v
 
                 # There can be repeated assignments on the same line, so
                 # don't automatically consume it.
@@ -131,22 +142,23 @@ def parse_block(tok_gen, start_tok_kind):
             else:
                 # This should be an element description
                 tok_gen.prepend(tok)
-                ret['elements'].append(parse_element(tok_gen))
-        elif tok.kind in parser_details['parsers']:
+                ret["elements"].append(parse_element(tok_gen))
+        elif tok.kind in parser_details["parsers"]:
             tok_gen.prepend(tok)
-            output_var, parser = parser_details['parsers'][tok.kind]
+            output_var, parser = parser_details["parsers"][tok.kind]
             ret[output_var].append(parser(tok_gen))
-        elif tok.kind == parser_details['end']:
+        elif tok.kind == parser_details["end"]:
             expect_token(tok_gen, TokenKind.Newline)
             break
         else:
-            print(f'Unexpected token when parsing circuit: {tok}')
+            print(f"Unexpected token when parsing circuit: {tok}")
             return
 
     return ret
 
+
 def parse_file(fname):
-    with open(fname, 'r', encoding='utf-8') as cct_file:
+    with open(fname, "r", encoding="utf-8") as cct_file:
         tok_gen = peekable(lex(cct_file))
 
         title = parse_title(tok_gen)
@@ -158,21 +170,26 @@ def parse_file(fname):
         parse_optional_newline(tok_gen)
 
         for tok in tok_gen:
-            cprint(f'Remaining tokens: {tok}', 'blue', file=sys.stderr)
+            cprint(f"Remaining tokens: {tok}", "blue", file=sys.stderr)
 
         cct_file = CctFile(title)
-        cct_file.cct_elems = cct_block['elements']
-        cct_file.cct_assignments = cct_block['assignments']
-        cct_file.cct_outvars = dict(cct_block['outvars'])
+        cct_file.cct_elems = cct_block["elements"]
+        cct_file.cct_assignments = cct_block["assignments"]
+        cct_file.cct_outvars = dict(cct_block["outvars"])
         for solve_block in solve_blocks:
-            cct_file.solve_blocks.append(SolveBlock(
-                solve_block['assignments'],
-                solve_block['methods'],
-                solve_block['output_blocks'],
-            ))
+            cct_file.solve_blocks.append(
+                SolveBlock(
+                    solve_block["assignments"],
+                    solve_block["methods"],
+                    solve_block["output_blocks"],
+                )
+            )
 
         return cct_file
 
-if __name__ == '__main__':
-    cct = parse_file('/Users/jeff/Documents/Source/gseim/gseim_grc/src/gseim/test_data/output/test/test_filter_1.in')
-    print(cct.dump(), end='')
+
+if __name__ == "__main__":
+    cct = parse_file(
+        "/Users/jeff/Documents/Source/gseim/gseim_grc/src/gseim/test_data/output/test/test_filter_1.in"
+    )
+    print(cct.dump(), end="")

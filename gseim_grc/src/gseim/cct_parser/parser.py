@@ -186,10 +186,3 @@ def parse_file(fname):
             )
 
         return cct_file
-
-
-if __name__ == "__main__":
-    cct = parse_file(
-        "/Users/jeff/Documents/Source/gseim/gseim_grc/src/gseim/test_data/output/test/test_filter_1.in"
-    )
-    print(cct.dump(), end="")

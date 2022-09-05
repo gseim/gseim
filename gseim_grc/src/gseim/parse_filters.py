@@ -20,16 +20,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Read the circuit file and rewrite after parsing xfer_fn elements.
 #
 
-import sys
-import os
 import numpy as np
 from ctypes import cdll
-import pkgutil
-import tempfile
 
 from importlib_resources import files
-
-import gseim.gutils_gseim as gu
 
 XFER_FN_PARMS = [
     "a0",

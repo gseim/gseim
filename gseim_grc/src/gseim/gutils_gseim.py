@@ -421,49 +421,6 @@ def extract_lines_1a(f_out, filename, keyword1, keyword2):
     for i in s1:
         f_out.write(i)
 
-def extract_lines_10(filename, keyword1, keyword2, string_list, flag_include_1, flag_include_2):
-
-    flag_keyword1 = False
-    flag_keyword2 = False
-    f = open(os.path.expanduser(filename), 'r')
-
-    for i in range(10000):
-        line = f.readline()
-        if (line == ""):
-            print('extract_lines_10: unexpected eof reached. Halting...')
-            sys.exit()
-        s2 = line.replace("\n","")
-        s1 = s2.split()
-        if (len(s1) > 0):
-            if s1[0].startswith(keyword2):
-                flag_keyword2 = True
-                if flag_include_2:
-                    string_list.append(line)
-                break
-        if (flag_keyword1):
-            string_list.append(line)
-            continue
-        if (len(s1) > 0):
-            if s1[0].startswith(keyword1):
-                flag_keyword1 = True
-                if flag_include_1:
-                    string_list.append(line)
-
-    f.close()
-
-    if (not flag_keyword1):
-        print('extract_lines_10: ',keyword1,' not found. Halting...')
-        sys.exit()
-    if (not flag_keyword2):
-        print('extract_lines_10: ',keyword2,' not found. Halting...')
-        sys.exit()
-
-def extract_lines_10a(f_out, filename, keyword1, keyword2, flag_include_1, flag_include_2):
-    s1 = []
-    extract_lines_10(filename, keyword1, keyword2, s1, flag_include_1, flag_include_2)
-    for i in s1:
-        f_out.write(i)
-
 def extract_int_1(filename, keyword):
 
     f = open(os.path.expanduser(filename), 'r')

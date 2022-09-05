@@ -94,21 +94,6 @@ def get_parms(filename, d_parms):
             'category': parm_category
         }    
 
-def assign_parms_1(d_dialog, d_parms):
-    for k, v in d_dialog.items():
-        w = v['widget']
-
-        if v['type_widget'] == 'entry':
-            s = w.get_text().replace(' ', '')
-            if s:
-                d_parms[k] = s
-            else:
-                d_parms[k] = 'none'
-        elif v['type_widget'] == 'checkbutton':
-            d_parms[k] = 'yes' if w.get_active() else 'no'
-        elif v['type_widget'] == 'combo':
-            d_parms[k] = w.get_active_text()
-
 def prepare_dict_1(slvparms_ast, d_categories):
     for k, v in slvparms_ast.parms.items():
         category = v.assignments.get('category', 'none')

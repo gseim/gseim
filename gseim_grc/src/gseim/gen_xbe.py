@@ -53,92 +53,92 @@ void x_{xbe_name} (
 
             if (len(in_var_list) > 0):
                 in_var_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, in_var_list, in_var_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, in_var_list, in_var_decl)
 
             if (len(out_var_list) > 0):
                 out_var_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, out_var_list, out_var_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, out_var_list, out_var_decl)
 
             auxvar_list = []
             gu.extract_strings_2(element_fname, 'aux_vars:', auxvar_list)
 
             if (len(auxvar_list) > 0):
                 auxvar_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, auxvar_list, auxvar_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, auxvar_list, auxvar_decl)
 
             iparm_list = []
             gu.extract_strings_1(element_fname, 'iparms:', iparm_list)
 
             if (len(iparm_list) > 0):
                 iparm_decl = []
-                gu.format_string_1a(out_f, nmax, 'int ', indent1, indent2, iparm_list, iparm_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] int ', indent1, indent2, iparm_list, iparm_decl)
 
             rparm_list = []
             gu.extract_strings_1(element_fname, 'rparms:', rparm_list)
 
             if (len(rparm_list) > 0):
                 rparm_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, rparm_list, rparm_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, rparm_list, rparm_decl)
 
             stparm_list = []
             gu.extract_strings_1(element_fname, 'stparms:', stparm_list)
 
             if (len(stparm_list) > 0):
                 stparm_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, stparm_list, stparm_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, stparm_list, stparm_decl)
 
             igparm_list = []
             gu.extract_strings_1(element_fname, 'igparms:', igparm_list)
 
             if (len(igparm_list) > 0):
                 igparm_decl = []
-                gu.format_string_1a(out_f, nmax, 'double ', indent1, indent2, igparm_list, igparm_decl)
+                gu.format_string_1a(out_f, nmax, '[[maybe_unused]] double ', indent1, indent2, igparm_list, igparm_decl)
 
             outparm_list = []
             gu.extract_strings_2(element_fname, 'outparms:', outparm_list)
 
             if (len(in_var_list) > 0):
                 in_var_order = []
-                gu.format_string_2a(out_f, 0, 'const int nvr_', indent1, in_var_list, in_var_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int nvr_', indent1, in_var_list, in_var_order)
 
             if (len(out_var_list) > 0):
                 out_var_order = []
-                gu.format_string_2a(out_f, len(in_var_list), 'const int nvr_', indent1,\
+                gu.format_string_2a(out_f, len(in_var_list), '[[maybe_unused]] const int nvr_', indent1,\
                   out_var_list, out_var_order)
 
             if (len(iparm_list) > 0):
                 iparm_order = []
-                gu.format_string_2a(out_f, 0, 'const int ni_', indent1, iparm_list, iparm_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int ni_', indent1, iparm_list, iparm_order)
 
             if (len(rparm_list) > 0):
                 rparm_order = []
-                gu.format_string_2a(out_f, 0, 'const int nr_', indent1, rparm_list, rparm_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int nr_', indent1, rparm_list, rparm_order)
 
             if (len(stparm_list) > 0):
                 stparm_order = []
-                gu.format_string_2a(out_f, 0, 'const int nst_', indent1, stparm_list, stparm_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int nst_', indent1, stparm_list, stparm_order)
 
             if (len(igparm_list) > 0):
                 igparm_order = []
-                gu.format_string_2a(out_f, 0, 'const int nig_', indent1, igparm_list, igparm_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int nig_', indent1, igparm_list, igparm_order)
 
             if (len(outparm_list) > 0):
                 outparm_order = []
-                gu.format_string_2a(out_f, 0, 'const int no_', indent1, outparm_list, outparm_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int no_', indent1, outparm_list, outparm_order)
 
             if (len(auxvar_list) > 0):
                 auxvar_order = []
-                gu.format_string_2a(out_f, 0, 'const int na_', indent1, auxvar_list, auxvar_order)
+                gu.format_string_2a(out_f, 0, '[[maybe_unused]] const int na_', indent1, auxvar_list, auxvar_order)
 
             n_f = gu.extract_int_1(element_fname, 'n_f')
             if (n_f > 0):
                 eq_order = []
-                gu.format_string_3a(out_f, 'const int nf_', indent1, n_f, eq_order)
+                gu.format_string_3a(out_f, '[[maybe_unused]] const int nf_', indent1, n_f, eq_order)
 
             n_g = gu.extract_int_1(element_fname, 'n_g')
             if (n_g > 0):
                 eq_order = []
-                gu.format_string_3a(out_f, 'const int ng_', indent1, n_g, eq_order)
+                gu.format_string_3a(out_f, '[[maybe_unused]] const int ng_', indent1, n_g, eq_order)
 
 #   source code from xx.xbe:
             gu.extract_lines_1a(out_f, element_fname, 'source:', 'endC')

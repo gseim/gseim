@@ -178,7 +178,7 @@ void get_xbe(
     if (xbe_f_ptr_map.count(xbe_name) > 0) {
         (xbe_f_ptr_map.at(xbe_name))(G, X, J);
     } else {
-        cout << "get_xbe (alt): did not find " << xbe_name << endl;
+        cout << "get_xbe: did not find \\"" << xbe_name << "\\"" << endl;
         exit(1);
     }
 }

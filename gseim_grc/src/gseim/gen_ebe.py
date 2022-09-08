@@ -179,7 +179,7 @@ void get_ebe(
     if (ebe_f_ptr_map.count(ebe_name) > 0) {
         (ebe_f_ptr_map.at(ebe_name))(G, X, J);
     } else {
-        cout << "get_ebe (alt): did not find " << ebe_name << endl;
+        cout << "get_ebe: did not find \\"" << ebe_name << "\\"" << endl;
         exit(1);
     }
 }

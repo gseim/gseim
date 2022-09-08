@@ -49,6 +49,7 @@ void XbeUsr::set_values_1(
    tick[pos] = true; tick[pos+1] = true;
    i_xbel = find_name<XbeLib>(xbe_lib,s1);
    index_xbel = i_xbel;
+   xbel_name = xbe_lib[i_xbel].name;
    n_vr1 = xbe_lib[i_xbel].n_vr;
    vr.resize(n_vr1);
 

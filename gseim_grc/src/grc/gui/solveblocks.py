@@ -18,366 +18,273 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import gi
 import sys
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, GObject, Pango
 from grc.core.utils import gutils as gu
 
-class AddSolveBlock(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, title='Add Solve Block', transient_for=parent, flags=0)
-        self.add_buttons(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
-        )
-        self.set_default_size(150, 100)
-        self.set_position(Gtk.WindowPosition.CENTER)
 
-        box = self.get_content_area()
+class SolveBlockEditor(object):
+    def __init__(self, title, mark_unsaved_handler, data, schema):
+        self.title = title
+        self.mark_unsaved_handler = mark_unsaved_handler
+        self.data = data
+        self.schema = schema
+        print("schema", schema)
 
-        box.set_spacing(30)
-        box.set_margin_top(5)
+    class SolveBlockRow(object):
+        header = False
+        schema = None
+        key = ""
+        default = ""
+        options = []
 
-        grid = Gtk.Grid()
+        def __init__(self, mark_unsaved_handler, solve_block, schema=None):
+            self.mark_unsaved_handler = mark_unsaved_handler
+            self.solve_block = solve_block
 
-        grid.set_row_spacing(10)
-        grid.set_column_spacing(10)
+            if schema:
+                self.schema = schema
 
-        label_name = Gtk.Label(label = '  Name ', xalign=1)
-        label_index = Gtk.Label(label = '  Index ', xalign=1)
+                self.key = schema["parm_name"]
+                self.default = schema["default"]
+                self.options = schema["options"]
 
-        self.entry_name = Gtk.Entry(text='')
-        self.entry_value = Gtk.Entry(text='0')
-
-        grid.add(label_name)
-        grid.attach(self.entry_name, 1, 0, 1, 1)
-        grid.attach_next_to(label_index, label_name, Gtk.PositionType.BOTTOM, 1, 1)
-        grid.attach_next_to(self.entry_value, label_index, Gtk.PositionType.RIGHT, 1, 1)
-
-        box.add(grid)
-        self.show_all()
-
-class DelSolveBlock(Gtk.Dialog):
-    def __init__(self, parent, l_solve_blocks):
-#       l_solve_blocks is a list of solve blocks, each solve block is a dict
-#       Note: do not need to add warning if l_solve_blocks is empty; that would be
-#         done in the calling function
-
-        Gtk.Dialog.__init__(self, title='Delete Solve Blocks', transient_for=parent, flags=0)
-        self.add_buttons(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
-        )
-        self.set_default_size(150, 100)
-        self.set_position(Gtk.WindowPosition.CENTER)
-
-        box = self.get_content_area()
-        box.set_spacing(30)
-        box.set_margin_top(5)
-
-        grid = Gtk.Grid()
-        grid.set_row_spacing(10)
-        grid.set_column_spacing(10)
-        grid.props.halign = Gtk.Align.CENTER
-
-        l_names = []
-
-#       if the solve block name is slv_1 and index is 0, we will display
-#       'slv_1 (0)' as the label
-#       We will treat index as a string, not int.
-
-        for slv in l_solve_blocks:
-            l_names.append(slv.name + ' (' + slv.index + ')')
-
-        self.name = []
-        self.tick = []
-
-        for i in range(len(l_names)):
-            self.name.append(Gtk.Label(label=l_names[i], xalign=0.5))
-            self.tick.append(Gtk.CheckButton())
-
-        grid.add(self.name[0])
-        grid.attach(self.tick[0], 1, 0, 1, 1)
-
-        for i in range(1, len(l_names)):
-            grid.attach_next_to(self.name[i], self.name[i-1], Gtk.PositionType.BOTTOM, 1, 1)
-            grid.attach_next_to(self.tick[i], self.name[i], Gtk.PositionType.RIGHT, 1, 1)
-
-        box.add(grid)
-        self.show_all()
-
-class PickSolveBlock(Gtk.Dialog):
-    def __init__(self, parent, l_solve_blocks):
-#       Note: do not need to add warning if l_solve_blocks is empty; that would be
-#         done in the calling function
-
-        Gtk.Dialog.__init__(self, title='Pick Solve Block for Editing',
-            transient_for=parent, flags=0)
-        self.add_buttons(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
-        )
-        self.set_default_size(150, 100)
-        self.set_position(Gtk.WindowPosition.CENTER)
-
-        box = self.get_content_area()
-        box.set_spacing(30)
-        box.set_margin_top(5)
-
-        grid = Gtk.Grid()
-        grid.set_row_spacing(10)
-        grid.set_column_spacing(10)
-        grid.props.halign = Gtk.Align.CENTER
-
-        l_names = []
-        self.l_buttons = []
-
-        for slv in l_solve_blocks:
-            l_names.append(slv.name + ' (' + slv.index + ')')
-
-        self.l_buttons.append(Gtk.RadioButton(label=l_names[0]))
-
-        for i in range(1, len(l_names)):
-            button1 = Gtk.RadioButton.new_from_widget(self.l_buttons[i-1])
-            button1.set_label(l_names[i])
-            self.l_buttons.append(button1)
-
-        grid.add(self.l_buttons[0])
-
-        for i in range(1, len(l_names)):
-            grid.attach_next_to(self.l_buttons[i], self.l_buttons[i-1],
-               Gtk.PositionType.BOTTOM, 1, 1)
-
-        box.add(grid)
-        self.show_all()
-
-class EditSolveBlock(Gtk.Dialog):
-#   Present the selected solve block for editing:
-
-    def __init__(self, parent, blk, d_slv_categories):
-#       blk is the selected solve block
-        Gtk.Dialog.__init__(self,
-            title=blk.name,
-            transient_for=parent, flags=0)
-        self.add_buttons(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
-        )
-        self.set_default_size(400, 800)
-        self.set_position(Gtk.WindowPosition.CENTER)
-
-        grid = Gtk.Grid()
-        grid.set_row_spacing(0)
-        grid.set_column_spacing(0)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.show()
-        self.vbox.pack_start(scrolled_window, True, True, 0)
-        scrolled_window.add(grid)
-
-        d_widgets = {}
-        set1 = {'yes', 'no'}
-
-        self.d_widgets_1 = {}
-
-        for d in d_slv_categories['none']:
-            parm_name = d['parm_name']
-            l_options = d['options']
-
-            if parm_name in blk.d_parms.keys():
-                s_value = blk.d_parms[parm_name]
+        def get_value(self):
+            if self.has_value():
+                return self.solve_block.d_parms[self.schema["parm_name"]]
             else:
-                s_value = d['default']
+                return ""
 
-            l_widgets = []
+        def set_value(self, value):
+            if not self.header:
+                self.value = value
+                self.solve_block.d_parms[self.schema["parm_name"]] = value
+                self.mark_unsaved_handler()
 
-#           if key is initial_sol_file, then we need special treatment
-#           button/entry with button connected to a function which will
-#           use Gtk.FileChooserDialog
+        def remove_value(self):
+            del self.solve_block.d_parms[self.schema["parm_name"]]
 
-            if parm_name == 'initial_sol_file':
-                button1 = Gtk.Button(label="init sol file", xalign=0)
-                button1.connect("clicked", self.on_file_clicked)
-                l_widgets.append([button1, [0, 0, 1, 1]])
+        def has_value(self):
+            if self.schema:
+                return self.schema["parm_name"] in self.solve_block.d_parms
             else:
-                label_1 = Gtk.Label(label = '  ' + parm_name + '  ', xalign=0)
-                l_widgets.append([label_1, [0, 0, 1, 1]])
+                return False
 
-            if l_options[0] == 'none':
-                if s_value == 'none':
-                    entry_1 = Gtk.Entry(text='')
-                else:
-                    entry_1 = Gtk.Entry(text=s_value)
-
-                self.d_widgets_1[parm_name] = {'type_widget': 'entry', 'widget':entry_1}
-                l_widgets.append([entry_1, [1, 0, 1, 1]])
+        @staticmethod
+        def set_value_set(cls, iter_, store, mark_unsaved_handler):
+            row = store.get(store.get_iter(Gtk.TreePath(iter_)), 0)[0]
+            if row.has_value():
+                row.remove_value()
             else:
-                if set(l_options) == set1:
-                    button_1 = Gtk.CheckButton()
-                    button_1.set_active(s_value == 'yes')
-                    button_1.set_label('yes/no')
-                    l_widgets.append([button_1, [1, 0, 1, 1]])
-                    self.d_widgets_1[parm_name] = {'type_widget': 'checkbutton', 'widget':button_1}
-                else:
-                    combo_1 = Gtk.ComboBoxText()
-                    combo_1.set_entry_text_column(0)
-                    for x in l_options:
-                        combo_1.append_text(x)
-                    combo_1.set_active(l_options.index(s_value))
-                    self.d_widgets_1[parm_name] = {'type_widget': 'combo', 'widget':combo_1}
+                row.set_value(row.default)
+            mark_unsaved_handler()
 
-                    l_widgets.append([combo_1, [1, 0, 1, 1]])
+        @staticmethod
+        def cell_data_get_key(column, cell_renderer, model, iter_, data):
+            obj = model.get_value(iter_, 0)
+            cell_renderer.set_property("text", obj.key)
 
-            d_widgets[parm_name] = l_widgets
+        @staticmethod
+        def cell_data_get_set(column, cell_renderer, model, iter_, data):
+            obj = model.get_value(iter_, 0)
+            cell_renderer.set_property("active", obj.has_value())
+            cell_renderer.set_property("inconsistent", obj.header)
 
-        l_keys = []
-        for d in d_slv_categories['none']:
-            parm_name = d['parm_name']
-            l_keys.append(parm_name)
+    class SolveBlockValueCellRenderer(Gtk.CellRenderer):
+        def __init__(self, store):
+            super().__init__()
+            self.store = store
 
-        for k,l in d_slv_categories.items():
-            if k != 'none':
-                button1 = Gtk.Button(label=k)
-                button1.connect('clicked', self.solve_options_1, k, l, blk)
-                self.d_widgets_1[k] = {'type_widget': 'button', 'widget':button1}
-                l_widgets = [[button1, [0, 0, 2, 1]]]
-                d_widgets[k] = l_widgets
-                l_keys.append(k)
+            self.renderer_text = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END)
+            self.renderer_text.connect("edited", self.text_edited, None)
 
-        disp = 0
+            self.renderer_combo = Gtk.CellRendererCombo(
+                ellipsize=Pango.EllipsizeMode.END
+            )
+            self.renderer_combo.connect("edited", self.text_edited, None)
 
-        for k in l_keys:
-            for l0 in d_widgets[k]:
-                l1 = l0[1]
-                grid.attach(l0[0], l1[0], l1[1] + disp, l1[2], l1[3])
-            d0 = max(map(lambda x: x[1][1], d_widgets[k])) + 1
-                    
-            disp += d0
+            self.models = {}
 
-        self.show_all()
+            self.renderer_combo.set_property("text_column", 0)
+            self.renderer_combo.set_property("has_entry", False)
 
-    def on_file_clicked(self, widget):
-        _dialog = Gtk.FileChooserDialog(
-            title="Please choose a file", parent=self,
-            action=Gtk.FileChooserAction.OPEN
-        )
-        _dialog.add_buttons(
-            Gtk.STOCK_CANCEL,
-            Gtk.ResponseType.CANCEL,
-            Gtk.STOCK_OPEN,
-            Gtk.ResponseType.OK,
-        )
+            self.obj_ = None
 
-        _filter_gsol = Gtk.FileFilter()
-        _filter_gsol.set_name("gsol files")
-        _filter_gsol.add_pattern("*.gsol")
-        _dialog.add_filter(_filter_gsol)
-
-        response = _dialog.run()
-        if response == Gtk.ResponseType.OK:
-            print("Open clicked")
-            filename = _dialog.get_filename()
-            print("File selected: " + _dialog.get_filename())
-            self.d_widgets_1['initial_sol_file']['widget'].set_text(filename)
-        elif response == Gtk.ResponseType.CANCEL:
-            print("Cancel clicked")
-
-        _dialog.destroy()
-
-    def solve_options_1(self, widget, category, l_dict, blk):
-
-        dialog2 = EditSolveGroup(self, category, l_dict, blk)
-
-        response = dialog2.run()
-        if response == Gtk.ResponseType.OK:
-            print('solve_options_1: dialog2: The OK button was clicked')
-            gu.assign_parms_1(dialog2.d_widgets_1, blk.d_parms)
-        elif response == Gtk.ResponseType.CANCEL:
-            print('solve_options_1: dialog2: The Cancel button was clicked')
-
-        dialog2.destroy()
-        return
-
-class EditSolveGroup(Gtk.Dialog):
-#   Present the statements from a solve block group (such as x_nr)
-
-    def __init__(self, parent, category, l_dict, blk):
-        Gtk.Dialog.__init__(self,
-            title=blk.name + ': ' + category,
-            transient_for=parent, flags=0)
-        self.add_buttons(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
-        )
-        self.set_default_size(400, 800)
-        self.set_position(Gtk.WindowPosition.CENTER)
-
-        grid = Gtk.Grid()
-        grid.set_row_spacing(0)
-        grid.set_column_spacing(0)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.show()
-        self.vbox.pack_start(scrolled_window, True, True, 0)
-
-        scrolled_window.add(grid)
-
-        d_widgets = {}
-        set1 = {'yes', 'no'}
-
-        self.d_widgets_1 = {}
-
-        for d in l_dict:
-            parm_name = d['parm_name']
-            l_options = d['options']
-            if parm_name not in blk.d_parms.keys():
-                print('EditSolveGroup:', parm_name, 'not found in blk.d_parms.keys(). Halting...')
-                sys.exit()
-
-            s_value = blk.d_parms[parm_name]
-
-            l_widgets = []
-
-            label_1 = Gtk.Label(label = '  ' + parm_name + '  ', xalign=0)
-            l_widgets.append([label_1, [0, 0, 1, 1]])
-
-            if l_options[0] == 'none':
-                if s_value == 'none':
-                    entry_1 = Gtk.Entry(text='')
-                else:
-                    entry_1 = Gtk.Entry(text=s_value)
-
-                self.d_widgets_1[parm_name] = {'type_widget': 'entry', 'widget':entry_1}
-                l_widgets.append([entry_1, [1, 0, 1, 1]])
+        @GObject.Property(type=Gtk.CellRenderer)
+        def renderer(self):
+            if self.obj_.header:
+                return self.renderer_text
+            elif self.obj_.options[0] != "none":
+                return self.renderer_combo
             else:
-                if set(l_options) == set1:
-                    button_1 = Gtk.CheckButton()
-                    button_1.set_active(s_value == 'yes')
-                    button_1.set_label('yes/no')
-                    l_widgets.append([button_1, [1, 0, 1, 1]])
-                    self.d_widgets_1[parm_name] = {'type_widget': 'checkbutton', 'widget':button_1}
+                return self.renderer_text
+
+        @GObject.Property(type=GObject.TYPE_PYOBJECT)
+        def obj(self):
+            return self.obj_
+
+        @obj.setter
+        def obj(self, new_obj):
+            self.obj_ = new_obj
+            if new_obj.header:
+                self.renderer_text.set_property("text", "")
+                self.renderer_text.set_property("editable", False)
+            elif new_obj.options[0] != "none":
+                self.renderer_combo.set_property("text", new_obj.get_value())
+                self.renderer_combo.set_property(
+                    "placeholder_text", "Default: " + new_obj.default
+                )
+                model = Gtk.TreeStore(str)
+                for opt in new_obj.options:
+                    model.append(None, [opt])
+                self.renderer_combo.set_property("model", model)
+                self.renderer_combo.set_property("editable", True)
+            else:
+                self.renderer_text.set_property("text", new_obj.get_value())
+                self.renderer_text.set_property(
+                    "placeholder_text", "Default: " + new_obj.default
+                )
+                self.renderer_text.set_property("editable", True)
+                self.set_property("mode", Gtk.CellRendererMode.EDITABLE)
+
+        def do_get_preferred_width(self, *args):
+            return self.renderer.get_preferred_width(*args)
+
+        def do_get_preferred_height(self, *args):
+            return self.renderer.get_preferred_height(*args)
+
+        def do_start_editing(self, *args):
+            return self.renderer.start_editing(*args)
+
+        def do_editing_canceled(self, *args):
+            return self.renderer.editing_canceled(*args)
+
+        def do_activate(self, *args):
+            return self.renderer.activate(*args)
+
+        def do_render(self, cr, widget, background_area, cell_area, flags):
+            self.renderer.render(cr, widget, background_area, cell_area, flags)
+
+        def text_edited(self, widget, it, value, unknown_arg):
+            row = self.store.get(self.store.get_iter(Gtk.TreePath(it)), 0)[0]
+            row.set_value(value)
+
+    def build_tree_store(self):
+        store = Gtk.TreeStore(GObject.TYPE_PYOBJECT)
+
+        for solve_block in self.data:
+            print(solve_block)
+            r = self.SolveBlockRow(self.mark_unsaved_handler, solve_block)
+            r.header = True
+            r.key = solve_block.name
+            parent_iter = store.append(None, [r])
+
+            for cat_name, cat_parms in self.schema.items():
+                if cat_name == "none":
+                    cat_iter = parent_iter
                 else:
-                    combo_1 = Gtk.ComboBoxText()
-                    combo_1.set_entry_text_column(0)
-                    for x in l_options:
-                        combo_1.append_text(x)
-                    combo_1.set_active(l_options.index(s_value))
-                    self.d_widgets_1[parm_name] = {'type_widget': 'combo', 'widget':combo_1}
+                    r = self.SolveBlockRow(self.mark_unsaved_handler, solve_block)
+                    r.header = True
+                    r.key = cat_name
 
-                    l_widgets.append([combo_1, [1, 0, 1, 1]])
+                    cat_iter = store.append(parent_iter, [r])
 
-            d_widgets[parm_name] = l_widgets
+                for parm_details in cat_parms:
+                    r = self.SolveBlockRow(
+                        self.mark_unsaved_handler, solve_block, parm_details
+                    )
+                    r.header = False
+                    store.append(cat_iter, [r])
 
-        l_keys = []
+        return store
 
-        for d in l_dict:
-            parm_name = d['parm_name']
-            l_keys.append(parm_name)
+    def build_toolbar(self):
+        toolbar = Gtk.Toolbar()
 
-        disp = 0
+        add_icon = Gtk.Image.new_from_stock(
+            stock_id=Gtk.STOCK_ADD, size=Gtk.IconSize.SMALL_TOOLBAR
+        )
+        self.add_btn = Gtk.ToolButton(icon_widget=add_icon, label="Add")
+        self.add_btn.connect("clicked", self.add_btn_clicked)
 
-        for k in l_keys:
-            for l0 in d_widgets[k]:
-                l1 = l0[1]
-                grid.attach(l0[0], l1[0], l1[1] + disp, l1[2], l1[3])
-            d0 = max(map(lambda x: x[1][1], d_widgets[k])) + 1
-                    
-            disp += d0
+        remove_icon = Gtk.Image.new_from_stock(
+            stock_id=Gtk.STOCK_REMOVE, size=Gtk.IconSize.SMALL_TOOLBAR
+        )
+        self.remove_btn = Gtk.ToolButton(icon_widget=remove_icon, label="Remove")
+        self.remove_btn.set_sensitive(False)
+        self.remove_btn.connect("clicked", self.remove_btn_clicked)
 
-        self.show_all()
+        toolbar.insert(self.add_btn, 0)
+        toolbar.insert(self.remove_btn, 1)
+
+        return toolbar
+
+    def build_tree_view(self):
+        store = self.build_tree_store()
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        scroll_window = Gtk.ScrolledWindow()
+        scroll_window.set_property("hscrollbar_policy", Gtk.PolicyType.NEVER)
+
+        self.tree = Gtk.TreeView(store)
+        self.tree.get_selection().connect("changed", self.tree_selection_changed)
+
+        r1 = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END)
+        col1 = Gtk.TreeViewColumn("Parameter", r1)
+        col1.set_cell_data_func(r1, self.SolveBlockRow.cell_data_get_key, None)
+        col1.set_min_width(140)
+        col1.set_expand(True)
+        self.tree.append_column(col1)
+
+        r2 = self.SolveBlockValueCellRenderer(store)
+        col2 = Gtk.TreeViewColumn("Value", r2)
+        col2.add_attribute(r2, "obj", 0)
+        col2.set_min_width(120)
+        col2.set_expand(True)
+        self.tree.append_column(col2)
+
+        r3 = Gtk.CellRendererToggle()
+        r3.connect(
+            "toggled",
+            self.SolveBlockRow.set_value_set,
+            store,
+            self.mark_unsaved_handler,
+        )
+        col3 = Gtk.TreeViewColumn("Set", r3)
+        col3.set_cell_data_func(r3, self.SolveBlockRow.cell_data_get_set, None)
+        col3.set_fixed_width(40)
+        self.tree.append_column(col3)
+
+        scroll_window.add(self.tree)
+
+        box.pack_start(
+            Gtk.Label(label=self.title, xalign=0.05), expand=False, fill=True, padding=5
+        )
+        box.pack_start(scroll_window, expand=True, fill=True, padding=0)
+        box.pack_end(self.build_toolbar(), expand=False, fill=True, padding=0)
+        box.show_all()
+
+        return box
+
+    def tree_selection_changed(self, tree_selection):
+        model, iter_ = tree_selection.get_selected()
+
+        if iter_:
+            row = model.get(iter_, 0)[0]
+            self.remove_btn.set_sensitive(row.header)
+            return
+
+        self.remove_btn.set_sensitive(False)
+
+    def add_btn_clicked(self, _btn):
+        pass
+
+    def remove_btn_clicked(self, _btn):
+        model, iter_ = self.tree.get_selection().get_selected()
+
+        if iter_:
+            row = model.get(iter_, 0)[0]
+            model.remove(iter_)
+            pass

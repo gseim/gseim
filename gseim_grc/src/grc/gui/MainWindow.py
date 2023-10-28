@@ -114,8 +114,8 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.variable_panel_sidebar = True
         if self.variable_panel_sidebar:
-            self.left.pack1(self.notebook)
-            self.left.pack2(self.console, False)
+            self.left.pack1(self.notebook, True, False)
+            self.left.pack2(self.console, True, False)
             self.right.pack1(self.btwin)
         else:
             # Put the variable editor in a panel with the console
@@ -127,8 +127,8 @@ class MainWindow(Gtk.ApplicationWindow):
             # Create the right panel
             self.right.pack1(self.btwin)
 
-        self.main.pack1(self.left)
-        self.main.pack2(self.right, False)
+        self.main.pack1(self.left, resize=True, shrink=False)
+        self.main.pack2(self.right, resize=True, shrink=False)
 
         # Load preferences and show the main window
         self.resize(*self.config.main_window_size())

@@ -27,6 +27,7 @@ from . import Actions
 from .StateCache import StateCache
 from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
+from grc.gui.solveblocks import SolveBlockEditor
 
 log = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ class Notebook(Gtk.Notebook):
             self._ignore_consecutive_scrolls -= 1
         return False
 
-class Page(Gtk.HBox):
+class Page(Gtk.HPaned):
     """A page in the notebook."""
 
     def __init__(self, main_window, flow_graph, file_path=''):
@@ -90,7 +91,8 @@ class Page(Gtk.HBox):
             main_window: main window
             file_path: path to a flow graph file
         """
-        Gtk.HBox.__init__(self)
+        Gtk.HPaned.__init__(self)
+        self.set_wide_handle(True)
 
         self.main_window = main_window
         self.flow_graph = flow_graph
@@ -128,7 +130,61 @@ class Page(Gtk.HBox):
         self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
 
         self.scrolled_window.add(self.drawing_area)
-        self.pack_start(self.scrolled_window, True, True, 0)
+        self.pack1(self.scrolled_window, True, False)
+
+        block_editor_panel = Gtk.VPaned(wide_handle=True)
+
+        slv_block_editor = SolveBlockEditor(
+            title='Solve blocks',
+            mark_unsaved_handler=self.mark_page_unsaved,
+            data=flow_graph.l_solve_blocks,
+            schema=flow_graph.parent_platform.d_slv_categories,
+        )
+        block_editor_panel.pack1(slv_block_editor.build_tree_view(), False, False)
+
+        output_block_editor = SolveBlockEditor(
+            title='Output blocks',
+            mark_unsaved_handler=self.mark_page_unsaved,
+            data=flow_graph.l_output_blocks,
+            schema={
+                'none': [
+                    {
+                        'parm_name': 'filename',
+                        'options': ['none'],
+                        'default': 'out.dat',
+                    },
+                    {
+                        'parm_name': 'append',
+                        'options': ['yes', 'no'],
+                        'default': 'no',
+                    },
+                    {
+                        'parm_name': 'limit_lines',
+                        'options': ['none'],
+                        'default': '1000000',
+                    },
+                    {
+                        'parm_name': 'fixed_interval',
+                        'options': ['none'],
+                        'default': '',
+                    },
+                    {
+                        'parm_name': 't_start',
+                        'options': ['none'],
+                        'default': '',
+                    },
+                    {
+                        'parm_name': 't_end',
+                        'options': ['none'],
+                        'default': '',
+                    },
+                ],
+            },
+        )
+        block_editor_panel.pack2(output_block_editor.build_tree_view(), False, False)
+
+        self.pack2(block_editor_panel)
+
         self.show_all()
 
     def _handle_scroll_window_key_press(self, widget, event):
@@ -193,3 +249,6 @@ class Page(Gtk.HBox):
             return False
         return (os.path.exists(self.file_path) and
                 not os.access(self.file_path, os.W_OK))
+
+    def mark_page_unsaved(self):
+        self.saved = False

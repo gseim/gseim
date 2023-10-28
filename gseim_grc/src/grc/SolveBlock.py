@@ -33,8 +33,8 @@ class SolveBlock():
 #       - even if a stored solve block is being treated, first
 #         assign the default values and then write over those
 
-        for k, v in slvparms_ast.parms.items():
-            self.d_parms[k] = v.default
+        # for k, v in slvparms_ast.parms.items():
+        #     self.d_parms[k] = v.default
 
         if s_name:
             self.name = s_name
